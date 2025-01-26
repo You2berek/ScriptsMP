@@ -1,0 +1,76 @@
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+local rushloop = false
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+
+   
+    -- Key press for J to toggle rushloop
+    if input.KeyCode == Enum.KeyCode.J then
+        if rushloop == false then
+            rushloop = true
+            print("enabled")
+        elseif rushloop == true then
+            rushloop = false
+            print("disabled")
+        end
+    end
+
+
+
+    -- Input handling for different keys
+    if input.KeyCode == Enum.KeyCode.One then
+        local args = {
+            [1] = game:GetService("Players").LocalPlayer
+        }
+       game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("ReverseFlash"):WaitForChild("Remotes"):WaitForChild("RampantFlurry"):FireServer(unpack(args))
+        
+		
+    elseif input.KeyCode == Enum.KeyCode.H then
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
+        wait(0.2)
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
+        wait(0.3)
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
+        wait(1)
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+        local args = {
+            [1] = game:GetService("Players").LocalPlayer
+        }
+               game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("ReverseFlash"):WaitForChild("Remotes"):WaitForChild("Counter"):FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        local args = {
+            [1] = workspace.Th3R3dARR0W5:FindFirstChild("HumanoidRootPart").Position
+        }
+
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args))
+      
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        local args = {
+            [1] = game:GetService("Players").LocalPlayer
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("ReverseFinisher"):FireServer(unpack(args))
+    elseif input.KeyCode == Enum.KeyCode.E then
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Sonic"):WaitForChild("Remotes"):WaitForChild("SonicBoom"):FireServer()
+   
+   end
+   
+end)
+
+-- Rushloop logic, fires Rush every 0.5 seconds if enabled
+task.spawn(function()
+    while task.wait(0.1) do
+        if rushloop == true then
+            local args2 = {
+                [1] = workspace.Th3R3dARR0W5:FindFirstChild("HumanoidRootPart").Position
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args2))
+        end
+    end
+end)
