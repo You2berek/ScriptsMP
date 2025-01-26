@@ -179,9 +179,12 @@ local function fireTNTs()
     end
 end
 local ScriptTab = Window:NewTab("Scripts")
-local ScriptSection = ScriptTab:NewSection("LancelotScripts")
+local ScriptSection = ScriptTab:NewSection("Regular Scripts")
 
-ScriptSection:NewButton("Omni-Man", "Why did you make me do this?", function()
+local CharTab = Window:NewTab("CharacterScripts")
+local CharSection = CharTab:NewSection("Character Scripts")
+
+CharSection:NewButton("Omni-Man", "Why did you make me do this?", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
 end)
 ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
@@ -190,18 +193,18 @@ end)
 ScriptSection:NewButton("Lance's Troll Menu", "Not patched. YET.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/TrollMenu"))()
 end)
-ScriptSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
+CharSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
 end)
 ScriptSection:NewButton("Hug/Stretch Grab", "WHAAT", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Hug"))()
 	
 end)
-ScriptSection:NewButton("Doctor Strange", "DORMAMMU", function()
+CharSection:NewButton("Doctor Strange", "DORMAMMU", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Strange"))()
 	
 end)
-ScriptSection:NewButton("The Reverse", "I'm faster.", function()
+CharSection:NewButton("The Reverse", "I'm faster.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
 	
 end)
