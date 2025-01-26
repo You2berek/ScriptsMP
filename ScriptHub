@@ -208,6 +208,10 @@ CharSection:NewButton("The Reverse", "I'm faster.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
 	
 end)
+CharSection:NewButton("Sportacus", "I ran as fast as i can", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Sportacus"))()
+	
+end)
 game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
     if key == "c" and keybindsEnabled then
         fireTNTs()
