@@ -1,0 +1,164 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local anim = Instance.new("Animation")
+
+
+
+anim.AnimationId = "rbxassetid://12177440739"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+animTrack:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("PortalBullets"):FireServer(unpack(args))
+
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+local combathitbox =  Instance.new("Part")
+combathitbox.Parent = game:GetService("Players").LocalPlayer.Character
+combathitbox.Size = Vector3.new(3, 4, 3)
+combathitbox.CanCollide = false
+combathitbox.CanTouch = true
+combathitbox.Name = "CombatBox"
+combathitbox.Transparency = 1
+while task.wait(0.05) do
+	combathitbox.Position = game:GetService("Players").LocalPlayer.Character:FindFirstChild("BeamEndPart").Position
+end
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local animWHIP = Instance.new("Animation")
+animWHIP.AnimationId = "rbxassetid://9819210819"
+local plr = game:GetService("Players").LocalPlayer
+local animTrackWH = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animWHIP)
+animTrackWH:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("WhipAttack"):FireServer(unpack(args))
+plr.Character:FindFirstChild("CombatBox").Touched:Connect(function(plrTouch)
+-- Ensure `plr` is defined and has a Character property
+local laser = plr.Character:FindFirstChild("CombatBox")
+local debouncetime = 3
+local debounce = false
+if laser then
+
+
+    laser.Touched:Connect(function(plrTouch)
+    if debounce == false then
+
+        debounce = true
+        -- Ensure the touched part is valid and has a parent (likely a character)
+        if plrTouch and plrTouch.Parent then
+            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
+            
+            if playerCharacter then
+                -- Define the args for RemoteEvent firing
+                local args = {
+                    [1] = playerCharacter
+                }
+
+                -- Fire the RemoteEvent safely
+                local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("HeavyHitRemote")
+                if remote then
+                    remote:FireServer(unpack(args))
+                    task.wait(debouncetime)
+                debounce = false
+                else
+                task.wait(debouncetime)
+                debounce = false
+				plr.Character:FindFirstChild("CombatBox").CanTouch = false
+                end
+                
+            end
+        end
+    end
+    end)
+end
+end)
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("CounterPush"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.Four then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local animCIN = Instance.new("Animation")
+
+
+
+animCIN.AnimationId = "rbxassetid://12175621372"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrackCIN = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animCIN)
+animTrackCIN:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("Bolts"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("TendrillSlam"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.F then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local animSH = Instance.new("Animation")
+
+
+
+animSH.AnimationId = "rbxassetid://9637222216"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrackSH = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animSH)
+animTrackSH:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("BigShieldRemote"):FireServer(unpack(args))
+game:GetService("Players").LocalPlayer.Character.DoctorStrange.CounterActivate2:FireServer(unpack(args))
+elseif input.KeyCode == Enum.KeyCode.K then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame,
+    [2] = 150
+}
+local animLOOPs = Instance.new("Animation")
+
+
+
+animLOOPs.AnimationId = "rbxassetid://12173192550"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrackLOOPs = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animLOOPs)
+animTrackLOOPs:Play()
+game:GetService("Players").LocalPlayer.Character.DoctorStrange.TimeBack:FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.J then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local animLOOPA = Instance.new("Animation")
+
+
+
+animLOOPA.AnimationId = "rbxassetid://12173340226"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrackLOOPA = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animLOOPA)
+animTrackLOOPA:Play()
+game:GetService("Players").LocalPlayer.Character.DoctorStrange.StartTimeBack:FireServer(unpack(args))
+
+   end
+end)
