@@ -1,0 +1,344 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+local function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = radius
+
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local otherChar = otherPlayer.Character
+            local otherHRP = otherChar.HumanoidRootPart
+
+            local myHRP = character:FindFirstChild("HumanoidRootPart")
+            if myHRP then
+                local distance = (myHRP.Position - otherHRP.Position).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = otherPlayer
+                end
+            end
+        end
+    end
+
+    return closestPlayer, shortestDistance
+end
+
+    if input.KeyCode == Enum.KeyCode.One then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Chop"):FireServer(unpack(args))
+
+function getNil(name, class)
+    for _, v in next, getnilinstances() do
+        if v.ClassName == class and v.Name == name then
+            return v
+        end
+    end
+end
+
+function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local character = game:GetService("Players").LocalPlayer.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = character.HumanoidRootPart
+        for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+            if player ~= game:GetService("Players").LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local playerHumanoidRootPart = player.Character.HumanoidRootPart
+                local distance = (humanoidRootPart.Position - playerHumanoidRootPart.Position).Magnitude
+                if distance < shortestDistance then
+                    closestPlayer = player
+                    shortestDistance = distance
+                end
+            end
+        end
+    end
+    return closestPlayer
+end
+
+local nearestPlayer = getNearestPlayer()
+
+-- Check if we found a nearest player
+if nearestPlayer then
+   local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DarthVader"):WaitForChild("Remotes"):WaitForChild("Bash2"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DarthVader"):WaitForChild("Remotes"):WaitForChild("Bash2"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DarthVader"):WaitForChild("Remotes"):WaitForChild("Bash2"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DarthVader"):WaitForChild("Remotes"):WaitForChild("Bash2"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DarthVader"):WaitForChild("Remotes"):WaitForChild("Bash2"):FireServer(unpack(args))
+
+
+
+
+else
+    print("No valid target found")
+end
+
+
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Clap"):FireServer(unpack(args))
+
+
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Slamdown"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.Four then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Spike"):FireServer(unpack(args))
+
+
+
+function getNil(name, class)
+    for _, v in next, getnilinstances() do
+        if v.ClassName == class and v.Name == name then
+            return v
+        end
+    end
+end
+
+function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+    local character = game:GetService("Players").LocalPlayer.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = character.HumanoidRootPart
+        for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+            if player ~= game:GetService("Players").LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local playerHumanoidRootPart = player.Character.HumanoidRootPart
+                local distance = (humanoidRootPart.Position - playerHumanoidRootPart.Position).Magnitude
+                if distance < shortestDistance then
+                    closestPlayer = player
+                    shortestDistance = distance
+                end
+            end
+        end
+    end
+    return closestPlayer
+end
+
+local nearestPlayer = getNearestPlayer()
+
+-- Check if we found a nearest player
+if nearestPlayer then
+   local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("SpikeHit"):FireServer(unpack(args))
+
+
+
+else
+    print("No valid target found")
+end
+
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Finisher"):FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.F then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("Blocking"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.E then
+
+local anim2 = Instance.new("Animation")
+
+
+
+anim2.AnimationId = "rbxassetid://15588214346"
+local plr = game.Players.LocalPlayer
+
+local animTrack2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Flight"):FireServer(unpack(args))
+game:GetService("Players").LocalPlayer.Character.OmniMan.Fly:FireServer(unpack(args))
+game:GetService("Players").LocalPlayer.Character.OmniMan.Fly:FireServer(unpack(args))
+game:GetService("Players").LocalPlayer.Character.OmniMan.Fly:FireServer(unpack(args))
+game:GetService("Players").LocalPlayer.Character.OmniMan.Fly:FireServer(unpack(args))
+game:GetService("Players").LocalPlayer.Character.OmniMan.Fly:FireServer(unpack(args))
+game:GetService("Players").LocalPlayer.Character.OmniMan.Fly:FireServer(unpack(args))
+
+
+
+
+
+animTrack2:Play()
+-- Variables to manage the forced speed and movement
+local Player = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local character = nil
+local humanoid = nil
+local bodyVelocity = nil
+local rotationSpeed = 2 -- Speed of rotation when pressing A or D
+local lastRemoteTime = 0
+local remoteInterval = 5 -- Time in seconds between remote events
+local isRunning = false -- Flag to control the loop
+
+-- Function to start forcing the player to run involuntarily
+local function startForcedMovement()
+    character = Player.Character or Player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+
+    -- Set WalkSpeed to 100 for the desired running effect
+    humanoid.WalkSpeed = 100
+
+    -- Create a BodyVelocity to enforce constant movement
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000) -- High force to overcome inertia
+    bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Will be updated each frame
+    bodyVelocity.Parent = humanoid.RootPart
+
+    -- Set the isRunning flag to true to start the loop
+    isRunning = true
+
+    -- Update velocity and handle rotation every frame
+    RunService.Heartbeat:Connect(function()
+        if isRunning and humanoid and humanoid.RootPart then
+            -- Update velocity to match the direction the player is facing
+            local moveDirection = humanoid.RootPart.CFrame.LookVector
+            bodyVelocity.Velocity = moveDirection * humanoid.WalkSpeed
+local nearestPlayer, distance = getNearestPlayer()
+    if nearestPlayer then
+      local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("ComboEndRemote"):FireServer(unpack(args))
+
+    else
+        print("No players found within radius.")
+    end
+            -- Fire the remote event every 5 seconds
+            if tick() - lastRemoteTime >= remoteInterval then
+                local remote = ReplicatedStorage:WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan")
+                remote:FireServer()
+                lastRemoteTime = tick()
+            end
+        end
+    end)
+
+    -- Allow rotation using A and D keys
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Enum.KeyCode.A then
+            -- Rotate character slightly to the left
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(-rotationSpeed), 0))
+        elseif input.KeyCode == Enum.KeyCode.D then
+            -- Rotate character slightly to the right
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0))
+        end
+    end)
+end
+
+-- Function to stop forcing the player to run
+local function stopForcedMovement()
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+
+    if humanoid then
+        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
+    end
+
+    -- Set the isRunning flag to false to stop the loop
+    isRunning = false
+end
+
+
+startForcedMovement()
+animTrack2.Ended:Wait()
+stopForcedMovement()
+
+   end
+end)
