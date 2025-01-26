@@ -46,7 +46,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
                game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("ReverseFlash"):WaitForChild("Remotes"):WaitForChild("Counter"):FireServer()
     elseif input.KeyCode == Enum.KeyCode.Four then
         local args = {
-            [1] = workspace.Th3R3dARR0W5:FindFirstChild("HumanoidRootPart").Position
+            [1] =  game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position
         }
 
             game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args))
@@ -68,7 +68,7 @@ task.spawn(function()
     while task.wait(0.1) do
         if rushloop == true then
             local args2 = {
-                [1] = workspace.Th3R3dARR0W5:FindFirstChild("HumanoidRootPart").Position
+                [1] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position
             }
             game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args2))
         end
