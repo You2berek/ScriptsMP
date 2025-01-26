@@ -1,0 +1,419 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+local radius = 5 -- Set the search radius
+local player = game.Players.LocalPlayer -- Change as needed if this is a server-side Script
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Function to get the nearest player
+local function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = radius
+
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local otherChar = otherPlayer.Character
+            local otherHRP = otherChar.HumanoidRootPart
+
+            local myHRP = character:FindFirstChild("HumanoidRootPart")
+            if myHRP then
+                local distance = (myHRP.Position - otherHRP.Position).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = otherPlayer
+                end
+            end
+        end
+    end
+
+    return closestPlayer, shortestDistance
+end
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+local anim = Instance.new("Animation")
+
+
+
+anim.AnimationId = "rbxassetid://17746999440"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("Players").LocalPlayer.Character.Homelander.Eyes:FireServer(unpack(args))
+plr.Character:FindFirstChild("Laser").CanTouch = true
+animTrack:Play()
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Homelander"):WaitForChild("Remotes"):WaitForChild("LaserEyes"):FireServer()
+plr.Character:FindFirstChild("Laser").Touched:Connect(function(plrTouch)
+-- Ensure `plr` is defined and has a Character property
+local laser = plr.Character:FindFirstChild("Laser")
+local debouncetime = 3
+local debounce = false
+if laser then
+
+
+    laser.Touched:Connect(function(plrTouch)
+    if debounce == false then
+
+        debounce = true
+        -- Ensure the touched part is valid and has a parent (likely a character)
+        if plrTouch and plrTouch.Parent then
+            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
+            
+            if playerCharacter then
+                -- Define the args for RemoteEvent firing
+                local args = {
+                    [1] = playerCharacter
+                }
+
+                -- Fire the RemoteEvent safely
+                local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("Homelander")
+                                :WaitForChild("Remotes"):WaitForChild("LaserEyesHit")
+                if remote then
+                    remote:FireServer(unpack(args))
+                    task.wait(debouncetime)
+                debounce = false
+                else
+                task.wait(debouncetime)
+                debounce = false
+                end
+                
+            end
+        end
+    end
+    end)
+end
+end)
+
+
+animTrack.Ended:Wait()
+plr.Character:FindFirstChild("Laser").CanTouch = false
+
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local animClap = Instance.new("Animation")
+
+
+
+animClap.AnimationId = "rbxassetid://17744938096"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrackClap = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animClap)
+
+
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+
+animTrackClap:Play()
+game:GetService("Players").LocalPlayer.Character.Homelander.EarClap:FireServer(unpack(args))
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Homelander"):WaitForChild("Remotes"):WaitForChild("EarClap"):FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+local animCount = Instance.new("Animation")
+
+
+
+animCount.AnimationId = "rbxassetid://17745583835"
+
+local plr = game:GetService("Players").LocalPlayer
+local animCounter = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animCount)
+
+
+animCounter:Play()
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Homelander"):WaitForChild("Remotes"):WaitForChild("ThrowDown"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.Four then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+local anim2 = Instance.new("Animation")
+local animE = Instance.new("Animation")
+
+animE.AnimationId = "rbxassetid://17752943363"
+anim2.AnimationId = "rbxassetid://11693275176"
+local plr = game.Players.LocalPlayer
+local animtrackEagle = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animE)
+local animTrack2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+animtrackEagle:Play()
+game:GetService("Players").LocalPlayer.Character.Homelander.StrikeStart:FireServer(unpack(args))
+animtrackEagle.Ended:Wait()
+
+
+
+
+
+
+
+animTrack2:Play()
+-- Variables to manage the forced speed and movement
+local Player = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local character = nil
+local humanoid = nil
+local bodyVelocity = nil
+local rotationSpeed = 2 -- Speed of rotation when pressing A or D
+local lastRemoteTime = 0
+local remoteInterval = 5 -- Time in seconds between remote events
+local isRunning = false -- Flag to control the loop
+
+-- Function to start forcing the player to run involuntarily
+local function startForcedMovement()
+    character = Player.Character or Player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+
+    -- Set WalkSpeed to 100 for the desired running effect
+    humanoid.WalkSpeed = 70
+
+    -- Create a BodyVelocity to enforce constant movement
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000) -- High force to overcome inertia
+    bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Will be updated each frame
+    bodyVelocity.Parent = humanoid.RootPart
+
+    -- Set the isRunning flag to true to start the loop
+    isRunning = true
+
+    -- Update velocity and handle rotation every frame
+    RunService.Heartbeat:Connect(function()
+        if isRunning and humanoid and humanoid.RootPart then
+            -- Update velocity to match the direction the player is facing
+            local moveDirection = humanoid.RootPart.CFrame.LookVector
+            bodyVelocity.Velocity = moveDirection * humanoid.WalkSpeed
+local nearestPlayer, distance = getNearestPlayer()
+    if nearestPlayer then
+      local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("ComboEndRemote"):FireServer(unpack(args))
+
+    else
+        print("No players found within radius.")
+    end
+            -- Fire the remote event every 5 seconds
+            if tick() - lastRemoteTime >= remoteInterval then
+                local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("Players").LocalPlayer.Character.Homelander.Eagle:FireServer(unpack(args))
+
+                remote:FireServer()
+                lastRemoteTime = tick()
+            end
+        end
+    end)
+
+    -- Allow rotation using A and D keys
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Enum.KeyCode.A then
+            -- Rotate character slightly to the left
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(-rotationSpeed), 0))
+        elseif input.KeyCode == Enum.KeyCode.D then
+            -- Rotate character slightly to the right
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0))
+        end
+    end)
+end
+
+-- Function to stop forcing the player to run
+local function stopForcedMovement()
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+
+    if humanoid then
+        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
+    end
+
+    -- Set the isRunning flag to false to stop the loop
+    isRunning = false
+end
+
+
+startForcedMovement()
+animTrack2.Ended:Wait()
+stopForcedMovement()
+
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Homelander"):WaitForChild("Remotes"):WaitForChild("Finisher"):FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.F then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local Block = Instance.new("Animation")
+
+
+
+Block.AnimationId = "rbxassetid://9760917435"
+
+local plr = game:GetService("Players").LocalPlayer
+local What = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(Block)
+
+
+What:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("Blocking"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.E then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local Milky = Instance.new("Animation")
+
+
+
+Milky.AnimationId = "rbxassetid://11700269118"
+
+local plr = game:GetService("Players").LocalPlayer
+local Yummers = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(Milky)
+
+
+Yummers:Play()
+game:GetService("Players").LocalPlayer.Character.Homelander.Milk:FireServer(unpack(args))
+elseif input.KeyCode == Enum.KeyCode.H then
+local animR = Instance.new("Animation")
+local animR2 = Instance.new("Animation")
+
+
+animR.AnimationId = "rbxassetid://13056471438"
+animR2.AnimationId = "rbxassetid://11759352907"
+local plr = game.Players.LocalPlayer
+local animTrackR = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animR)
+local animTrackR2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animR2)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
+       local remote = ReplicatedStorage:WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan")
+                remote:FireServer()
+plr.Character:WaitForChild("Humanoid").WalkSpeed = 0
+animTrackR:Play()
+animTrackR.Ended:Wait()
+animTrackR2:Play()
+-- Variables to manage the forced speed and movement
+local Player = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local character = nil
+local humanoid = nil
+local bodyVelocity = nil
+local rotationSpeed = 2 -- Speed of rotation when pressing A or D
+local lastRemoteTime = 0
+local remoteInterval = .5 -- Time in seconds between remote events
+local isRunning = false -- Flag to control the loop
+
+-- Function to start forcing the player to run involuntarily
+local function startForcedMovement()
+    character = Player.Character or Player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+
+    -- Set WalkSpeed to 100 for the desired running effect
+    humanoid.WalkSpeed = 100
+
+    -- Create a BodyVelocity to enforce constant movement
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000) -- High force to overcome inertia
+    bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Will be updated each frame
+    bodyVelocity.Parent = humanoid.RootPart
+
+    -- Set the isRunning flag to true to start the loop
+    isRunning = true
+
+    -- Update velocity and handle rotation every frame
+    RunService.Heartbeat:Connect(function()
+        if isRunning and humanoid and humanoid.RootPart then
+            -- Update velocity to match the direction the player is facing
+            local moveDirection = humanoid.RootPart.CFrame.LookVector
+            bodyVelocity.Velocity = moveDirection * humanoid.WalkSpeed
+ local nearestPlayer, distance = getNearestPlayer()
+    if nearestPlayer then
+      local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("ComboEndRemote"):FireServer(unpack(args))
+
+    else
+        print("No players found within radius.")
+    end
+       humanoid.WalkSpeed = 100
+         local remote = ReplicatedStorage:WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan")
+                remote:FireServer()
+    wait(1) -- Check every second
+            -- Fire the remote event every 5 seconds
+            
+           
+            
+        end
+    end)
+
+    -- Allow rotation using A and D keys
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Enum.KeyCode.A then
+            -- Rotate character slightly to the left
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(-rotationSpeed), 0))
+        elseif input.KeyCode == Enum.KeyCode.D then
+            -- Rotate character slightly to the right
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0))
+        end
+    end)
+end
+
+-- Function to stop forcing the player to run
+local function stopForcedMovement()
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+
+    if humanoid then
+        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
+    end
+
+    -- Set the isRunning flag to false to stop the loop
+    isRunning = false
+end
+
+
+startForcedMovement()
+animTrackR2.Ended:Wait()
+stopForcedMovement()
+
+
+
+
+
+
+   end
+end)
