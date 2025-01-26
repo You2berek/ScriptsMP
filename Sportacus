@@ -1,0 +1,44 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("A-Train"):WaitForChild("Remotes"):WaitForChild("BellyPunch"):FireServer()
+
+
+elseif input.KeyCode == Enum.KeyCode.H then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("A-Train"):WaitForChild("Remotes"):WaitForChild("Hammer"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.Four then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("A-Train"):WaitForChild("Remotes"):WaitForChild("Grab"):FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("A-Train"):WaitForChild("Remotes"):WaitForChild("QuicksilverFinisher"):FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.F then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("Blocking"):FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.E then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("A-train").Inject:FireServer(unpack(args))
+
+   end
+end)
