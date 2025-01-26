@@ -1,0 +1,217 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("LancelotHub", "Midnight")
+
+-- Initialize Variables
+local keybindsEnabled = false
+local godModeEnabled = false
+local tntPerClick = 1
+
+-- Secret Characters Tab
+local Tab = Window:NewTab("Secret Characters")
+local Section = Tab:NewSection("Secret Characters")
+
+local function fireChangeChar(character, script)
+    local args = {
+        [1] = character,
+        [2] = script
+    }
+    game:GetService("ReplicatedStorage").SelectACharacter.ChangeChar:FireServer(unpack(args))
+end
+
+Section:NewButton("Amazo", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").SelectACharacter.Amazo,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
+Section:NewButton("ReverseFlash" , "The god of speed", function()
+fireChangeChar(
+ game:GetService("ReplicatedStorage").SelectACharacter.ReverseFlash,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+
+)
+end)
+Section:NewButton("DarkFlash" , "The god of speed", function()
+fireChangeChar(
+ game:GetService("ReplicatedStorage").Skins.RReverseFlash.Skin3,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+
+)
+end)
+Section:NewButton("2099" , "The god of speed", function()
+fireChangeChar(
+ game:GetService("ReplicatedStorage").Skins.RReverseFlash.Skin2,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+
+)
+end)
+Section:NewButton("ForcesRF" , "The god of speed", function()
+fireChangeChar(
+ game:GetService("ReplicatedStorage").Skins.RReverseFlash.Skin4,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+
+)
+end)
+Section:NewButton("Thanos" , "Peace", function()
+fireChangeChar(
+ game:GetService("ReplicatedStorage").Skins.Thanos.Skin1,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+
+)
+end)
+Section:NewButton("Gigachad" , "Peace", function()
+fireChangeChar(
+ game:GetService("ReplicatedStorage").Skins.GigaChad.Skin1,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+
+)
+end)
+Section:NewButton("Giant Saitama", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("Players").LocalPlayer.PlayerGui.CharacterSpecial.SaitamaPunch.ViewportFrame.WorldModel.GuiSaitama,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
+
+Section:NewButton("Wanda", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Wanda.Skin1,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
+
+Section:NewButton("Golden Freddy", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Characters.Springtrap.Fx.GoldenFred,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
+
+Section:NewButton("Vergil (Not finished)", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").SelectACharacter.Vergil,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
+
+-- Extra Tab
+local ExtraTab = Window:NewTab("Extra")
+local ExtraSection = ExtraTab:NewSection("Moves that you can use with them")
+
+ExtraSection:NewButton("Enable Keybinds", "Enable keybinds", function()
+    keybindsEnabled = true
+end)
+
+ExtraSection:NewButton("Disable Keybinds", "Disable keybinds", function()
+    keybindsEnabled = false
+end)
+
+local function createKeybind(name, description, key, remote, args)
+    ExtraSection:NewKeybind(name, description, key, function()
+        if keybindsEnabled then
+            remote:FireServer(unpack(args or {}))
+        end
+    end)
+end
+
+createKeybind("Joe Cage", "KeybindInfo", Enum.KeyCode.V, game:GetService("ReplicatedStorage").Characters.Joe.Remotes.TheCage)
+createKeybind("Joe StrangleHold", "KeybindInfo", Enum.KeyCode.T, game:GetService("ReplicatedStorage").Characters.Joe.Remotes.ChokeSlam, {game.Players.LocalPlayer})
+
+ExtraSection:NewButton("Steve TNT (Key is C)", "Cannot change the key for this", function()
+    if keybindsEnabled then
+        fireTNTs()
+    end
+end)
+
+createKeybind("Steve Fire", "KeybindInfo", Enum.KeyCode.R, game:GetService("ReplicatedStorage").Characters.Steve.Remotes.FireCounter)
+
+ExtraSection:NewButton("God Mode", "Enable God Mode", function()
+    if not godModeEnabled then
+        godModeEnabled = true
+        coroutine.wrap(function()
+            while godModeEnabled do
+                game:GetService("ReplicatedStorage").Characters.Quicksilver.Remotes.TimeStop:FireServer(game.Players.LocalPlayer)
+                wait(3)
+            end
+        end)()
+    end
+end)
+
+ExtraSection:NewButton("Disable God Mode", "Disable God Mode", function()
+    godModeEnabled = false
+end)
+
+-- TNT Tab
+local tntTab = Window:NewTab("TNT Settings")
+local tntSection = tntTab:NewSection("TNT Per Click")
+
+local function setTNTAmount(amount)
+    tntPerClick = amount
+end
+
+tntSection:NewButton("10 TNTs Per Click", "Set TNTs per click to 10", function()
+    setTNTAmount(10)
+end)
+
+tntSection:NewButton("50 TNTs Per Click", "Set TNTs per click to 50", function()
+    setTNTAmount(50)
+end)
+
+tntSection:NewButton("100 TNTs Per Click", "Set TNTs per click to 100", function()
+    setTNTAmount(100)
+end)
+
+tntSection:NewButton("500 TNTs Per Click", "Set TNTs per click to 500", function()
+    setTNTAmount(500)
+end)
+
+tntSection:NewButton("1000 TNTs Per Click", "Set TNTs per click to 1000", function()
+    setTNTAmount(1000)
+end)
+
+tntSection:NewButton("Reset", "Reset TNTs per click to 1", function()
+    setTNTAmount(1)
+end)
+
+local function fireTNTs()
+    for i = 1, tntPerClick do
+        game:GetService("ReplicatedStorage").Characters.Steve.Remotes.TNT:FireServer()
+    end
+end
+local ScriptTab = Window:NewTab("Scripts")
+local ScriptSection = ScriptTab:NewSection("LancelotScripts")
+
+ScriptSection:NewButton("Omni-Man", "Why did you make me do this?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan?token=GHSAT0AAAAAAC542GMDYD7DTT6CTLWZOVZUZ4VQI7A"))()
+end)
+ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end)
+ScriptSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
+end)
+ScriptSection:NewButton("Hug/Stretch Grab", "WHAAT", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Hug"))()
+	
+end)
+ScriptSection:NewButton("Doctor Strange", "DORMAMMU", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Strange"))()
+	
+end)
+ScriptSection:NewButton("The Reverse", "I'm faster.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
+	
+end)
+game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
+    if key == "c" and keybindsEnabled then
+        fireTNTs()
+    end
+end)
+
+-- UI Tab
+local Tab = Window:NewTab("UI")
+local Section = Tab:NewSection("UI")
+
+Section:NewKeybind("Hide UI", "KeybindInfo", Enum.KeyCode.P, function()
+    Library:ToggleUI()
+end)
