@@ -1,0 +1,67 @@
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.H then
+local radius = 15 -- Set the search radius
+local player = game.Players.LocalPlayer -- Change as needed if this is a server-side Script
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Function to get the nearest player
+local function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = radius
+
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local otherChar = otherPlayer.Character
+            local otherHRP = otherChar.HumanoidRootPart
+
+            local myHRP = character:FindFirstChild("HumanoidRootPart")
+            if myHRP then
+                local distance = (myHRP.Position - otherHRP.Position).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = otherPlayer
+                end
+            end
+        end
+    end
+
+    return closestPlayer, shortestDistance
+end
+
+
+local nearestPlayer = getNearestPlayer()
+local args = {
+
+
+ [1] = workspace:FindFirstChild(nearestPlayer.Name)
+
+
+
+}
+
+
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("MrFantastic"):WaitForChild("Remotes"):WaitForChild("StretchGrab"):FireServer(unpack(args))
+elseif input.KeyCode == Enum.KeyCode.G then
+local args2 = {
+
+
+ [1] = workspace:FindFirstChild("MariusDeSanta")
+
+
+
+}
+
+
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("MrFantastic"):WaitForChild("Remotes"):WaitForChild("StretchGrab"):FireServer(unpack(args2))
+   end
+end)
