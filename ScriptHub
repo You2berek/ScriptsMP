@@ -182,7 +182,7 @@ local ScriptTab = Window:NewTab("Scripts")
 local ScriptSection = ScriptTab:NewSection("LancelotScripts")
 
 ScriptSection:NewButton("Omni-Man", "Why did you make me do this?", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan?token=GHSAT0AAAAAAC542GMDYD7DTT6CTLWZOVZUZ4VQI7A"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
 end)
 ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
