@@ -39,6 +39,8 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
         game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
         wait(1)
         game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer()
+        wait(.1)
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("ReverseFlash").RunStart:FireServer()
     elseif input.KeyCode == Enum.KeyCode.Three then
         local args = {
             [1] = game:GetService("Players").LocalPlayer
