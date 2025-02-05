@@ -26,7 +26,7 @@ Section:NewButton("Amazo", "Turns you into the character", function()
 end)
 Section:NewButton("PibbyOld" , "The god of speed", function()
 fireChangeChar(
- game:GetService("ReplicatedStorage").Skins.Pibby.Old1,
+ game:GetService("ReplicatedStorage").Skins.Pibby.Old,
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
 
 )
