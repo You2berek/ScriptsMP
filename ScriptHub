@@ -24,9 +24,9 @@ Section:NewButton("Amazo", "Turns you into the character", function()
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
-Section:NewButton("ReverseFlash" , "The god of speed", function()
+Section:NewButton("PibbyOld" , "The god of speed", function()
 fireChangeChar(
- game:GetService("ReplicatedStorage").SelectACharacter.ReverseFlash,
+ game:GetService("ReplicatedStorage").Skins.Pibby.Old1,
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
 
 )
