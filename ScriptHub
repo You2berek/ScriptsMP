@@ -155,6 +155,11 @@ end)
 ScriptSection:NewButton("Lance's Troll Menu", "Not patched. YET.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/TrollMenu"))()
 end)
+ScriptSection:NewButton("Black Screen Killer", "Deletes the transition screen that's broken most of the time.", function()
+while task.wait(.05) do
+	game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Transition"):Destroy()
+end
+end)
 CharSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
 end)
