@@ -66,7 +66,20 @@ end
 elseif input.KeyCode == Enum.KeyCode.T then
 	
 game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").Phase:FireServer()
+elseif input.KeyCode == Enum.KeyCode.G then
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+local animCIN = Instance.new("Animation")
 
+
+
+animCIN.AnimationId = "rbxassetid://12175621372"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrackCIN = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animCIN)
+animTrackCIN:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("Bolts"):FireServer(unpack(args))
 elseif input.KeyCode == Enum.KeyCode.Two then
 
 local anim2 = Instance.new("Animation")
