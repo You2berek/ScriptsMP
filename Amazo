@@ -1,0 +1,526 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+local anim = Instance.new("Animation")
+local radius = 150
+local function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = radius
+local character = game.Players.LocalPlayer.Character
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local otherChar = otherPlayer.Character
+            local otherHRP = otherChar.HumanoidRootPart
+
+            local myHRP = character:FindFirstChild("HumanoidRootPart")
+            if myHRP then
+                local distance = (myHRP.Position - otherHRP.Position).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = otherPlayer
+                end
+            end
+        end
+    end
+
+    return closestPlayer, shortestDistance
+end
+
+anim.AnimationId = "rbxassetid://13548087302"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+animTrack:Play()
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").Freeze:FireServer()
+   local nearestPlayer, distance = getNearestPlayer()
+    if nearestPlayer then
+      local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Invincible"):WaitForChild("Remotes"):WaitForChild("ComboPunch"):FireServer(unpack(args))
+task.wait(.05)
+end
+elseif input.KeyCode == Enum.KeyCode.T then
+	
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").Phase:FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+
+local anim2 = Instance.new("Animation")
+local anim = Instance.new("Animation")
+local radius = 5
+local function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = radius
+local character = game.Players.LocalPlayer.Character
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Name ~= game.Players.LocalPlayer.Name   and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local otherChar = otherPlayer.Character
+            local otherHRP = otherChar.HumanoidRootPart
+
+            local myHRP = character:FindFirstChild("HumanoidRootPart")
+            if myHRP then
+                local distance = (myHRP.Position - otherHRP.Position).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = otherPlayer
+                end
+            end
+        end
+    end
+
+    return closestPlayer, shortestDistance
+end
+
+anim2.AnimationId = "rbxassetid://11759352907"
+anim.AnimationId = "rbxassetid://10394846633"
+local plr = game.Players.LocalPlayer
+
+local animTrack2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+animTrack:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer(unpack(args))
+animTrack.Ended:Wait()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan"):FireServer(unpack(args))
+
+
+
+
+
+
+animTrack2:Play()
+-- Variables to manage the forced speed and movement
+local Player = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local character = nil
+local humanoid = nil
+local bodyVelocity = nil
+local rotationSpeed = 2 -- Speed of rotation when pressing A or D
+local lastRemoteTime = 0
+local remoteInterval = 5 -- Time in seconds between remote events
+local isRunning = false -- Flag to control the loop
+
+-- Function to start forcing the player to run involuntarily
+local function startForcedMovement()
+    character = Player.Character or Player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+
+    -- Set WalkSpeed to 100 for the desired running effect
+    humanoid.WalkSpeed = 110
+
+    -- Create a BodyVelocity to enforce constant movement
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000) -- High force to overcome inertia
+    bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Will be updated each frame
+    bodyVelocity.Parent = humanoid.RootPart
+
+    -- Set the isRunning flag to true to start the loop
+    isRunning = true
+
+    -- Update velocity and handle rotation every frame
+    RunService.Heartbeat:Connect(function()
+        if isRunning and humanoid and humanoid.RootPart then
+            -- Update velocity to match the direction the player is facing
+            local moveDirection = humanoid.RootPart.CFrame.LookVector
+            bodyVelocity.Velocity = moveDirection * humanoid.WalkSpeed
+local nearestPlayer, distance = getNearestPlayer()
+    if nearestPlayer then
+      local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("ComboEndRemote"):FireServer(unpack(args))
+
+    else
+        print("No players found within radius.")
+    end
+            -- Fire the remote event every 5 seconds
+            if tick() - lastRemoteTime >= remoteInterval then
+                remote:FireServer()
+                lastRemoteTime = tick()
+            end
+        end
+    end)
+
+    -- Allow rotation using A and D keys
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Enum.KeyCode.A then
+            -- Rotate character slightly to the left
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(-rotationSpeed), 0))
+        elseif input.KeyCode == Enum.KeyCode.D then
+            -- Rotate character slightly to the right
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0))
+        end
+    end)
+end
+
+-- Function to stop forcing the player to run
+local function stopForcedMovement()
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+
+    if humanoid then
+        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
+    end
+
+    -- Set the isRunning flag to false to stop the loop
+    isRunning = false
+end
+
+
+startForcedMovement()
+animTrack2.Ended:Wait()
+stopForcedMovement()
+elseif input.KeyCode == Enum.KeyCode.Three then
+local anim = Instance.new("Animation")
+local anim2 = Instance.new("Animation")
+
+
+anim.AnimationId = "rbxassetid://13042850868"
+anim2.AnimationId = "rbxassetid://9618163760"
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+local animTrack2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+
+animTrack:Play()
+
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").Phase:FireServer()
+animTrack.Ended:Wait()
+
+ local args = {
+                    [1] = game.Players.LocalPlayer.Character
+					
+                }
+
+                -- Fire the RemoteEvent safely
+                local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("MrFantastic")
+:WaitForChild("Remotes"):WaitForChild("StretchPunch")
+remote:FireServer(unpack(args))
+animTrack2:Play()
+game.Players.LocalPlayer.Character:FindFirstChild("RightFist").CanTouch = true
+plr.Character:FindFirstChild("RightFist").Touched:Connect(function(plrTouch)
+-- Ensure `plr` is defined and has a Character property
+local fist = plr.Character:FindFirstChild("RightFist")
+local debouncetime = 5
+local debounce = false
+if fist then
+
+
+    fist.Touched:Connect(function(plrTouch)
+    if debounce == false then
+
+        debounce = true
+        -- Ensure the touched part is valid and has a parent (likely a character)
+        if plrTouch and plrTouch.Parent then
+            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
+            
+            if playerCharacter then
+                -- Define the args for RemoteEvent firing
+                local args = {
+                    [1] = playerCharacter
+                }
+
+                -- Fire the RemoteEvent safely
+               local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("MrFantastic")
+:WaitForChild("Remotes"):WaitForChild("StretchPunchHit")
+remote:FireServer(unpack(args))
+
+                    task.wait(debouncetime)
+                debounce = false
+                else
+                task.wait(debouncetime)
+                debounce = false
+              
+                
+            end
+        end
+    end
+    end)
+end
+end)
+animTrack2.Ended:Wait()
+game.Players.LocalPlayer.Character:FindFirstChild("RightFist").CanTouch = false
+
+elseif input.KeyCode == Enum.KeyCode.Four then
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").SmokeOn:FireServer()
+local anim = Instance.new("Animation")
+local radius = 5 -- Set the search radius
+local player = game.Players.LocalPlayer -- Change as needed if this is a server-side Script
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Function to get the nearest player
+local function getNearestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = radius
+
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local otherChar = otherPlayer.Character
+            local otherHRP = otherChar.HumanoidRootPart
+
+            local myHRP = character:FindFirstChild("HumanoidRootPart")
+            if myHRP then
+                local distance = (myHRP.Position - otherHRP.Position).Magnitude
+                if distance < shortestDistance then
+                    shortestDistance = distance
+                    closestPlayer = otherPlayer
+                end
+            end
+        end
+    end
+
+    return closestPlayer, shortestDistance
+end
+
+
+
+
+anim.AnimationId = "rbxassetid://11693275176"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+animTrack:Play()
+
+-- Variables to manage the forced speed and movement
+local Player = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local character = nil
+local humanoid = nil
+local bodyVelocity = nil
+local rotationSpeed = 2 -- Speed of rotation when pressing A or D
+local lastRemoteTime = 0
+local remoteInterval = 5 -- Time in seconds between remote events
+local isRunning = false -- Flag to control the loop
+
+-- Function to start forcing the player to run involuntarily
+local function startForcedMovement()
+    character = Player.Character or Player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+
+    -- Set WalkSpeed to 100 for the desired running effect
+    humanoid.WalkSpeed = 70
+
+    -- Create a BodyVelocity to enforce constant movement
+    bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000) -- High force to overcome inertia
+    bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Will be updated each frame
+    bodyVelocity.Parent = humanoid.RootPart
+
+    -- Set the isRunning flag to true to start the loop
+    isRunning = true
+
+    -- Update velocity and handle rotation every frame
+    RunService.Heartbeat:Connect(function()
+        if isRunning and humanoid and humanoid.RootPart then
+            -- Update velocity to match the direction the player is facing
+            local moveDirection = humanoid.RootPart.CFrame.LookVector
+            bodyVelocity.Velocity = moveDirection * humanoid.WalkSpeed
+local nearestPlayer, distance = getNearestPlayer()
+    if nearestPlayer then
+      local args = {
+    [1] = workspace:FindFirstChild(nearestPlayer.Name)
+}
+local function stopForcedMovementHit()
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+
+    if humanoid then
+        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
+    end
+
+    -- Set the isRunning flag to false to stop the loop
+    isRunning = false
+end
+stopForcedMovementHit()
+anim.AnimationId = "rbxassetid://11693280948"
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").Better:FireServer()
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+
+
+animTrack:Play()
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").SmokeOff:FireServer()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("ComboEndRemote"):FireServer(unpack(args))
+
+    else
+        print("No players found within radius.")
+    end
+            -- Fire the remote event every 5 seconds
+            if tick() - lastRemoteTime >= remoteInterval then
+                lastRemoteTime = tick()
+            end
+        end
+    end)
+
+    -- Allow rotation using A and D keys
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+
+        if input.KeyCode == Enum.KeyCode.A then
+            -- Rotate character slightly to the left
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(-rotationSpeed), 0))
+        elseif input.KeyCode == Enum.KeyCode.D then
+            -- Rotate character slightly to the right
+            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0))
+        end
+    end)
+end
+
+-- Function to stop forcing the player to run
+local function stopForcedMovement()
+    if bodyVelocity then
+        bodyVelocity:Destroy()
+        bodyVelocity = nil
+    end
+
+    if humanoid then
+        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
+    end
+
+    -- Set the isRunning flag to false to stop the loop
+    isRunning = false
+end
+
+
+startForcedMovement()
+
+animTrack.Ended:Wait()
+stopForcedMovement()
+
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").SmokeOff:FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Homelander"):WaitForChild("Remotes"):WaitForChild("Finisher"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+local args = {
+
+   [1] = game.Players.LocalPlayer
+
+
+}
+
+anim.AnimationId = "rbxassetid://9760917435"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Combat.Remotes.Blocking:FireServer(unpack(args))
+elseif input.KeyCode == Enum.KeyCode.E then
+local anim = Instance.new("Animation")
+
+
+
+anim.AnimationId = "rbxassetid://13548212618"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+game:GetService("Players").LocalPlayer.Character.Amazo.Eyes:FireServer(unpack(args))
+plr.Character:FindFirstChild("Laser").CanTouch = true
+animTrack:Play()
+
+plr.Character:FindFirstChild("Laser").Touched:Connect(function(plrTouch)
+-- Ensure `plr` is defined and has a Character property
+local laser = plr.Character:FindFirstChild("Laser")
+local debouncetime = 5
+local debounce = false
+if laser then
+
+
+    laser.Touched:Connect(function(plrTouch)
+    if debounce == false then
+
+        debounce = true
+        -- Ensure the touched part is valid and has a parent (likely a character)
+        if plrTouch and plrTouch.Parent then
+            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
+            
+            if playerCharacter then
+                -- Define the args for RemoteEvent firing
+                local args = {
+                    [1] = playerCharacter
+                }
+
+                -- Fire the RemoteEvent safely
+               local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("MrFantastic")
+:WaitForChild("Remotes"):WaitForChild("StretchPunchHit")
+remote:FireServer(unpack(args))
+
+                    task.wait(debouncetime)
+                debounce = false
+                else
+                task.wait(debouncetime)
+                debounce = false
+              
+                
+            end
+        end
+    end
+    end)
+end
+end)
+ 
+
+animTrack.Ended:Wait()
+plr.Character:FindFirstChild("Laser").CanTouch = false
+
+   end
+end)
