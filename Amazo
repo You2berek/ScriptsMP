@@ -295,7 +295,71 @@ end
 end)
 animTrack2.Ended:Wait()
 game.Players.LocalPlayer.Character:FindFirstChild("RightFist").CanTouch = false
+elseif input.KeyCode == Enum.KeyCode.P then
 
+local anim2 = Instance.new("Animation")
+
+
+
+anim2.AnimationId = "rbxassetid://9618163760"
+local plr = game:GetService("Players").LocalPlayer
+
+local animTrack2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+ local args = {
+                    [1] = game.Players.LocalPlayer.Character
+					
+                }
+
+                -- Fire the RemoteEvent safely
+                local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("MrFantastic")
+:WaitForChild("Remotes"):WaitForChild("StretchPunch")
+remote:FireServer(unpack(args))
+animTrack2:Play()
+game.Players.LocalPlayer.Character:FindFirstChild("RightFist").CanTouch = true
+plr.Character:FindFirstChild("RightFist").Touched:Connect(function(plrTouch)
+-- Ensure `plr` is defined and has a Character property
+local fist = plr.Character:FindFirstChild("RightFist")
+local debouncetime = 5
+local debounce = false
+if fist then
+
+
+    fist.Touched:Connect(function(plrTouch)
+    if debounce == false then
+
+        debounce = true
+        -- Ensure the touched part is valid and has a parent (likely a character)
+        if plrTouch and plrTouch.Parent then
+            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
+            
+            if playerCharacter then
+                -- Define the args for RemoteEvent firing
+                local args = {
+                    [1] = playerCharacter
+                }
+
+                -- Fire the RemoteEvent safely
+               local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("MrFantastic")
+:WaitForChild("Remotes"):WaitForChild("StretchPunchHit")
+remote:FireServer(unpack(args))
+
+                    task.wait(debouncetime)
+                debounce = false
+                else
+                task.wait(debouncetime)
+                debounce = false
+              
+                
+            end
+        end
+    end
+    end)
+end
+end)
+animTrack2.Ended:Wait()
+game.Players.LocalPlayer.Character:FindFirstChild("RightFist").CanTouch = false
 elseif input.KeyCode == Enum.KeyCode.Four then
 game:GetService("Players").LocalPlayer.Character:FindFirstChild("Amazo").SmokeOn:FireServer()
 local anim = Instance.new("Animation")
