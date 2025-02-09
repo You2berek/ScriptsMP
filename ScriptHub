@@ -38,7 +38,12 @@ Section:NewButton("Wanda", "Turns you into the character", function()
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
-
+Section:NewButton("Rizztrap", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Springbonnie.Skin4,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
 Section:NewButton("Golden Freddy", "Turns you into the character", function()
     fireChangeChar(
         game:GetService("ReplicatedStorage").Characters.Springtrap.Fx.GoldenFred,
@@ -181,6 +186,12 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 end)
 CharSection:NewButton("Pibby", "Now the revamp.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Pibby"))()
+end)
+CharSection:NewButton("Amazo", "The one.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
+end)
+CharSection:NewButton("The Deep", "Real eyes realize real lies", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Deep"))()
 end)
 game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
     if key == "c" and keybindsEnabled then
