@@ -1,0 +1,124 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+
+
+
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.DropKickRem:FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+
+
+
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.ChargeStart:FireServer()
+wait(.3)
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.SlashRelease:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Three then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+
+
+
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Counter:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Four then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://18145886937"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+animTrack:Play()
+
+
+
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.ForcePush:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Five then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+
+
+
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+
+
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://17870386300"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+animTrack:Play()
+
+
+game:GetService("Players").LocalPlayer.Character.ObiWan.Guard:FireServer()
+game:GetService("ReplicatedStorage").Characters.Combat.Remotes.Blocking:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+
+
+
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+wait(50)
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.RageOff:FireServer()
+elseif input.KeyCode == Enum.KeyCode.H then
+local args = {
+
+    [1] = game.Players.LocalPlayer
+
+}
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://18306582524"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+animTrack:Play()
+
+
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.ForceHold:FireServer()	
+
+   end
+end)
