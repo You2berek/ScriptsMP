@@ -1,0 +1,83 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.G then
+
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://10541019171"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+
+
+animTrack:Play()
+game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Radiation2:FireServer()
+
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Three then
+
+elseif input.KeyCode == Enum.KeyCode.J then
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://10541019171"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+
+
+animTrack:Play()
+game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Radiation:FireServer()
+elseif input.KeyCode == Enum.KeyCode.H then
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://10540486043"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+
+
+animTrack:Play()
+game.ReplicatedStorage.Characters.SoldierBoy.Remotes.ShieldPunish:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+
+elseif input.KeyCode == Enum.KeyCode.E then
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://10546385452"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+
+
+animTrack:Play()
+game.Players.LocalPlayer.Character.SoldierBoy.Steam:FireServer()
+   end
+end)
