@@ -183,6 +183,14 @@ local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(
 animTrack:Play()
 game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
 plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
 
 elseif input.KeyCode == Enum.KeyCode.H then
 game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes.QuickChoke:FireServer(plr)
