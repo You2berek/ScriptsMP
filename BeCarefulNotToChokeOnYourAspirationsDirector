@@ -209,7 +209,26 @@ game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Rem
 elseif input.KeyCode == Enum.KeyCode.J then
 local plr = game.Players.LocalPlayer
 game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-	
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
+
 
    end
 end)
