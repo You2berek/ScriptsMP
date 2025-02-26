@@ -46,14 +46,6 @@ if not table.find(tbl_upvr, Parent_9) and Humanoid_3 and Humanoid_3.Health ~= 0 
 table.insert(tbl_upvr, Parent_9)
 
 game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireServer(Parent_9)
-
-game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireServer(Parent_9)
-
-game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireServer(Parent_9)
-
-game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireServer(Parent_9)
-
-game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireServer(Parent_9)
 end
 end)
 
@@ -103,9 +95,6 @@ if saber then
                                 :WaitForChild("Remotes"):WaitForChild("SaberThrowHit")
                 if remote then
                     remote:FireServer(unpack(args))
-  remote:FireServer(unpack(args))
-  remote:FireServer(unpack(args))
-  remote:FireServer(unpack(args))
 
                     task.wait(debouncetime)
                 debounce = false
