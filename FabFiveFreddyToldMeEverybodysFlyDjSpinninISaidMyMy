@@ -23,12 +23,107 @@ local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(
 
 animTrack:Play()
 game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Radiation2:FireServer()
+elseif input.KeyCode == Enum.KeyCode.One then
+local Character_upvr = game.Players.LocalPlayer.Character
+local CombatHitbox_upvr = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+local BodyVelocity_upvr = Instance.new("BodyVelocity")
+local ComboEndRemote_upvr = game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote
+                   	local anim = Instance.new("Animation")
+local animH = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://11955034802"
+animH.AnimationId = "rbxassetid://13185400825"
+local plr = game.Players.LocalPlayer
 
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+local animTrackH = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animH)
+        BodyVelocity_upvr.Parent = Character_upvr.HumanoidRootPart
+        BodyVelocity_upvr.P = 1250
+        BodyVelocity_upvr.MaxForce = Vector3.new(1000000, 0, 1000000)
+        BodyVelocity_upvr.Velocity = Character_upvr.HumanoidRootPart.CFrame.lookVector * 35
+        game.Debris:AddItem(BodyVelocity_upvr, 1.5)
+		local clone_upvr_2 = CombatHitbox_upvr:Clone()
+        clone_upvr_2.Parent = Character_upvr
+        local Weld_5 = Instance.new("Weld", clone_upvr_2)
+        Weld_5.Part0 = clone_upvr_2
+        Weld_5.Part1 = Character_upvr.HumanoidRootPart
+        Weld_5.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+        game.Debris:AddItem(clone_upvr_2, 1.5)
+		animTrack:Play()
+		 clone_upvr_2.Touched:Connect(function(arg1) -- Line 321
+            --[[ Upvalues[8]:
+                [1]: Character_upvr (copied, readonly)
+                [2]: clone_upvr_2 (readonly)
+                [3]: ComboEndRemote_upvr (copied, readonly)
+                [4]: any_LoadAnimation_result1_upvr_12 (copied, readonly)
+                [5]: LocalPlayer_upvr (copied, readonly)
+                [6]: any_LoadAnimation_result1_upvr_4 (copied, readonly)
+                [7]: BodyVelocity_upvr (readonly)
+                [8]: var8_upvw (copied, read and write)
+            ]]
+			local Character_upvr = game.Players.LocalPlayer.Character
+            local Parent_2 = arg1.Parent
+            local Parent = arg1.Parent
+            local Humanoid = Parent_2:FindFirstChild("Humanoid")
+            if Humanoid and Humanoid.Health ~= 0 and (Parent:FindFirstChild("Values").TeamColor.Value ~= Character_upvr:FindFirstChild("Values").TeamColor.Value or Parent:FindFirstChild("Values").TeamColor.Value == game.ReplicatedStorage.FFAColor.Value and Character_upvr:FindFirstChild("Values").TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+                if Parent_2 ~= Character_upvr then
+
+animTrack:Stop()
+animTrackH:Play()
+				    clone_upvr_2:Destroy()
+                    ComboEndRemote_upvr:FireServer(Parent_2)
+                
+                    Character_upvr:FindFirstChild("SoldierBoy").Warn:FireServer(LocalPlayer_upvr)
+                 
+                    BodyVelocity_upvr:Destroy()
+                    Dash(Character_upvr.HumanoidRootPart)
+                    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        FieldOfView = 70;
+                    }):Play()
+            
+                end
+            end
+        end)
+        while 0 < 15 do
+            if BodyVelocity_upvr then
+                wait(0.1)
+                BodyVelocity_upvr.Velocity = Character_upvr.HumanoidRootPart.CFrame.lookVector * 35
+            end
+        end
+elseif input.KeyCode == Enum.KeyCode.Two then
+local SniperShot_upvr = game.ReplicatedStorage.Characters.Vigilante.Remotes.SniperShot
+local plr = game:GetService("Players").LocalPlayer
+local char = plr.Character
+
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://9641653929"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 60;
+        }):Play()
+char:FindFirstChild("SoldierBoy").Slap:FireServer(plr)
+wait(.45)
+animTrack:Play()
+SniperShot_upvr:FireServer(plr)
+    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 80;
+        }):Play()
+		wait(.2)
+		    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 70;
+        }):Play()	
 
 elseif input.KeyCode == Enum.KeyCode.Five then
 game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Finisher:FireServer()
 elseif input.KeyCode == Enum.KeyCode.Three then
-
+game.ReplicatedStorage.Characters.Moonknight.Remotes.SmackDown:FireServer(LocalPlayer_upvr)
 elseif input.KeyCode == Enum.KeyCode.J then
 local anim = Instance.new("Animation")
 
@@ -79,5 +174,34 @@ local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(
 
 animTrack:Play()
 game.Players.LocalPlayer.Character.SoldierBoy.Steam:FireServer()
+elseif input.KeyCode == Enum.KeyCode.K then
+local SniperShot_upvr = game.ReplicatedStorage.Characters.Vigilante.Remotes.SniperShot
+local plr = game:GetService("Players").LocalPlayer
+local char = plr.Character
+
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://9641653929"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 60;
+        }):Play()
+wait(.45)
+animTrack:Play()
+SniperShot_upvr:FireServer(plr)
+    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 80;
+        }):Play()
+		wait(.2)
+		    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 70;
+        }):Play()
    end
 end)
