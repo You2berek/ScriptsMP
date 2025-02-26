@@ -186,7 +186,7 @@ plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
 
 elseif input.KeyCode == Enum.KeyCode.H then
 game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes.QuickChoke:FireServer(plr)
-elseif input.KeyCode == Enum.KeyCode.G then
+elseif input.KeyCode == Enum.KeyCode.J then
 local plr = game.Players.LocalPlayer
 game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
 	
