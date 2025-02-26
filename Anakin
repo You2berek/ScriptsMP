@@ -3,21 +3,42 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
         return 
     end
    
+function RollForwardDash(arg1) -- Line 52
+    local BodyPosition_2 = Instance.new("BodyPosition")
+    BodyPosition_2.MaxForce = Vector3.new(1000000, 0, 1000000)
+    BodyPosition_2.P = 100000
+    BodyPosition_2.D = 3000
+    BodyPosition_2.Position = (arg1.CFrame * CFrame.new(0, 0, -30)).Position
+    BodyPosition_2.Parent = arg1
+    game.Debris:AddItem(BodyPosition_2, 0.7)
+end
 
 
-
-    if input.KeyCode == Enum.KeyCode.One then
+    if input.KeyCode == Enum.KeyCode.H then
 local args = {
 
     [1] = game.Players.LocalPlayer
 
 }
-
-
-
-game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.DropKickRem:FireServer()
+local plr = game.Players.LocalPlayer
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.DropKickRem:FireServer(plr)
 
 elseif input.KeyCode == Enum.KeyCode.Two then
+	local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://94927733300831"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+animTrack:Play()
+RollForwardDash(plr.Character.HumanoidRootPart)
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.FallenAngel:FireServer(plr)
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.FallenAngel:FireServer(plr)
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.FallenAngel:FireServer(plr)
+
+elseif input.KeyCode == Enum.KeyCode.One then
 local args = {
 
     [1] = game.Players.LocalPlayer
@@ -99,9 +120,9 @@ local args = {
 
 
 game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
-wait(50)
+wait(30)
 game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.RageOff:FireServer()
-elseif input.KeyCode == Enum.KeyCode.H then
+elseif input.KeyCode == Enum.KeyCode.G then
 local args = {
 
     [1] = game.Players.LocalPlayer
