@@ -120,6 +120,17 @@ local args = {
 
 
 game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Rage:FireServer()
+
 wait(30)
 game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.RageOff:FireServer()
 elseif input.KeyCode == Enum.KeyCode.G then
