@@ -1,0 +1,176 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+
+local args = {
+
+
+   [1] = game.Players.LocalPlayer
+
+}
+local anim = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://17589528352"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Steve.Remotes.Mine:FireServer(unpack(args))
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+
+local args = {
+
+
+   [1] = 999999999999999999999999999999999999999999999
+
+
+}
+local anim = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://17608841106"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Steve.Remotes.BowShoot:FireServer(unpack(args))
+elseif input.KeyCode == Enum.KeyCode.Four then
+local plr = game:GetService("Players").LocalPlayer
+local char = plr.Character
+
+local anim = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://10321913853"
+
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+local function cartoff(arg)
+animTrack.Ended:Wait()
+	char:FindFirstChild("Steve").CartOff:FireServer(arg)
+end
+
+
+
+animTrack:Play()
+task.spawn(cartoff)
+local Velocity = Instance.new("BodyVelocity")
+Velocity.Parent = char.HumanoidRootPart
+Velocity.P = 1250
+Velocity.MaxForce = Vector3.new(1000000, 0, 1000000)
+Velocity.Velocity = char.HumanoidRootPart.CFrame.lookVector * 35
+game.Debris:AddItem(Velocity, 3)
+ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 85;
+        }):Play()
+char:FindFirstChild("Steve").CartOn:FireServer(plr)
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+local CloneHitbox = Hitbox:Clone()
+CloneHitbox.Parent = char 
+local Weld = Instance.new("Weld", CloneHitbox)
+Weld.Part0 = CloneHitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0,0,3.5) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(CloneHitbox, 3)
+CloneHitbox.Touched:Connect(function(arg1) -- Line 449
+       
+            local Parent_2 = arg1.Parent
+            local Parent = arg1.Parent
+            local Humanoid = Parent_2:FindFirstChild("Humanoid")
+            if Humanoid and Humanoid.Health ~= 0 and (Parent:FindFirstChild("Values").TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Parent:FindFirstChild("Values").TeamColor.Value == game.ReplicatedStorage.FFAColor.Value and char:FindFirstChild("Values").TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+                if Parent_2 ~= char then
+                    CloneHitbox:Destroy()
+                    game:GetService("ReplicatedStorage").Characters.Steve.Remotes.MinecartHit:FireServer(Character_upvr, Parent_2)
+                    animTrack:Stop()
+                    Velocity:Destroy()
+                    char:FindFirstChild("Steve").CartOff:FireServer(plr)
+                    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        FieldOfView = 70;
+                    }):Play()
+            
+        
+                end
+            end
+        end)
+        while 0 < 30 do
+            if Velocity then
+                wait(0.1)
+                Velocity.Velocity = char.HumanoidRootPart.CFrame.lookVector * 35
+            end
+        end
+	
+
+elseif input.KeyCode == Enum.KeyCode.G then
+
+local args = {
+
+
+   [1] = game.Players.LocalPlayer
+
+}
+local anim = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://10330483907"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Steve.Remotes.BlockPlace:FireServer(unpack(args))
+
+
+
+elseif input.KeyCode == Enum.KeyCode.F then
+
+elseif input.KeyCode == Enum.KeyCode.H then
+local args = {
+
+
+   [1] = game.Players.LocalPlayer
+
+}
+local anim = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://10330483907"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Steve.Remotes.TNT:FireServer(unpack(args))
+elseif input.KeyCode == Enum.KeyCode.J then
+    	local args = {
+
+
+   [1] = game.Players.LocalPlayer
+
+}
+local anim = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://10330483907"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Steve.Remotes.FireCounter:FireServer(unpack(args))
+
+
+   end
+end)
