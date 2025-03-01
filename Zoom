@@ -1,0 +1,86 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+
+local plr = game:GetService("Players").LocalPlayer
+local char = plr.Character
+local ToClone = game:GetService("ReplicatedStorage"):FindFirstChild("Characters").Combat.Fx.CombatHitbox
+local CombatHitbox = ToClone:Clone()
+local MoveAnim = Instance.new("Animation")
+MoveAnim.AnimationId = "rbxassetid://14077746975"
+local animPlayer = char:FindFirstChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(MoveAnim)
+CombatHitbox.Parent = char 
+local Weld = Instance.new("Weld", CombatHitbox)
+Weld.Part0 = CombatHitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0,0,3.5) * CFrame.Angles(0,0,0)
+char:FindFirstChild("Zoom").Move1:FireServer(plr)
+game.Debris:AddItem(CombatHitbox, 0.2)
+animPlayer:Play()
+CombatHitbox.Touched:Connect(function(who)
+
+local whoParent1 = who.Parent
+local whoParent2 = who.Parent 
+local Humanoid = whoParent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and (whoParent2:FindFirstChild("Values").TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or whoParent2:FindFirstChild("Values").TeamColor.Value == game:GetService("ReplicatedStorage").FFAColor.Value and char:FindFirstChild("Values").TeamColor.Value == game:GetService("ReplicatedStorage").FFAColor.Value) then
+ if whoParent1 ~= char then
+ local plr = game:GetService("Players").LocalPlayer
+local char = plr.Character
+	 CombatHitbox:Destroy()
+	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
+	 game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
+	 wait(.4)
+	 	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
+	  game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
+	  wait(.3)
+	  	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
+	   game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
+	   wait(.4)
+	   	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
+	   	   game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
+ end
+ end
+end)
+elseif input.KeyCode == Enum.KeyCode.Two then
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+local plr = game.Players.LocalPlayer
+game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.Counter:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Four then
+	local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://9641648166"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.Choke:FireServer(plr)
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+local plr = game.Players.LocalPlayer
+game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+local plr = game.Players.LocalPlayer
+	local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://9760917435"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+animTrack:Play()
+game:GetService("ReplicatedStorage").Characters.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+local plr = game.Players.LocalPlayer
+game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.V9:FireServer(plr)
+   end
+end)
