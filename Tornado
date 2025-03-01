@@ -1,0 +1,243 @@
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local plr = Players.LocalPlayer
+
+-- Function to handle input and character actions
+local function setupCharacter(char)
+    local rootPart = char:WaitForChild("HumanoidRootPart")
+    local humanoid = char:WaitForChild("Humanoid")
+
+    UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+        if gameProcessedEvent then
+            return
+        end
+
+        if input.KeyCode == Enum.KeyCode.V then
+            -- Animation setup
+            local anim1 = Instance.new("Animation")
+            anim1.AnimationId = "rbxassetid://11759352907"
+            local animTrack1 = humanoid:WaitForChild("Animator"):LoadAnimation(anim1)
+
+            local anim2 = Instance.new("Animation")
+            anim2.AnimationId = "rbxassetid://10394846633"
+            local animTrack2 = humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+
+            -- Play the first animation
+            animTrack2:Play()
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer(plr)
+            animTrack2.Ended:Wait()
+
+            -- Play the second animation
+            animTrack1:Play()
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan"):FireServer(plr)
+
+            -- Movement setup
+            local Velocity = Instance.new("BodyVelocity")
+            Velocity.Parent = rootPart
+            Velocity.P = 5500
+            Velocity.MaxForce = Vector3.new(1000000, 0, 1000000) -- Only apply force on X and Z axes
+            Velocity.Velocity = rootPart.CFrame.lookVector * 235 -- Speed set to 235
+            Debris:AddItem(Velocity, 3)
+
+            -- Camera effect
+            TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                FieldOfView = 85
+            }):Play()
+
+            -- Hitbox setup
+            local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+            local CloneHitbox = Hitbox:Clone()
+            CloneHitbox.Parent = char
+            local Weld = Instance.new("Weld", CloneHitbox)
+            Weld.Part0 = CloneHitbox
+            Weld.Part1 = rootPart
+            Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+            Debris:AddItem(CloneHitbox, 3)
+
+            -- Touched event for Hitbox
+            CloneHitbox.Touched:Connect(function(hit)
+                local Parent = hit.Parent
+                local Humanoid = Parent:FindFirstChild("Humanoid")
+                if Humanoid and Humanoid.Health ~= 0 then
+                    local Values = Parent:FindFirstChild("Values")
+                    if Values and (Values.TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+                        game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent)
+                        TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                            FieldOfView = 70
+                        }):Play()
+                    end
+                end
+            end)
+
+            -- Continuously update velocity based on current look vector
+            local connection
+            connection = RunService.Heartbeat:Connect(function()
+                if Velocity and Velocity.Parent then
+                    -- Only apply horizontal velocity (X and Z axes)
+                    local lookVector = rootPart.CFrame.lookVector
+                    Velocity.Velocity = Vector3.new(lookVector.X * 235, 0, lookVector.Z * 235) -- Speed set to 235
+                else
+                    connection:Disconnect() -- Stop updating if Velocity is destroyed
+                end
+            end)
+
+            -- Cleanup after 3 seconds
+            delay(3, function()
+                if connection then
+                    connection:Disconnect()
+                end
+                Velocity:Destroy()
+            end)
+
+        elseif input.KeyCode == Enum.KeyCode.B then
+            -- Animation setup (same as above)
+            local anim1 = Instance.new("Animation")
+            anim1.AnimationId = "rbxassetid://11759352907"
+            local animTrack1 = humanoid:WaitForChild("Animator"):LoadAnimation(anim1)
+
+            local anim2 = Instance.new("Animation")
+            anim2.AnimationId = "rbxassetid://10394846633"
+            local animTrack2 = humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+
+            -- Play the first animation
+            animTrack2:Play()
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer(plr)
+            animTrack2.Ended:Wait()
+
+            -- Play the second animation
+            animTrack1:Play()
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan"):FireServer(plr)
+
+            -- Movement setup (faster speed)
+            local Velocity = Instance.new("BodyVelocity")
+            Velocity.Parent = rootPart
+            Velocity.P = 5500
+            Velocity.MaxForce = Vector3.new(1000000, 0, 1000000) -- Only apply force on X and Z axes
+            Velocity.Velocity = rootPart.CFrame.lookVector * 500 -- Speed set to 500
+            Debris:AddItem(Velocity, 3)
+
+            -- Camera effect
+            TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                FieldOfView = 85
+            }):Play()
+
+            -- Hitbox setup
+            local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+            local CloneHitbox = Hitbox:Clone()
+            CloneHitbox.Parent = char
+            local Weld = Instance.new("Weld", CloneHitbox)
+            Weld.Part0 = CloneHitbox
+            Weld.Part1 = rootPart
+            Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+            Debris:AddItem(CloneHitbox, 3)
+
+            -- Touched event for Hitbox
+            CloneHitbox.Touched:Connect(function(hit)
+                local Parent = hit.Parent
+                local Humanoid = Parent:FindFirstChild("Humanoid")
+                if Humanoid and Humanoid.Health ~= 0 then
+                    local Values = Parent:FindFirstChild("Values")
+                    if Values and (Values.TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+                        game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent)
+                        TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                            FieldOfView = 70
+                        }):Play()
+                    end
+                end
+            end)
+
+            -- Continuously update velocity based on current look vector
+            local connection
+            connection = RunService.Heartbeat:Connect(function()
+                if Velocity and Velocity.Parent then
+                    -- Only apply horizontal velocity (X and Z axes)
+                    local lookVector = rootPart.CFrame.lookVector
+                    Velocity.Velocity = Vector3.new(lookVector.X * 500, 0, lookVector.Z * 500) -- Speed set to 500
+                else
+                    connection:Disconnect() -- Stop updating if Velocity is destroyed
+                end
+            end)
+
+            -- Cleanup after 3 seconds
+            delay(3, function()
+                if connection then
+                    connection:Disconnect()
+                end
+                Velocity:Destroy()
+            end)
+
+        elseif input.KeyCode == Enum.KeyCode.N then
+            -- Tornado animation setup
+            local tornadoAnim = Instance.new("Animation")
+            tornadoAnim.AnimationId = "rbxassetid://10452685011" -- Replace with your tornado animation ID
+            local tornadoTrack = humanoid:WaitForChild("Animator"):LoadAnimation(tornadoAnim)
+            tornadoTrack:Play()
+
+            -- Fire the FastestMan remote to create a lightning trail
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan"):FireServer(plr)
+
+            -- Create a large hitbox for instakill
+            local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+            local CloneHitbox = Hitbox:Clone()
+            CloneHitbox.Parent = char
+            CloneHitbox.Size = Vector3.new(18, 18, 18) -- Large hitbox size
+            local Weld = Instance.new("Weld", CloneHitbox)
+            Weld.Part0 = CloneHitbox
+            Weld.Part1 = rootPart
+            Weld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+            Debris:AddItem(CloneHitbox, 3) -- Destroy hitbox after 3 seconds
+
+            -- Instakill anyone inside the hitbox
+            CloneHitbox.Touched:Connect(function(hit)
+                local Parent = hit.Parent
+                local Humanoid = Parent:FindFirstChild("Humanoid")
+                if Humanoid and Humanoid.Health ~= 0 then
+                    local Values = Parent:FindFirstChild("Values")
+                    if Values and (Values.TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+                        game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent) -- Instakill
+                    end
+                end
+            end)
+
+            -- Cleanup after 3 seconds
+            delay(3, function()
+                tornadoTrack:Stop() -- Stop the tornado animation
+            end)
+       
+      elseif input.KeyCode == Enum.KeyCode.M then
+        -- Tornado animation setup
+        local tornadoAnim = Instance.new("Animation")
+        tornadoAnim.AnimationId = "rbxassetid://10452685011" -- Replace with your tornado animation ID
+        local tornadoTrack = humanoid:WaitForChild("Animator"):LoadAnimation(tornadoAnim)
+        tornadoTrack:Play()
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan"):FireServer(plr)
+	      wait(2.7)
+		      local args = {
+            [1] =  game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position
+        }
+
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args))
+			 elseif input.KeyCode == Enum.KeyCode.C then
+        -- Tornado animation setup
+        local tornadoAnim = Instance.new("Animation")
+        tornadoAnim.AnimationId = "rbxassetid://10452685011" -- Replace with your tornado animation ID
+        local tornadoTrack = humanoid:WaitForChild("Animator"):LoadAnimation(tornadoAnim)
+        tornadoTrack:Play()
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan"):FireServer(plr)
+	     
+      
+	 end
+	end)
+end
+
+-- Initialize for the current character
+if plr.Character then
+    setupCharacter(plr.Character)
+end
+
+-- Reinitialize when the character respawns
+plr.CharacterAdded:Connect(setupCharacter)
