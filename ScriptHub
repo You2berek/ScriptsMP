@@ -34,7 +34,7 @@ end)
 
 Section:NewButton("Wanda", "Turns you into the character", function()
     fireChangeChar(
-        game:GetService("ReplicatedStorage").Skins.Wanda.Skin1,
+        game:GetService("ReplicatedStorage").Skins.Wanda.OldSkin1,
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
