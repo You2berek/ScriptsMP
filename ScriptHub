@@ -192,20 +192,29 @@ local Misc = CharTab:NewSection("Misc")
 IBSection:NewButton("Omni-Man", "Why did you make me do this?", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
 end)
+
+IBSection:NewButton("Invincible", "And if you still think you can stop us.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Invincible"))()
+end)
+
 ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
+
 ScriptSection:NewButton("Lance's Troll Menu", "Not patched. YET.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/TrollMenu"))()
 end)
+
 ScriptSection:NewButton("Black Screen Killer", "Deletes the transition screen that's broken most of the time.", function()
 while task.wait(.05) do
 	game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Transition"):Destroy()
 end
 end)
+
 TBSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
 end)
+
 ScriptSection:NewButton("Hug/Stretch Grab", "WHAAT", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Hug"))()
 	
@@ -222,33 +231,43 @@ SpeedSection:NewButton("Sportacus", "I ran as fast as i can", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Sportacus"))()
 
 end)
+
 Misc:NewButton("Pibby", "Now the revamp.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Pibby"))()
 end)
+
 SpeedSection:NewButton("Amazo", "The one.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
 end)
+
 TBSection:NewButton("The Deep", "Real eyes realize real lies", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Deep"))()
 end)
+
 SWSection:NewButton("Anakin", "You turned her against me.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Anakin"))()
 end)
+
 TBSection:NewButton("Soldier Boy", "Fab Five Freddy told me everybody's fly DJ spinnin' and I said my, my.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FabFiveFreddyToldMeEverybodysFlyDjSpinninISaidMyMy"))()
 end)
+
 SWSection:NewButton("Darth Vader", "I find your lack of faith disturbing.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/BeCarefulNotToChokeOnYourAspirationsDirector"))()
 end)
+
 Misc:NewButton("Father", "I yearned for the mines.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Father"))()
 end)
+
 SpeedSection:NewButton("Zoom", "You can't lock up the darkness.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
 end)
+
 SpeedSection:NewButton("Tornado+SuperSpeed", "Roberto.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tornado"))()
 end)
+
 game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
     if key == "c" and keybindsEnabled then
         fireTNTs()
