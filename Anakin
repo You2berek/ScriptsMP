@@ -12,7 +12,7 @@ function RollForwardDash(arg1) -- Line 52
     BodyPosition_2.Parent = arg1
     game.Debris:AddItem(BodyPosition_2, 0.7)
 end
-
+-- call
 
     if input.KeyCode == Enum.KeyCode.H then
 local args = {
