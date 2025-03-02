@@ -187,10 +187,15 @@ local MCUSection = CharTab:NewSection("Marvel Cinematic Universe")
 local SWSection = CharTab:NewSection("Star Wars")
 local TBSection = CharTab:NewSection("The Boys")
 local IBSection = CharTab:NewSection("Invincible")
+local DCSection = CharTab:NewSection("DC")
 local Misc = CharTab:NewSection("Misc")
 
 IBSection:NewButton("Omni-Man", "Why did you make me do this?", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
+end)
+
+DCSection:NewButton("The Batman", "Do you bleed?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Batman"))()
 end)
 
 IBSection:NewButton("Invincible", "And if you still think you can stop us.", function()
