@@ -157,5 +157,8 @@ elseif input.KeyCode == Enum.KeyCode.E then
 Emove()
 elseif input.KeyCode == Enum.KeyCode.H then
 	Batmobile()
+elseif input.KeyCode == Enum.KeyCode.G then
+local plr = game.Players.LocalPlayer
+game:GetService("ReplicatedStorage").Characters.Wanda.Remotes.Torture:FireServer(plr)
    end
 end)
