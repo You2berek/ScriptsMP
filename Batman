@@ -1,0 +1,161 @@
+-- Wait for the player's character to load
+local LocalPlayer = game.Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+
+-- Wait for the Animations folder
+local Animations = Character.TheBatman:WaitForChild("Animations")
+
+-- Load animations
+local GrabAnim = Humanoid:LoadAnimation(Animations:WaitForChild("Grab"))
+local ChestSliceAnim = Humanoid:LoadAnimation(Animations:WaitForChild("ChestSlice"))
+local MiniExplosiveAnim = Humanoid:LoadAnimation(Animations:WaitForChild("MiniExplosive"))
+local GrappleUpAnim = Humanoid:LoadAnimation(Animations:WaitForChild("GrappleUp"))
+local AdShotAnim = Humanoid:LoadAnimation(Animations:WaitForChild("AdShot")) -- Adrenaline Shot animation
+local ItemGrabAnim = Humanoid:LoadAnimation(Animations:WaitForChild("ItemGrab")) -- Item Grab animation
+
+-- Wait for Remotes
+local Remotes = game.ReplicatedStorage:WaitForChild("Characters"):WaitForChild("TheBatman"):WaitForChild("Remotes")
+local MoveOneRemote = Remotes:WaitForChild("MoveOne")
+local ChestSliceRemote = Remotes:WaitForChild("ChestSlice")
+local MiniExplosiveRemote = Remotes:WaitForChild("MiniExplosive")
+local GrappleUpRemote = Remotes:WaitForChild("GrappleUp")
+local VengeanceComboRemote = Remotes:WaitForChild("VengeanceCombo")
+local CounterRemote = Remotes:WaitForChild("Counter")
+local BatMobileRemote = Remotes:WaitForChild("BatMobile")
+local AdShotRemote = Remotes:WaitForChild("AdShotRemote") -- Adrenaline Shot remote -- Item Reset remote
+
+-- Item Switching
+local ItemFolder = Character:WaitForChild("ItemFolder")
+ItemFolder:WaitForChild("StickyBomb").Value = true -- Default item
+
+-- Function to handle Move One (Electric Grab or Batmobile)
+function MoveOne()
+    -- Check if the Batmobile should be activated
+    local shouldSummonBatmobile = false
+    for _, v in pairs(game.Workspace:GetChildren()) do
+        if v:IsA("Model") and v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") then
+            if v ~= Character and not v:FindFirstChild("Iframe") and v.Humanoid.Health <= 21 then
+                if (Character.FakeUpperTorso.Position - v.HumanoidRootPart.Position).magnitude <= 25 then
+                    shouldSummonBatmobile = true
+                    break
+                end
+            end
+        end
+    end
+
+    if shouldSummonBatmobile then
+        print("Move One: Batmobile Activated")
+        BatMobileRemote:FireServer(LocalPlayer)
+    else
+        print("Move One: Electric Grab")
+        GrabAnim:Play()
+        MoveOneRemote:FireServer(LocalPlayer)
+    end
+end
+
+-- Function to handle Move Two (Bat Blade)
+function MoveTwo()
+    print("Move Two: Bat Blade")
+    ChestSliceAnim:Play()
+    ChestSliceRemote:FireServer()
+    Character.TheBatman:WaitForChild("Chest"):FireServer()
+end
+
+-- Function to handle Move Three (Brutal Counter)
+function MoveThree()
+    print("Move Three: Brutal Counter")
+    Character.TheBatman:WaitForChild("CounterActivate"):FireServer(LocalPlayer)
+    Character:WaitForChild("HumanoidRootPart").RootRigAttachment.Shockwave:Emit(1)
+    Character.TheBatman:WaitForChild("Bass"):Play()
+    CounterRemote:FireServer(LocalPlayer)
+end
+
+-- Function to handle Move Four (Sticky Bomb / Grappling Hook / Adrenaline Shot)
+function MoveFour()
+    if ItemFolder:WaitForChild("StickyBomb").Value then
+        print("Move Four: Sticky Bomb")
+        MiniExplosiveAnim:Play()
+        MiniExplosiveRemote:FireServer(LocalPlayer)
+    elseif ItemFolder:WaitForChild("GrappleHook").Value then
+        print("Move Four: Grappling Hook")
+        GrappleUpAnim:Play()
+        GrappleUpRemote:FireServer(LocalPlayer)
+    elseif ItemFolder:WaitForChild("AdShot").Value then
+        print("Move Four: Adrenaline Shot")
+        AdShotAnim:Play()
+        AdShotRemote:FireServer(LocalPlayer)
+    else
+        warn("No valid item selected for Move Four!")
+    end
+end
+
+-- Function to handle Move Five (Vengeance Finisher)
+function MoveFive()
+    print("Move Five: Vengeance Finisher")
+    VengeanceComboRemote:FireServer()
+    GrabAnim:Play()
+    Character.TheBatman:WaitForChild("Swing"):Play()
+end
+function Batmobile()
+    print("Batmobile Activated")
+    BatMobileRemote:FireServer(LocalPlayer)
+end
+-- Function to handle Item Switch (E Key)
+function Emove()
+    print("Switching Item")
+    ItemResetRemote:FireServer(LocalPlayer) -- Fire Item Reset remote
+    ItemGrabAnim:Play() -- Play Item Grab animation
+
+    -- Get the current active item
+    local currentItem
+    for _, item in pairs(ItemFolder:GetChildren()) do
+        if item:IsA("BoolValue") and item.Value == true then
+            currentItem = item
+            break
+        end
+    end
+
+    -- Cycle to the next item
+    if currentItem then
+        currentItem.Value = false -- Disable the current item
+        if currentItem.Name == "AdShot" then
+            ItemFolder.GrappleHook.Value = true
+            print("Switched to Grappling Hook")
+        elseif currentItem.Name == "GrappleHook" then
+            ItemFolder.StickyBomb.Value = true
+            print("Switched to Sticky Bomb")
+        elseif currentItem.Name == "StickyBomb" then
+            ItemFolder.AdShot.Value = true
+            print("Switched to Adrenaline Shot")
+        end
+    else
+        warn("No valid item found for switching!")
+    end
+end
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+MoveOne()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+MoveTwo()
+elseif input.KeyCode == Enum.KeyCode.Three then
+MoveThree()
+elseif input.KeyCode == Enum.KeyCode.Four then
+MoveFour()
+elseif input.KeyCode == Enum.KeyCode.Five then
+MoveFive()
+
+elseif input.KeyCode == Enum.KeyCode.E then
+Emove()
+elseif input.KeyCode == Enum.KeyCode.H then
+	Batmobile()
+   end
+end)
