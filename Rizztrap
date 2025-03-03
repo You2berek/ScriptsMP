@@ -1,0 +1,175 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local animations = character.SpringBonnie.Animations
+
+-- Remotes
+local StabBellyRemote = ReplicatedStorage.Characters.Springbonnie.Remotes.StabBelly
+local HeavyKickRemote = ReplicatedStorage.Characters.Springbonnie.Remotes.HeavyKickRem
+local KickHitRemote = ReplicatedStorage.Characters.Springbonnie.Remotes.KickHit
+local AssistRemote = ReplicatedStorage.Characters.Springbonnie.Remotes.Assist
+local FinisherRemote = ReplicatedStorage.Characters.Ghostface.Remotes.Finisher
+local RevealRemote = ReplicatedStorage.Characters.Ghostface.Remotes.Reveal
+local BlockingRemote = ReplicatedStorage.Characters.Combat.Remotes.Blocking
+local HitboxPunch = ReplicatedStorage.Characters.Combat.Peacemaker.HitboxPunch
+local LocalKickRemote = character.SpringBonnie.Kick
+-- Animations
+local StabBellyAnim = humanoid:LoadAnimation(animations.Pierce)
+local HeavyKickAnim = humanoid:LoadAnimation(animations.HeavyKick)
+local GrabAnim = humanoid:LoadAnimation(animations.Grab)
+local CounterAnim = humanoid:LoadAnimation(animations.Counter) -- Add this animation for Move 3
+
+-- Dash Function (Thrust Forward)
+function DashForward2(rootPart)
+    local BodyPosition = Instance.new("BodyPosition")
+    BodyPosition.MaxForce = Vector3.new(1000000, 0, 1000000)
+    BodyPosition.P = 100000
+    BodyPosition.D = 3000
+    BodyPosition.Position = (rootPart.CFrame * CFrame.new(0, 0, -20)).Position
+    BodyPosition.Parent = rootPart
+    game.Debris:AddItem(BodyPosition, 0.5)
+end
+
+-- Move One: Symmetry Thrust
+function MoveOne()
+    StabBellyAnim:Play()
+    StabBellyRemote:FireServer(player)
+    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.25), {FieldOfView = 50}):Play()
+    wait(0.25)
+    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.25), {FieldOfView = 90}):Play()
+end
+
+-- Move Two: Spring Strike (No Cooldown)
+function MoveTwo()
+    -- Play Heavy Kick Animation
+    HeavyKickAnim:Play()
+LocalKickRemote:FireServer(player)
+    -- Fire Heavy Kick Remote
+    HeavyKickRemote:FireServer(player)
+
+    -- Thrust Forward
+    DashForward2(character.HumanoidRootPart)
+
+    -- Create Hitbox for Heavy Kick
+    local hitbox = HitboxPunch:Clone()
+    hitbox.Parent = character
+    local weld = Instance.new("Weld")
+    weld.Part0 = hitbox
+    weld.Part1 = character.Head
+    weld.C0 = CFrame.new(0, 0, 0)
+    weld.Parent = hitbox
+
+    -- Handle Touched Event
+    local hitTargets = {}
+    hitbox.Touched:Connect(function(hit)
+        local target = hit.Parent
+        if target:FindFirstChild("Humanoid") and target ~= character and not hitTargets[target] then
+            hitTargets[target] = true
+            KickHitRemote:FireServer(target)
+        end
+    end)
+
+    -- Cleanup Hitbox
+    game.Debris:AddItem(hitbox, 0.2)
+
+    -- Camera Effects
+    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+        FieldOfView = 45
+    }):Play()
+    wait(0.4)
+    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+        FieldOfView = 80
+    }):Play()
+    wait(0.2)
+    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+        FieldOfView = 70
+    }):Play()
+end
+
+-- Move Three: Cupcake Counter
+function MoveThree()
+    CounterAnim:Play() -- Play the Counter animation
+    ReplicatedStorage.Characters.Springbonnie.Remotes.Cupcake:FireServer(player)
+end
+
+-- Move Four: Ghost Children
+function MoveFour()
+    AssistRemote:FireServer()
+    GrabAnim:Play()
+end
+
+-- Move Five: Finisher
+function MoveFive()
+    FinisherRemote:FireServer()
+end
+
+-- Move E: Afton's Embrace
+function MoveE()
+    RevealRemote:FireServer(player)
+
+    -- Cutscene for Move E
+    local blackLines = ReplicatedStorage.Characters.Moonknight.Other.BlackLines:Clone()
+    blackLines.Parent = player.PlayerGui
+
+    -- Tween black lines into view
+    blackLines.BlackLineUp:TweenPosition(UDim2.new(0, 0, 0, 0))
+    blackLines.BlackLineDown:TweenPosition(UDim2.new(0, 0, 0.849, 0))
+
+    -- Disable UI and lock camera
+    player.PlayerGui.CharacterGui.Enabled = false
+    player.PlayerGui["UI thing"].Enabled = false
+    player.PlayerGui.Vig.Enabled = false
+    game.Workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+    game.Workspace.CurrentCamera.CameraSubject = character.CamCutscene
+    game.Workspace.CurrentCamera.CFrame = character.CamCutscene.CFrame
+
+    -- Wait for cutscene duration
+    wait(2.6)
+
+    -- Tween black lines out of view
+    blackLines.BlackLineUp:TweenPosition(UDim2.new(0, 0, -0.2, 0))
+    blackLines.BlackLineDown:TweenPosition(UDim2.new(0, 0, 1, 0))
+
+    -- Re-enable UI and reset camera
+    player.PlayerGui.CharacterGui.Enabled = true
+    player.PlayerGui["UI thing"].Enabled = true
+    player.PlayerGui.Vig.Enabled = true
+    game.Workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+    game.Workspace.CurrentCamera.CameraSubject = character.Humanoid
+
+    -- Cleanup
+    blackLines:Destroy()
+end
+
+-- Guard Function
+function Guard()
+    BlockingRemote:FireServer(player)
+end
+
+-- Input Handling
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return
+    end
+
+    if input.KeyCode == Enum.KeyCode.One then
+        MoveOne()
+    elseif input.KeyCode == Enum.KeyCode.Two then
+        MoveTwo()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+        MoveThree()
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        MoveFour()
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        MoveFive()
+    elseif input.KeyCode == Enum.KeyCode.F then
+        Guard()
+    elseif input.KeyCode == Enum.KeyCode.E then
+        MoveE()
+    end
+end)
