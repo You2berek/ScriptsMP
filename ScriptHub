@@ -272,10 +272,7 @@ end)
 SpeedSection:NewButton("Tornado+SuperSpeed", "Roberto.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tornado"))()
 end)
-local combos = 1
-ScriptSection:NewSlider("ComboEndRemote", "Choose Amount", 50, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
-    combos = s
-end)
+
 local Players = game:GetService("Players")
 local players = {}
 
@@ -287,14 +284,14 @@ local function refreshPlayerList()
 end
 
 refreshPlayerList() -- Initial population of the player list
-
+local OddSection = ScriptTab:NewSection("Odd Section")
 local playerDropdown -- Variable to hold the dropdown
-
+Select = nil
 local function updateDropdown()
     if playerDropdown then
         playerDropdown:Refresh(players)
     else
-        playerDropdown = ScriptSection:NewDropdown("Select Player", "Select a player to target", players, function(abc)
+        playerDropdown = OddSection:NewDropdown("Select Player", "Select a player to target", players, function(abc)
             Select = abc
         end)
     end
@@ -302,14 +299,18 @@ end
 
 updateDropdown()
 
-ScriptSection:NewButton("Refresh", "Refresh player list", function()
+OddSection:NewButton("Refresh", "Refresh player list", function()
     refreshPlayerList()
     updateDropdown()
 end)
-ScriptSection:NewButton("Fire ComboEndRemote", "Death.", function()
+local combos = 1
+OddSection:NewSlider("ComboEndRemote", "Choose Amount", 50, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    combos = s
+end)
+OddSection:NewButton("Fire ComboEndRemote", "Death.", function()
 -- Define the players and action arguments
 local players = game:GetService("Players") -- Get all players in the game
-local actionArgument = workspace:FindFirstChild(playertofireon)  -- The action you want to perform (e.g., "fire")
+local actionArgument = workspace:FindFirstChild(Select)  -- The action you want to perform (e.g., "fire")
 local rem = game:GetService("ReplicatedStorage").Characters.Combat.Remotes.ComboEndRemote
 
 for i = 1, combos do  -- This will loop 10 times
