@@ -307,15 +307,12 @@ local combos = 1
 OddSection:NewSlider("Remote", "Choose Amount", 50, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
     combos = s
 end)
-local path = nil
-OddSection:NewTextBox("RemotePath", "Path for the remote", function(txt)
-	path = txt
-end)
-OddSection:NewButton("Fire Remote", "Death.", function()
+
+OddSection:NewButton("Fire ComboEndRemote", "Death.", function()
 -- Define the players and action arguments
 local players = game:GetService("Players") -- Get all players in the game
 local actionArgument = workspace:FindFirstChild(Select)  -- The action you want to perform (e.g., "fire")
-local rem = path
+local rem = game:GetService("ReplicatedStorage").Characters.Combat.Remotes.ComboEndRemote
 
 for i = 1, combos do  -- This will loop 10 times
     rem:FireServer(actionArgument)
@@ -323,6 +320,29 @@ for i = 1, combos do  -- This will loop 10 times
 end
 end)
 
+OddSection:NewButton("Fire ComboRemote", "Death.", function()
+-- Define the players and action arguments
+local players = game:GetService("Players") -- Get all players in the game
+local actionArgument = workspace:FindFirstChild(Select)  -- The action you want to perform (e.g., "fire")
+local rem2 = game:GetService("ReplicatedStorage").Characters.Combat.Remotes.Combo
+
+for i = 1, combos do  -- This will loop 10 times
+    rem2:FireServer(actionArgument)
+    wait(0.1)  -- Wait for 0.1 seconds before the next iteration
+end
+end)
+
+OddSection:NewButton("Fire ComboWeakRemote", "Death.", function()
+-- Define the players and action arguments
+local players = game:GetService("Players") -- Get all players in the game
+local actionArgument = workspace:FindFirstChild(Select)  -- The action you want to perform (e.g., "fire")
+local rem3 = game:GetService("ReplicatedStorage").Characters.Combat.Remotes.ComboWeak
+
+for i = 1, combos do  -- This will loop 10 times
+    rem3:FireServer(actionArgument)
+    wait(0.1)  -- Wait for 0.1 seconds before the next iteration
+end
+end)
 game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
     if key == "c" and keybindsEnabled then
         fireTNTs()
