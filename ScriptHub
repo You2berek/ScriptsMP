@@ -276,7 +276,9 @@ local combos = 1
 ScriptSection:NewSlider("ComboEndRemote", "Choose Amount", 50, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
     combos = s
 end)
+local Players = game:GetService("Players")
 local players = {}
+
 local function refreshPlayerList()
     players = {}
     for _, v in pairs(Players:GetPlayers()) do
