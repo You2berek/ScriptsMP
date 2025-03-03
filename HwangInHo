@@ -1,0 +1,86 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+
+    local plr = game:GetService("Players").LocalPlayer
+    local char = plr.Character
+    local charScript = plr.Character:WaitForChild("FrontMan")
+    local Repl = game:GetService("ReplicatedStorage")
+
+    if input.KeyCode == Enum.KeyCode.One then
+        local Shove = Instance.new("Animation")
+        Shove.AnimationId = "rbxassetid://16763289060"
+        local ShAn = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(Shove)
+        ShAn:Play()
+        Repl:FindFirstChild("Characters"):WaitForChild("FrontMan").Remotes.Shove:FireServer(plr)
+
+    elseif input.KeyCode == Enum.KeyCode.Two then
+        local STAn = Instance.new("Animation")
+        STAn.AnimationId = "rbxassetid://114955664997329"
+        local SpinningTopAnim = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(STAn)
+        charScript:WaitForChild("SpinnerStart"):FireServer(plr)
+        wait(.1)
+        charScript:WaitForChild("SpinnerThrow"):FireServer(plr)
+        SpinningTopAnim:Play()
+        Repl:FindFirstChild("Characters"):WaitForChild("FrontMan").Remotes.Spinner:FireServer(plr)
+
+    elseif input.KeyCode == Enum.KeyCode.Three then
+        Repl:FindFirstChild("Characters"):WaitForChild("FrontMan").Remotes.MealTime:FireServer(plr)
+
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        Repl:FindFirstChild("Characters"):WaitForChild("FrontMan").Remotes.Mp5:FireServer(plr)
+
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        Repl:FindFirstChild("Characters"):WaitForChild("FrontMan").Remotes.Finisher:FireServer(plr)
+
+    elseif input.KeyCode == Enum.KeyCode.F then
+        local BlockingA = Instance.new("Animation")
+        BlockingA.AnimationId = "rbxassetid://9760917435"
+        local BlAnim = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(BlockingA)
+        BlAnim:Play()
+        Repl:FindFirstChild("Characters"):WaitForChild("Combat").Remotes.Blocking:FireServer(plr)
+
+    elseif input.KeyCode == Enum.KeyCode.E then
+        -- Fire the remote event
+        Repl:FindFirstChild("Characters"):WaitForChild("FrontMan").Remotes.LightsOut:FireServer(plr)
+
+        -- Get the root part and humanoid
+        local rootPart = char:WaitForChild("HumanoidRootPart")
+        local humanoid = char:WaitForChild("Humanoid")
+
+        -- Create a BodyVelocity object to move the character
+        local Velocity = Instance.new("BodyVelocity")
+        Velocity.Parent = rootPart
+        Velocity.P = 5500
+        Velocity.MaxForce = Vector3.new(1000000, 0, 1000000) -- Only apply force on X and Z axes
+        Velocity.Velocity = rootPart.CFrame.lookVector * 100 -- Speed set to 100
+
+        -- Camera effect
+        local TweenService = game:GetService("TweenService")
+        TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+            FieldOfView = 85
+        }):Play()
+
+        -- Continuously update velocity based on current look vector
+        local RunService = game:GetService("RunService")
+        local connection
+        connection = RunService.Heartbeat:Connect(function()
+            if Velocity and Velocity.Parent then
+                -- Only apply horizontal velocity (X and Z axes)
+                local lookVector = rootPart.CFrame.lookVector
+                Velocity.Velocity = Vector3.new(lookVector.X * 100, 0, lookVector.Z * 100) -- Speed set to 100
+            else
+                connection:Disconnect() -- Stop updating if Velocity is destroyed
+            end
+        end)
+
+        -- Cleanup after 3 seconds
+        delay(3, function()
+            if connection then
+                connection:Disconnect()
+            end
+            Velocity:Destroy()
+        end)
+    end
+end)
