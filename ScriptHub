@@ -272,6 +272,22 @@ end)
 SpeedSection:NewButton("Tornado+SuperSpeed", "Roberto.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tornado"))()
 end)
+local combos = 1
+ScriptSection:NewSlider("ComboEndRemote", "Choose Amount", 50, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    combos = s
+end)
+
+ScriptSection:NewButton("Fire ComboEndRemote", "Death.", function()
+-- Define the players and action arguments
+local players = game:GetService("Players") -- Get all players in the game
+local actionArgument = workspace:FindFirstChild(playertofireon)  -- The action you want to perform (e.g., "fire")
+local rem = game:GetService("ReplicatedStorage").Characters.Combat.Remotes.ComboEndRemote
+
+for i = 1, 1 do  -- This will loop 10 times
+    rem:FireServer(actionArgument)
+    wait(0.1)  -- Wait for 0.1 seconds before the next iteration
+end
+end)
 
 game.Players.LocalPlayer:GetMouse().KeyDown:Connect(function(key)
     if key == "c" and keybindsEnabled then
