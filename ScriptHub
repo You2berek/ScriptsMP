@@ -304,14 +304,18 @@ OddSection:NewButton("Refresh", "Refresh player list", function()
     updateDropdown()
 end)
 local combos = 1
-OddSection:NewSlider("ComboEndRemote", "Choose Amount", 50, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
+OddSection:NewSlider("Remote", "Choose Amount", 50, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
     combos = s
 end)
-OddSection:NewButton("Fire ComboEndRemote", "Death.", function()
+local path = nil
+OddSection:NewTextBox("RemotePath", "Path for the remote", function(txt)
+	path = txt
+end)
+OddSection:NewButton("Fire Remote", "Death.", function()
 -- Define the players and action arguments
 local players = game:GetService("Players") -- Get all players in the game
 local actionArgument = workspace:FindFirstChild(Select)  -- The action you want to perform (e.g., "fire")
-local rem = game:GetService("ReplicatedStorage").Characters.Combat.Remotes.ComboEndRemote
+local rem = path
 
 for i = 1, combos do  -- This will loop 10 times
     rem:FireServer(actionArgument)
