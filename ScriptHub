@@ -275,7 +275,10 @@ end)
 
 local Dune = CharTab:NewSection("Dune")
 
+Dune:NewButton("Paul Muad'dib Atreides", "Give me the water.", function()
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Atreides"))()
+end)
 
 local MCraft = CharTab:NewSection("Minecraft")
 
