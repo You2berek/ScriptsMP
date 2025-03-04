@@ -1,5 +1,16 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Bhteaser-TheBayHarborButcher Personal", "Ocean")
+local colors = {
+    SchemeColor = Color3.fromRGB(120, 59, 142 ),
+    Background = Color3.fromRGB(82, 22, 103),
+    Header = Color3.fromRGB(60, 9, 89),
+    TextColor = Color3.fromRGB(229, 172, 172 ),
+    ElementColor = Color3.fromRGB(79, 9, 89)
+}
+
+
+
+
+local Window = Library.CreateLib("Marvellous Playground", colors)
 
 -- Initialize Variables
 local keybindsEnabled = false
@@ -28,13 +39,6 @@ end)
 Section:NewButton("Giant Saitama", "Turns you into the character", function()
     fireChangeChar(
         game:GetService("Players").LocalPlayer.PlayerGui.CharacterSpecial.SaitamaPunch.ViewportFrame.WorldModel.GuiSaitama,
-        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
-    )
-end)
-
-Section:NewButton("Wanda", "Turns you into the character", function()
-    fireChangeChar(
-        game:GetService("ReplicatedStorage").Skins.Wanda.OldSkin1,
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
@@ -90,16 +94,29 @@ Speedsters:NewButton("Zoom", "I will scour this city until I hunt you down.", fu
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
+local SGC = CharTab:NewSection("Squid Game")
+SGC:NewButton("Hwang-In-Ho", "In-Ho, Why? - Jun-Ho", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").SelectACharacter.FrontMan,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
+SGC:NewButton("The FrontMan", "You've lost your position.", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.FrontMan.Skin1,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
 -- Extra Tab
 local ExtraTab = Window:NewTab("Extra")
 local ExtraSection = ExtraTab:NewSection("Moves that you can use with them")
 
-ExtraSection:NewButton("Enable Keybinds", "Enable keybinds", function()
+ExtraSection:NewToggle("KeybindsActive", "If active-check rest.", function(state)
+    if state then
     keybindsEnabled = true
-end)
-
-ExtraSection:NewButton("Disable Keybinds", "Disable keybinds", function()
-    keybindsEnabled = false
+    else
+         keybindsEnabled = false
+    end
 end)
 
 local function createKeybind(name, description, key, remote, args)
@@ -121,8 +138,9 @@ end)
 
 createKeybind("Steve Fire", "KeybindInfo", Enum.KeyCode.R, game:GetService("ReplicatedStorage").Characters.Steve.Remotes.FireCounter)
 
-ExtraSection:NewButton("God Mode", "Enable God Mode", function()
-    if not godModeEnabled then
+ExtraSection:NewToggle("GodMode", "Toggles Godmode", function(state)
+    if state then
+ if not godModeEnabled then
         godModeEnabled = true
         coroutine.wrap(function()
             while godModeEnabled do
@@ -131,46 +149,19 @@ ExtraSection:NewButton("God Mode", "Enable God Mode", function()
             end
         end)()
     end
+    else
+        godModeEnabled = false
+    end
 end)
-
-ExtraSection:NewButton("Disable God Mode", "Disable God Mode", function()
-    godModeEnabled = false
-end)
-
--- TNT Tab
-local tntTab = Window:NewTab("TNT Settings")
-local tntSection = tntTab:NewSection("TNT Per Click")
-
 local function setTNTAmount(amount)
     tntPerClick = amount
 end
-
-tntSection:NewButton("10 TNTs Per Click", "Set TNTs per click to 10", function()
-    setTNTAmount(10)
+ExtraSection:NewSlider("TNT Amount", "Choose.", 30000, 1, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    setTNTAmount(s)
 end)
 
-tntSection:NewButton("50 TNTs Per Click", "Set TNTs per click to 50", function()
-    setTNTAmount(50)
-end)
 
-tntSection:NewButton("100 TNTs Per Click", "Set TNTs per click to 100", function()
-    setTNTAmount(100)
-end)
 
-tntSection:NewButton("500 TNTs Per Click", "Set TNTs per click to 500", function()
-    setTNTAmount(500)
-end)
-
-tntSection:NewButton("1000 TNTs Per Click", "Set TNTs per click to 1000", function()
-    setTNTAmount(1000)
-end)
-tntSection:NewButton("10000 TNTs Per Click", "Set TNTs per click to 10000", function()
-    setTNTAmount(10000)
-end)
-
-tntSection:NewButton("Reset", "Reset TNTs per click to 1", function()
-    setTNTAmount(1)
-end)
 
 local function fireTNTs()
     for i = 1, tntPerClick do
@@ -179,28 +170,6 @@ local function fireTNTs()
 end
 local ScriptTab = Window:NewTab("Scripts")
 local ScriptSection = ScriptTab:NewSection("Regular Scripts")
-
-local CharTab = Window:NewTab("CharacterScripts")
-local CharSection = CharTab:NewSection("Character Scripts")
-local SpeedSection = CharTab:NewSection("Speedsters")
-local MCUSection = CharTab:NewSection("Marvel Cinematic Universe")
-local SWSection = CharTab:NewSection("Star Wars")
-local TBSection = CharTab:NewSection("The Boys")
-local IBSection = CharTab:NewSection("Invincible")
-local DCSection = CharTab:NewSection("DC")
-local Misc = CharTab:NewSection("Misc")
-
-IBSection:NewButton("Omni-Man", "Why did you make me do this?", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
-end)
-
-DCSection:NewButton("The Batman", "Do you bleed?", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Batman"))()
-end)
-
-IBSection:NewButton("Invincible", "And if you still think you can stop us.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Invincible"))()
-end)
 
 ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
@@ -216,18 +185,18 @@ while task.wait(.05) do
 end
 end)
 
-TBSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
-end)
+
 
 ScriptSection:NewButton("Hug/Stretch Grab", "WHAAT", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Hug"))()
 	
 end)
-MCUSection:NewButton("Doctor Strange", "DORMAMMU", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Strange"))()
-	
-end)
+
+
+local CharTab = Window:NewTab("The Vault")
+local CharSection = CharTab:NewSection("Lancelot's Vault")
+local SpeedSection = CharTab:NewSection("Speedsters")
+
 SpeedSection:NewButton("The Reverse", "I'm faster.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
 	
@@ -237,32 +206,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 
 end)
 
-Misc:NewButton("Pibby", "Now the revamp.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Pibby"))()
-end)
-
 SpeedSection:NewButton("Amazo", "The one.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
-end)
-
-TBSection:NewButton("The Deep", "Real eyes realize real lies", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Deep"))()
-end)
-
-SWSection:NewButton("Anakin", "You turned her against me.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Anakin"))()
-end)
-
-TBSection:NewButton("Soldier Boy", "Fab Five Freddy told me everybody's fly DJ spinnin' and I said my, my.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FabFiveFreddyToldMeEverybodysFlyDjSpinninISaidMyMy"))()
-end)
-
-SWSection:NewButton("Darth Vader", "I find your lack of faith disturbing.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/BeCarefulNotToChokeOnYourAspirationsDirector"))()
-end)
-
-Misc:NewButton("Father", "I yearned for the mines.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Father"))()
 end)
 
 SpeedSection:NewButton("Zoom", "You can't lock up the darkness.", function()
@@ -271,6 +216,74 @@ end)
 
 SpeedSection:NewButton("Tornado+SuperSpeed", "Roberto.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tornado"))()
+end)
+
+local MCUSection = CharTab:NewSection("Marvel Cinematic Universe")
+
+MCUSection:NewButton("Doctor Strange", "DORMAMMU", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Strange"))()
+	
+end)
+
+local SWSection = CharTab:NewSection("Star Wars")
+
+SWSection:NewButton("Darth Vader", "I find your lack of faith disturbing.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/BeCarefulNotToChokeOnYourAspirationsDirector"))()
+end)
+
+SWSection:NewButton("Anakin", "You turned her against me.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Anakin"))()
+end)
+
+local SGSection = CharTab:NewSection("Squid Game")
+
+SGSection:NewButton("Hwang-In-Ho", "Why?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/HwangInHo"))()
+end)
+
+local TBSection = CharTab:NewSection("The Boys")
+
+TBSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
+end)
+
+
+
+TBSection:NewButton("The Deep", "Real eyes realize real lies", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Deep"))()
+end)
+
+TBSection:NewButton("Soldier Boy", "Fab Five Freddy told me everybody's fly DJ spinnin' and I said my, my.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FabFiveFreddyToldMeEverybodysFlyDjSpinninISaidMyMy"))()
+end)
+
+local IBSection = CharTab:NewSection("Invincible")
+
+IBSection:NewButton("Omni-Man", "Why did you make me do this?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
+end)
+
+IBSection:NewButton("Invincible", "And if you still think you can stop us.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Invincible"))()
+end)
+
+local DCSection = CharTab:NewSection("Detective Comics Extended Universe")
+
+DCSection:NewButton("The Batman", "Do you bleed?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Batman"))()
+end)
+
+
+local MCraft = CharTab:NewSection("Minecraft")
+
+MCraft:NewButton("Father", "I yearned for the mines.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Father"))()
+end)
+
+local LPibby = CharTab:NewSection("Learning with Pibby")
+
+LPibby:NewButton("Pibby", "Now the revamp.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Pibby"))()
 end)
 
 local Players = game:GetService("Players")
