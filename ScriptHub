@@ -273,6 +273,9 @@ DCSection:NewButton("The Batman", "Do you bleed?", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Batman"))()
 end)
 
+local Dune = CharTab:NewSection("Dune")
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Atreides"))()
 
 local MCraft = CharTab:NewSection("Minecraft")
 
