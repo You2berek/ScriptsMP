@@ -1,0 +1,240 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+	local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://16625593936"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+local plr = game:GetService("Players").LocalPlayer
+local char = plr.Character
+
+local HeadHitbox = game:GetService("ReplicatedStorage").Characters.Combat.Peacemaker.HitboxPunch
+local HitboxClone = HeadHitbox:Clone()
+HitboxClone.Parent = plr.Character
+HitboxClone.Size = Vector3.new(4,4,4)
+local Weld = Instance.new("Weld", HitboxClone)
+Weld.Part0 = HitboxClone
+Weld.Part1 = char.Head
+Weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(HitboxClone, 0.3)
+local tbl_upvr = {}
+
+HitboxClone.Touched:Connect(function(arg1) -- Line 284
+local Bash2_upvr = game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2
+
+local Parent_9 = arg1.Parent
+local Humanoid_3 = Parent_9:FindFirstChild("Humanoid")
+if not table.find(tbl_upvr, Parent_9) and Humanoid_3 and Humanoid_3.Health ~= 0 and Parent_9 ~= Character_upvr then
+table.insert(tbl_upvr, Parent_9)
+
+Bash2_upvr:FireServer(Parent_9)
+end
+end)
+animTrack:Play()
+elseif input.KeyCode == Enum.KeyCode.Two then
+
+
+local Players = game:GetService("Players")
+local RemoteEvent = game.ReplicatedStorage.Characters.Paul.Remotes:FindFirstChild("VoiceHit") -- Change to your RemoteEvent's name
+local LocalPlayer = Players.LocalPlayer
+local radius = 21 -- Set your desired radius
+
+local function getPlayersInRadius(radius)
+    local foundPlayers = {}
+    local localCharacter = LocalPlayer.Character
+    if not localCharacter then return foundPlayers end
+
+    local rootPart = localCharacter:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return foundPlayers end
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then -- Exclude yourself
+            local targetCharacter = player.Character
+            if targetCharacter then
+                local targetRoot = targetCharacter:FindFirstChild("HumanoidRootPart")
+                if targetRoot then
+                    local distance = (rootPart.Position - targetRoot.Position).Magnitude
+                    if distance <= radius then
+                        table.insert(foundPlayers, player)
+                    end
+                end
+            end
+        end
+    end
+
+    return foundPlayers
+end
+
+local function fireRemoteForNearbyPlayers()
+    local playersInRadius = getPlayersInRadius(radius)
+    for _, targetPlayer in pairs(playersInRadius) do
+	local args = {
+
+		[1] = targetPlayer.Character
+	}
+        RemoteEvent:FireServer(unpack(args))
+		print(targetPlayer) -- Fire remote individually for each player
+    end
+end
+-- Example: Bind to an event, like a tool activation
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://16646636589"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+animTrack:Play()
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Paul").Voice:FireServer()
+fireRemoteForNearbyPlayers(game:GetService("Players").LocalPlayer)
+elseif input.KeyCode == Enum.KeyCode.Three then
+game.ReplicatedStorage.Characters.Paul.Remotes.Counter:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Four then
+local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://81725274539316"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+function RollForwardDash(arg1) -- Line 37
+    local BodyPosition = Instance.new("BodyPosition")
+    BodyPosition.MaxForce = Vector3.new(1000000, 0, 1000000)
+    BodyPosition.P = 100000
+    BodyPosition.D = 3000
+    BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -20)).Position
+    BodyPosition.Parent = arg1
+    game.Debris:AddItem(BodyPosition, 0.7)
+end
+
+
+
+
+animTrack:Play()
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Paul").Roll:FireServer()
+game.ReplicatedStorage.Characters.Paul.Remotes.SpinPaul:FireServer()
+RollForwardDash(plr.Character.HumanoidRootPart)
+
+
+
+
+
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+game.ReplicatedStorage.Characters.Paul.Remotes.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+local args = {
+
+   [1] = game.Players.LocalPlayer
+
+
+}
+local anim = Instance.new("Animation")
+anim.AnimationId = "rbxassetid://9760917435"
+
+local plr = game:GetService("Players").LocalPlayer
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+
+
+
+animTrack:Play()
+game.ReplicatedStorage.Characters.Combat.Remotes.Blocking:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Paul").Shield:FireServer()
+elseif input.KeyCode == Enum.KeyCode.G then
+	local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://71288531368572"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+animTrack:Play()
+local anim = Instance.new("Animation")
+
+
+
+
+
+
+local args = {
+    [1] = game:GetService("Players").LocalPlayer
+}
+
+
+animTrack:Play()
+plr.Character:FindFirstChild("Knife").CanTouch = true
+local debounce = false
+plr.Character:FindFirstChild("Knife").Touched:Connect(function(plrTouch)
+-- Ensure `plr` is defined and has a Character property
+local knife = plr.Character:FindFirstChild("Knife")
+local debouncetime = 3
+
+if knife then
+
+
+    knife.Touched:Connect(function(plrTouch)
+    if debounce == false then
+
+        debounce = true
+        -- Ensure the touched part is valid and has a parent (likely a character)
+        if plrTouch and plrTouch.Parent then
+            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
+            
+            if playerCharacter then
+                -- Define the args for RemoteEvent firing
+                local args = {
+                    [1] = playerCharacter
+                }
+
+                -- Fire the RemoteEvent safely
+               local replicatedStorage = game:GetService("ReplicatedStorage")
+                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("MrFantastic")
+:WaitForChild("Remotes"):WaitForChild("StretchPunchHit")
+
+remote:FireServer(unpack(args))
+
+                    task.wait(debouncetime)
+                debounce = false
+                else
+                task.wait(debouncetime)
+                debounce = false
+				end
+				end
+				end
+				end)
+				end
+				end)
+animTrack.Ended:Wait()
+plr.Character:FindFirstChild("Knife").CanTouch = false
+elseif input.KeyCode == Enum.KeyCode.H then
+
+	local anim = Instance.new("Animation")
+
+anim.AnimationId = "rbxassetid://16645059302"
+
+local plr = game.Players.LocalPlayer
+
+local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+animTrack:Play()
+	game.ReplicatedStorage.Characters.Paul.Remotes.Bombs:FireServer()
+elseif input.KeyCode == Enum.KeyCode.B then
+	game:GetService("Players").LocalPlayer.Character:FindFirstChild("Paul").Voice:FireServer()
+
+
+
+
+
+   end
+end)
