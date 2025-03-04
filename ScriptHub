@@ -195,6 +195,14 @@ end)
 
 local CharTab = Window:NewTab("The Vault")
 local CharSection = CharTab:NewSection("Lancelot's Vault")
+
+local DexterSection = CharTab:NewSection("Dexter/Original Sin/New Blood")
+DexterSection:NewButton("Dexter Morgan", "Tonight's the night.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Dexter"))()
+	
+end)
+
+
 local SpeedSection = CharTab:NewSection("Speedsters")
 
 SpeedSection:NewButton("The Reverse", "I'm faster.", function()
