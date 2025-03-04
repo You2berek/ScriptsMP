@@ -1,0 +1,64 @@
+
+
+
+local plr = game:GetService("Players").LocalPlayer
+
+local char = plr.Character
+local Repl = game:GetService("ReplicatedStorage")
+
+
+
+local function moveOne()
+Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.LiverBlows:FireServer(plr)
+end
+local function moveTwo()
+Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.Harpoon:FireServer(plr)
+end
+local function Counter()
+Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.Counter:FireServer(plr)
+end
+local function moveFour()
+Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.Garrote:FireServer(plr)
+end
+local function moveFive()
+Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.Finisher:FireServer(plr)
+end
+local function Needle()
+Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.M99:FireServer(plr)
+end
+local function Guard()
+local anim = Instance.new("Animation")
+
+anim.AnimationId = ""
+
+local animTrack = char.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
+
+animTrack:Play()
+Repl:WaitForChild("Characters"):FindFirstChild("Combat").Remotes.Blocking:FireServer(plr)
+
+end
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+moveOne()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+moveTwo()
+elseif input.KeyCode == Enum.KeyCode.Three then
+Counter()
+elseif input.KeyCode == Enum.KeyCode.Four then
+moveFour()
+elseif input.KeyCode == Enum.KeyCode.Five then
+moveFive()
+elseif input.KeyCode == Enum.KeyCode.F then
+Guard()
+elseif input.KeyCode == Enum.KeyCode.E then
+Needle()
+   end
+end)
