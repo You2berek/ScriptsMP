@@ -306,7 +306,7 @@ MCraft:NewButton("Father", "I yearned for the mines.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Father"))()
 end)
 
-local FNAF = CharTab:NewSection("Five Nights At Freddy's)
+local FNAF = CharTab:NewSection("Five Nights At Freddy's")
 
 FNAF:NewButton("Rizztrap", "First I rizz your brother.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Rizztrap"))()
