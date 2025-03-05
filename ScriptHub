@@ -61,6 +61,18 @@ Section:NewButton("Vergil (Not finished)", "Turns you into the character", funct
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
+Section:NewButton("Random (Not playable)", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").SelectACharacter.nilRandomCharacter,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
+Section:NewButton("Old Miles", "Turns you into the character", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").SelectACharacter.OldMiles,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
+    )
+end)
 -- Characters Tab
 local CharTab = Window:NewTab("Characters")
 local Speedsters = CharTab:NewSection("Speedsters")
@@ -76,13 +88,13 @@ Speedsters:NewButton("Harrison Wells", "Mother.", function()
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
-Speedsters:NewButton("2049 Reverse Flash.", "Gentleman.", function()
+Speedsters:NewButton("2049 Reverse Flash.", "Gentlemen.", function()
     fireChangeChar(
         game:GetService("ReplicatedStorage").Skins.ReverseFlash.Skin2,
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
     )
 end)
-Speedsters:NewButton("EARTH-X Nazi Reverse Flash", "I'm the fastest man alive.", function()
+Speedsters:NewButton("EARTH-X Nazi Reverse Flash", "We've been at this a long time.", function()
     fireChangeChar(
         game:GetService("ReplicatedStorage").Skins.ReverseFlash.Skin5,
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.Select.SelectScript
