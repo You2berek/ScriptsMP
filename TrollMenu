@@ -1,7 +1,14 @@
 -- Feel free to change anything you want :)
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("Bhtea-TBHB TPersonal", "Ocean")
+local colors = {
+    SchemeColor = Color3.fromRGB(120, 59, 142 ),
+    Background = Color3.fromRGB(82, 22, 103),
+    Header = Color3.fromRGB(60, 9, 89),
+    TextColor = Color3.fromRGB(229, 172, 172 ),
+    ElementColor = Color3.fromRGB(79, 9, 89)
+}
+local Window = Library.CreateLib("Marvellous Fairground", colors)
 
 local Players = game:GetService("Players")
 
@@ -10,10 +17,10 @@ local function createNotification()
     player:WaitForChild("PlayerGui")
 
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "GUI Loaded",
-        Text = "Made By AgentLancelot",
+        Title = "Troll Menu Loaded",
+        Text = "Made By Mr_DeVere",
         Duration = 5,
-        Icon = "rbxassetid://10878730168"
+        Icon = "rbxassetid://12780318812"
     })
 end
 
@@ -35,7 +42,7 @@ local function refreshPlayerList()
     end
 end
 
-local killTab = Window:NewTab("Kill All")
+local killTab = Window:NewTab("Combo Tab")
 local killSection = killTab:NewSection("Features")
 
 refreshPlayerList() -- Initial population of the player list
@@ -136,7 +143,7 @@ killSection:NewToggle("Kill All (Crashes the server)", "Toggle to kill all playe
     end
 end)
 
-local jumpscareTab = Window:NewTab("Jumpscare All")
+local jumpscareTab = Window:NewTab("Jeff Goobering")
 local jumpscareSection = jumpscareTab:NewSection("Features")
 
 local jumpscareDropdown
@@ -250,7 +257,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     end
 end)
 
-local bringAllTab = Window:NewTab("Bring All")
+local bringAllTab = Window:NewTab("Teleport")
 local bringAllSection = bringAllTab:NewSection("Features")
 
 local bringAllDropdown
@@ -343,4 +350,3 @@ uiSection:NewKeybind("Hide UI", "KeybindInfo", Enum.KeyCode.N, function()
     Library:ToggleUI()
 end)
 -- Feel free to change anything you want :)
-
