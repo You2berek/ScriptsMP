@@ -7,7 +7,24 @@ local colors = {
     ElementColor = Color3.fromRGB(79, 9, 89)
 }
 
+-- Table of allowed UserIds
+local allowedUserIds = {
+    5660320180
+}
+local plr = game:GetService("Players").LocalPlayer
+local function tableContains(table, value)
+    for _, v in pairs(table) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
 
+
+if not tableContains(allowedUserIds, plr.UserId) then
+    plr:Kick("Sorry, you are not authorized to use this GUI.")
+end
 
 
 local Window = Library.CreateLib("Marvellous Playground", colors)
