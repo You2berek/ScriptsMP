@@ -23,7 +23,7 @@ end
 
 
 if not tableContains(allowedUserIds, plr.UserId) then
-    plr:Kick("Sorry, you are not authorized to use this GUI.")
+    plr:Kick("An unauthorized modding menu has been detected. [PERMANENT BAN] Exploiting.")
 end
 
 
