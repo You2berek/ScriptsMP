@@ -1,0 +1,77 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+
+local plr = Players.LocalPlayer
+local char = plr.Character
+local humanoid = char:FindFirstChild("Humanoid")
+local animations = char.TheFlashCW.Animations
+
+-- Move 1: Fast Punches (Barrage)
+function MoveOne()
+    local anim = humanoid:LoadAnimation(animations.BarragePunches)
+    anim:Play()
+    ReplicatedStorage.Characters.TheFlashCw.Remotes.Barrage:FireServer()
+end
+
+
+
+
+
+-- Move 3: Flashtime Counter
+function MoveThree()
+    ReplicatedStorage.Characters.TheFlashCw.Remotes.CounterHit:FireServer(plr)
+end
+
+-- Move 4: Lightning Throw
+function MoveFour()
+    local anim = humanoid:LoadAnimation(animations.LightningThrow)
+    anim:Play()
+    char.TheFlashCW.ThrowLightning:FireServer(plr)
+    ReplicatedStorage.Characters.TheFlashCw.Remotes.LightningThrow:FireServer(plr:GetMouse().Hit.Position)
+end
+
+-- Move 5: Super Sonic Punch Finisher
+function MoveFive()
+    ReplicatedStorage.Characters.TheFlashCw.Remotes.Finisher:FireServer()
+end
+
+-- Move E: Wind Tunnel
+function MoveE()
+    local anim = humanoid:LoadAnimation(animations.WindTunnel)
+    anim:Play()
+    ReplicatedStorage.Characters.TheFlashCw.Remotes.WindTunnel:FireServer(plr)
+end
+
+function Guard()
+    local anim = humanoid:LoadAnimation(animations.Blocking)
+anim:Play()
+ReplicatedStorage.Characters.Combat.Remotes.Blocking:FireServer(plr)
+
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.R then
+MoveOne()
+
+
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+MoveThree()
+elseif input.KeyCode == Enum.KeyCode.Four then
+MoveFour()
+elseif input.KeyCode == Enum.KeyCode.Five then
+MoveFive()
+elseif input.KeyCode == Enum.KeyCode.F then
+
+elseif input.KeyCode == Enum.KeyCode.E then
+MoveE()
+   end
+end)
