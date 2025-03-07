@@ -1,0 +1,106 @@
+-- Input Handling
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local stalkerModeActive = false -- Track Stalker Mode state
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    
+    local plr = Players.LocalPlayer
+    local char = plr.Character
+    
+    if input.KeyCode == Enum.KeyCode.One or input.KeyCode == Enum.KeyCode.Two or 
+       input.KeyCode == Enum.KeyCode.Three or input.KeyCode == Enum.KeyCode.Four or 
+       input.KeyCode == Enum.KeyCode.Five or input.KeyCode == Enum.KeyCode.F then
+        if stalkerModeActive then
+            stalkerModeActive = false
+            ReplicatedStorage.Characters.Joe.Remotes.StalkerModeOff:FireServer(plr)
+            game:GetService("TweenService"):Create(char.Head.StalkLoop, TweenInfo.new(0.3), { Volume = 0 }):Play()
+        end
+    end
+    
+    if input.KeyCode == Enum.KeyCode.One then
+        local hammerAnim = Instance.new("Animation")
+        hammerAnim.AnimationId = "rbxassetid://17514323805"
+        local hammerTrack = char:FindFirstChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(hammerAnim)
+        hammerTrack:Play()
+        char:FindFirstChild("Joe").Hammer:FireServer(plr)
+        wait(0.3)
+        ReplicatedStorage.Characters.Joe.Remotes.BugsSlam:FireServer(plr)
+        hammerTrack.Ended:Wait()
+        char:FindFirstChild("Joe").HammerOff:FireServer(plr)
+    
+    elseif input.KeyCode == Enum.KeyCode.Two then
+        ReplicatedStorage.Characters.Joe.Remotes.ChokeSlam:FireServer(plr)
+    
+    elseif input.KeyCode == Enum.KeyCode.Three then
+        ReplicatedStorage.Characters.Joe.Remotes.StabCounter:FireServer(plr)
+    
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        ReplicatedStorage.Characters.Joe.Remotes.TheCage:FireServer(plr)
+    
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        ReplicatedStorage.Characters.Joe.Remotes.Finisher:FireServer(plr)
+    
+    elseif input.KeyCode == Enum.KeyCode.F then
+        ReplicatedStorage.Characters.Combat.Remotes.Blocking:FireServer(plr)
+    
+    elseif input.KeyCode == Enum.KeyCode.E then
+        -- MoveE (Stalker Mode) without cooldown
+        stalkerModeActive = true
+        ReplicatedStorage.Characters.Joe.Remotes.StalkerMode:FireServer(plr)
+        local stalkerAnim = Instance.new("Animation")
+        stalkerAnim.AnimationId = "rbxassetid://17545601178"
+        local stalkerTrack = char:FindFirstChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(stalkerAnim)
+        stalkerTrack:Play()
+        char.Head.StalkLoop.Volume = 1.5
+        char.Head.StalkLoop:Play()
+    
+    elseif input.KeyCode == Enum.KeyCode.Z then
+        -- Manually deactivate Stalker Mode
+        if stalkerModeActive then
+            stalkerModeActive = false
+            ReplicatedStorage.Characters.Joe.Remotes.StalkerModeOff:FireServer(plr)
+            game:GetService("TweenService"):Create(char.Head.StalkLoop, TweenInfo.new(0.3), { Volume = 0 }):Play()
+        end
+    end
+end)
+
+-- Detect LMB press or number/F key to deactivate Stalker Mode
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    
+    local plr = Players.LocalPlayer
+    local char = plr.Character
+    
+    if stalkerModeActive and (input.UserInputType == Enum.UserInputType.MouseButton1 or
+       input.KeyCode == Enum.KeyCode.One or input.KeyCode == Enum.KeyCode.Two or 
+       input.KeyCode == Enum.KeyCode.Three or input.KeyCode == Enum.KeyCode.Four or 
+       input.KeyCode == Enum.KeyCode.Five or input.KeyCode == Enum.KeyCode.F) then
+        stalkerModeActive = false
+        ReplicatedStorage.Characters.Joe.Remotes.StalkerModeOff:FireServer(plr)
+        game:GetService("TweenService"):Create(char.Head.StalkLoop, TweenInfo.new(0.3), { Volume = 0 }):Play()
+    end
+end) 
+
+-- Detect when the player takes damage to deactivate Stalker Mode
+local function onCharacterAdded(character)
+    local humanoid = character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.HealthChanged:Connect(function(health)
+            if stalkerModeActive and health < humanoid.MaxHealth then
+                stalkerModeActive = false
+                ReplicatedStorage.Characters.Joe.Remotes.StalkerModeOffHit:FireServer(Players.LocalPlayer)
+                game:GetService("TweenService"):Create(character.Head.StalkLoop, TweenInfo.new(0.3), { Volume = 0 }):Play()
+            end
+        end)
+    end
+end
+
+if Players.LocalPlayer.Character then
+    onCharacterAdded(Players.LocalPlayer.Character)
+end
+
+Players.LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
