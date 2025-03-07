@@ -93,6 +93,52 @@ Section:NewButton("Old Miles", "Turns you into the character", function()
 end)
 -- Characters Tab
 local CharTab = Window:NewTab("Characters")
+local BB = CharTab:NewSection("Breaking Bad")
+BB:NewButton("Walter White", "This is not meth.", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").SelectACharacter.Walter,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+end)
+BB:NewButton("Walter White (PILOT)", "This is not meth.", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Walter.Skin1,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+end)
+BB:NewButton("Walter White (HEISENBERG)", "This is not meth.", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Walter.Skin2,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+end)
+BB:NewButton("Walter White (COOKING)", "This is not meth.", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Walter.Skin3,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+end)
+BB:NewButton("Walter White (JOKER)", "{insert menacing laugh}", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Walter.Skin4,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+end)
+BB:NewButton("Walter White (MrBeast)", "Welcome to the final test.", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Walter.Skin5,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+end)
+BB:NewButton("Walter White (Skelly)", "Spooky scary skeletons.", function()
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").Skins.Walter.Skin6,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+end)
+
+
+
 local Speedsters = CharTab:NewSection("Speedsters")
 Speedsters:NewButton("Reverse Flash", "He is fast. I'm faster.", function()
     fireChangeChar(
@@ -311,7 +357,11 @@ YOUSection:NewButton("Joe Goldberg", "To see the truth.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Goldberg"))()
 	
 end)
-
+local BBSection = CharTab:NewSection("Breaking Bad")
+BBSection:NewButton("Walter White", "This is not meth.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Heisenberg"))()
+	
+end)
 local SpeedSection = CharTab:NewSection("Speedsters")
 
 SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
