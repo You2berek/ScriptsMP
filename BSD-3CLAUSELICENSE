@@ -314,11 +314,15 @@ end)
 
 local SpeedSection = CharTab:NewSection("Speedsters")
 
-SpeedSection:NewButton("The Reverse", "I'm faster.", function()
+SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
 	
 end)
-SpeedSection:NewButton("Sportacus", "I ran as fast as i can", function()
+SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
+	
+end)
+SpeedSection:NewButton("Íþróttaálfurinn 'Sportacus'", "I ran as fast as i can", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Sportacus"))()
 
 end)
@@ -327,7 +331,7 @@ SpeedSection:NewButton("Amazo", "The one.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
 end)
 
-SpeedSection:NewButton("Zoom", "You can't lock up the darkness.", function()
+SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
 end)
 
