@@ -8,26 +8,7 @@ local colors = {
 }
 
 -- Table of allowed UserIds
-local allowedUserIds = {
-    5660320180,
-	7027357045,
-  5722669155
-}
-local plr = game:GetService("Players").LocalPlayer
-local function tableContains(table, value)
-    for _, v in pairs(table) do
-        if v == value then
-            return true
-        end
-    end
-    return false
-end
-
-
-if not tableContains(allowedUserIds, plr.UserId) then
-    plr:Kick("An unauthorized modding menu has been detected. [PERMANENT BAN] Exploiting.")
-end
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
 
 local Window = Library.CreateLib("Marvellous Playground", colors)
 
