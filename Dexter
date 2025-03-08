@@ -62,3 +62,4 @@ elseif input.KeyCode == Enum.KeyCode.E then
 Needle()
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
