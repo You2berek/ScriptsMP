@@ -10,7 +10,8 @@ local colors = {
 -- Table of allowed UserIds
 local allowedUserIds = {
     5660320180,
-	7027357045
+	7027357045,
+  5722669155
 }
 local plr = game:GetService("Players").LocalPlayer
 local function tableContains(table, value)
