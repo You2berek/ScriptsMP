@@ -162,3 +162,4 @@ game:GetService("Players").LocalPlayer.Character.DoctorStrange.StartTimeBack:Fir
 
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
