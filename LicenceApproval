@@ -1,6 +1,7 @@
 local allowedUserIds = {
     5660320180,
-	7027357045
+	7027357045,
+       5722669155
   
 }
 local plr = game:GetService("Players").LocalPlayer
@@ -15,5 +16,5 @@ end
 
 
 if not tableContains(allowedUserIds, plr.UserId) then
-    plr:Kick("An unauthorized modding menu has been detected. [PERMANENT BAN] Exploiting.")
+    plr:Kick("Who's a little skiddy? [PERMANENT BAN] You fell for it.")
 end
