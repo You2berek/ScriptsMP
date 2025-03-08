@@ -16,5 +16,19 @@ end
 
 
 if not tableContains(allowedUserIds, plr.UserId) then
-    plr:Kick("Who's a little skiddy? [PERMANENT BAN] You fell for it.")
+      local plr = game:GetService("Players").LocalPlayer
+   local char = plr.Character
+
+   local Repl = game:GetService("ReplicatedStorage")
+      game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("I'm a little skiddy who has no life", "All")
+plr.PlayerGui.Extras.Knock:Play()
+plr.PlayerGui.RedScreen.Light.BackgroundTransparency = 0.5
+plr.PlayerGui.Vig.RedVig.ImageTransparency = 0
+wait(14)
+   game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Who's a little skiddy? Me :) ", "All")
+plr.PlayerGui.Extras.Screamer.Scream.Looped = true
+plr.PlayerGui.Extras.Screamer.Scream:Play()
+plr.PlayerGui.Vig.RedVig.Image = "rbxassetid://12121883283"
+wait(3)
+plr:Kick("Little Skiddymajohnjohn [PERMANENT BAN]")
 end
