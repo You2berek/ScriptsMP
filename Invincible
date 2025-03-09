@@ -2,131 +2,25 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     if gameProcessedEvent then
         return 
     end
+   local plr = game:GetService("Players").LocalPlayer
+   local char = plr.Character
+  local InvScript = char:WaitForChild("Invincible")
+ local Anims = InvScript:WaitForChild("Animations")
 
+local Repl = game:getService("ReplicatedStorage")
 
 
     if input.KeyCode == Enum.KeyCode.One then
--- Services
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-
--- Local player and character
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local rootPart = character:WaitForChild("HumanoidRootPart")
-
--- Animation setup (using the correct animation ID)
-local moveOneAnimation = Instance.new("Animation")
-moveOneAnimation.AnimationId = "rbxassetid://17417199489" -- Correct animation ID for MoveOne
-local moveOneTrack = humanoid:WaitForChild("Animator"):LoadAnimation(moveOneAnimation)
-
--- Remote event for MoveOne
-local moveOneRemote = game.ReplicatedStorage.Characters.Invincible.Remotes.HeavyPunch
-
--- Function to perform MoveOne
-function PerformMoveOne()
-    -- Play the MoveOne animation
-    moveOneTrack:Play()
-
-    -- Fire the MoveOne remote event
-    moveOneRemote:FireServer(player)
-
-    -- Apply camera effects
-    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-        FieldOfView = 50
-    }):Play()
-
-    -- Wait for the animation to play
-    wait(0.3)
-
-    -- Restore camera field of view
-    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-        FieldOfView = 90
-    }):Play()
-end
-
--- Example usage: Bind the function to a key or button
-
- 
-        PerformMoveOne()
-
-
+Repl.Characters.Invincible.Remotes.Swipes:FireServer()
+    
 elseif input.KeyCode == Enum.KeyCode.Two then
--- Services
-local Players = game:GetService("Players")
-local Debris = game:GetService("Debris")
-
--- Local player and character
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local rootPart = character:WaitForChild("HumanoidRootPart")
-
--- Animation setup (using the correct animation ID)
-local moveTwoAnimation = Instance.new("Animation")
-moveTwoAnimation.AnimationId = "rbxassetid://17420082187" -- Replace with your animation ID
-local moveTwoTrack = humanoid:WaitForChild("Animator"):LoadAnimation(moveTwoAnimation)
-
--- Remote event for MoveTwo
-local moveTwoRemote = game.ReplicatedStorage.Characters.Invincible.Remotes.ComboPunch
-
--- Function to perform MoveTwo
-function PerformMoveTwo()
-    -- Play the MoveTwo animation
-    moveTwoTrack:Play()
-    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Invincible").ComboPunch:FireServer()
-
-    -- Create and configure the hitbox
-    local combatHitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
-    combatHitbox.Parent = character
-    local weld = Instance.new("Weld", combatHitbox)
-    weld.Part0 = combatHitbox
-    weld.Part1 = rootPart
-    weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
-    Debris:AddItem(combatHitbox, 3) -- Remove the hitbox after 3 seconds
-
-    -- Track which targets have already been hit in this sequence
-    local hitTargets = {}
-
-    -- Handle the touched event for the hitbox
-    combatHitbox.Touched:Connect(function(hit)
-        local parent = hit.Parent
-        local targetHumanoid = parent:FindFirstChild("Humanoid")
-        if targetHumanoid and targetHumanoid.Health > 0 then
-            local values = parent:FindFirstChild("Values")
-            if values and (values.TeamColor.Value ~= character:FindFirstChild("Values").TeamColor.Value or values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
-                -- Check if the target has already been hit in this sequence
-                if not hitTargets[parent] then
-                    -- Mark the target as hit
-                    hitTargets[parent] = true
-
-                    -- Trigger the combo punch remote
-                    moveTwoRemote:FireServer(parent)
-                end
-            end
-        end
-    end)
-
-    -- Multiple punch sequence
-    for i = 1, 8 do
-        wait(0.25) -- Delay between punches
-        if character:FindFirstChild("CantAttack") then
-            moveTwoTrack:Stop()
-            combatHitbox:Destroy() -- Stop the animation and destroy the hitbox if the player can't attack
-            break
-        end
-        -- Fire the remote event after each punch
-        moveTwoRemote:FireServer(player)
-    end
-end
-
--- Example usage: Bind the function to a key or button
-PerformMoveTwo()
+Repl.Characters.Invincible.Remotes.ComboPunch:FireServer()
 elseif input.KeyCode == Enum.KeyCode.Three then
 local player = game.Players.LocalPlayer
-local counterRemote = game.ReplicatedStorage.Characters.Invincible.Remotes.Counters
-player.Character.Humanoid.Animator:LoadAnimation(game:GetService("ReplicatedStorage").SelectACharacter.Invincible.Invincible.Animations.Counter):Play(); counterRemote:FireServer(player)
+local CounterWork = Instance.new("BoolValue")
+CounterWork.Parent = char
+CounterWork.Name = "CounterSucces"
+game.Debris:AddItem(CounterWork, .1)
 elseif input.KeyCode == Enum.KeyCode.Four then
 -- Services
 local Players = game:GetService("Players")
