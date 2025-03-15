@@ -231,119 +231,201 @@ local args = {
 
 game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("Blocking"):FireServer(unpack(args))
 
-elseif input.KeyCode == Enum.KeyCode.E then
-
-local anim2 = Instance.new("Animation")
-
-
-
-anim2.AnimationId = "rbxassetid://15588214346"
-local plr = game.Players.LocalPlayer
-
-local animTrack2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Flight"):FireServer(unpack(args))
-game:GetService("Players").LocalPlayer.Character.OmniMan.Fly:FireServer(unpack(args))
-
-
-
-
-
-animTrack2:Play()
--- Variables to manage the forced speed and movement
-local Player = game.Players.LocalPlayer
-local RunService = game:GetService("RunService")
+elseif input.KeyCode == Enum.KeyCode.G then
 local UserInputService = game:GetService("UserInputService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
-local character = nil
-local humanoid = nil
-local bodyVelocity = nil
-local rotationSpeed = 2 -- Speed of rotation when pressing A or D
-local lastRemoteTime = 0
-local remoteInterval = 5 -- Time in seconds between remote events
-local isRunning = false -- Flag to control the loop
+local plr = Players.LocalPlayer
+local char = plr.Character
+local rootPart = char:WaitForChild("HumanoidRootPart")
+local humanoid = char:WaitForChild("Humanoid")
 
--- Function to start forcing the player to run involuntarily
-local function startForcedMovement()
-    character = Player.Character or Player.CharacterAdded:Wait()
-    humanoid = character:WaitForChild("Humanoid")
+-- Animation setup
+local anim1 = Instance.new("Animation")
+anim1.AnimationId = "rbxassetid://15546807765"
+local animTrack1 = humanoid:WaitForChild("Animator"):LoadAnimation(anim1)
+animTrack1:Play()
 
-    -- Set WalkSpeed to 100 for the desired running effect
-    humanoid.WalkSpeed = 100
+-- Movement setup
+local Velocity = Instance.new("BodyVelocity")
+Velocity.Parent = rootPart
+Velocity.P = 5500
+Velocity.MaxForce = Vector3.new(1000000, 0, 1000000) -- Only apply force on X and Z axes
+Velocity.Velocity = rootPart.CFrame.lookVector * 80 -- Speed set to 80
+Debris:AddItem(Velocity, 0.5)
 
-    -- Create a BodyVelocity to enforce constant movement
-    bodyVelocity = Instance.new("BodyVelocity")
-    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000) -- High force to overcome inertia
-    bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Will be updated each frame
-    bodyVelocity.Parent = humanoid.RootPart
+-- Camera effect
+TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+    FieldOfView = 85
+}):Play()
 
-    -- Set the isRunning flag to true to start the loop
-    isRunning = true
+-- Hitbox setup
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+local CloneHitbox = Hitbox:Clone()
+CloneHitbox.Parent = char
+local Weld = Instance.new("Weld", CloneHitbox)
+Weld.Part0 = CloneHitbox
+Weld.Part1 = rootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+Debris:AddItem(CloneHitbox, 0.5)
 
-    -- Update velocity and handle rotation every frame
-    RunService.Heartbeat:Connect(function()
-        if isRunning and humanoid and humanoid.RootPart then
-            -- Update velocity to match the direction the player is facing
-            local moveDirection = humanoid.RootPart.CFrame.LookVector
-            bodyVelocity.Velocity = moveDirection * humanoid.WalkSpeed
-local nearestPlayer, distance = getNearestPlayer()
-    if nearestPlayer then
-      local args = {
-    [1] = workspace:FindFirstChild(nearestPlayer.Name)
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("ComboEndRemote"):FireServer(unpack(args))
-
-    else
-        print("No players found within radius.")
-    end
-            -- Fire the remote event every 5 seconds
-            if tick() - lastRemoteTime >= remoteInterval then
-                local remote = ReplicatedStorage:WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan")
-                remote:FireServer()
-                lastRemoteTime = tick()
+-- Touched event for Hitbox
+CloneHitbox.Touched:Connect(function(hit)
+    local Parent = hit.Parent
+    local Humanoid = Parent:FindFirstChild("Humanoid")
+    if Humanoid and Humanoid.Health ~= 0 then
+        local Values = Parent:FindFirstChild("Values")
+        if Values and (Values.TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+            for i = 1, 10 do
+                game.ReplicatedStorage.Characters.MrFantastic.Remotes.StretchPunchHit:FireServer(Parent)
             end
+            game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent)
+            TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                FieldOfView = 70
+            }):Play()
         end
-    end)
+    end
+end)
 
-    -- Allow rotation using A and D keys
-    UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if gameProcessed then return end
+-- Continuously update velocity based on current look vector
+local connection
+connection = RunService.Heartbeat:Connect(function()
+    if Velocity and Velocity.Parent then
+        -- Only apply horizontal velocity (X and Z axes) with speed 80
+        local lookVector = rootPart.CFrame.lookVector
+        Velocity.Velocity = Vector3.new(lookVector.X * 80, 0, lookVector.Z * 80) -- Speed set to 80
+    else
+        connection:Disconnect() -- Stop updating if Velocity is destroyed
+    end
+end)
 
-        if input.KeyCode == Enum.KeyCode.A then
-            -- Rotate character slightly to the left
-            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(-rotationSpeed), 0))
-        elseif input.KeyCode == Enum.KeyCode.D then
-            -- Rotate character slightly to the right
-            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0))
-        end
-    end)
-end
-
--- Function to stop forcing the player to run
-local function stopForcedMovement()
-    if bodyVelocity then
-        bodyVelocity:Destroy()
-        bodyVelocity = nil
+-- Cleanup after 3 seconds
+delay(3, function()
+    if connection then
+        connection:Disconnect()
     end
 
-    if humanoid then
-        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
+    -- Freeze the character completely
+    if Velocity and Velocity.Parent then
+        -- Stop all movement by setting velocity to zero
+        Velocity.Velocity = Vector3.zero
+
+        -- Add a BodyGyro to lock the character's rotation and position
+        local Gyro = Instance.new("BodyGyro")
+        Gyro.Parent = rootPart
+        Gyro.MaxTorque = Vector3.new(1000000, 1000000, 1000000)
+        Gyro.P = 10000
+        Gyro.D = 500
+        Gyro.CFrame = rootPart.CFrame -- Lock the character's current rotation
+
+        -- Destroy the BodyVelocity
+        Velocity:Destroy()
+
+        -- Remove the BodyGyro after a short delay
+        Debris:AddItem(Gyro, 0.1)
     end
-
-    -- Set the isRunning flag to false to stop the loop
-    isRunning = false
-end
+end)
 
 
-startForcedMovement()
-animTrack2.Ended:Wait()
-stopForcedMovement()
+elseif input.KeyCode == Enum.KeyCode.E then
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
+local plr = Players.LocalPlayer
+local char = plr.Character
+local rootPart = char:WaitForChild("HumanoidRootPart")
+local humanoid = char:WaitForChild("Humanoid")
+
+-- Animation setup
+local anim1 = Instance.new("Animation")
+anim1.AnimationId = "rbxassetid://15588214346"
+local animTrack1 = humanoid:WaitForChild("Animator"):LoadAnimation(anim1)
+animTrack1:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes"):WaitForChild("Flight"):FireServer(plr)
+char.OmniMan.Fly:FireServer()
+
+-- Movement setup
+local Velocity = Instance.new("BodyVelocity")
+Velocity.Parent = rootPart
+Velocity.P = 5500
+Velocity.MaxForce = Vector3.new(1000000, 1000000, 1000000) -- Apply force on all axes
+Velocity.Velocity = rootPart.CFrame.lookVector * 235 -- Speed set to 235
+Debris:AddItem(Velocity, 3)
+
+-- Disable gravity (prevent falling)
+local AntiGravity = Instance.new("BodyVelocity")
+AntiGravity.Parent = rootPart
+AntiGravity.Velocity = Vector3.new(0, 30, 0) -- Counteract gravity by applying upward force
+AntiGravity.MaxForce = Vector3.new(0, 1000000, 0) -- Only apply force on the Y axis
+AntiGravity.P = 10000
+Debris:AddItem(AntiGravity, 3)
+
+-- Stabilize character rotation
+local Gyro = Instance.new("BodyGyro")
+Gyro.Parent = rootPart
+Gyro.MaxTorque = Vector3.new(1000000, 1000000, 1000000)
+Gyro.P = 10000
+Gyro.D = 500
+Gyro.CFrame = rootPart.CFrame -- Lock the character's current rotation
+Debris:AddItem(Gyro, 3)
+
+-- Camera effect
+TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+    FieldOfView = 85
+}):Play()
+
+-- Hitbox setup
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+local CloneHitbox = Hitbox:Clone()
+CloneHitbox.Parent = char
+local Weld = Instance.new("Weld", CloneHitbox)
+Weld.Part0 = CloneHitbox
+Weld.Part1 = rootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+Debris:AddItem(CloneHitbox, 3)
+
+-- Touched event for Hitbox
+CloneHitbox.Touched:Connect(function(hit)
+    local Parent = hit.Parent
+    local Humanoid = Parent:FindFirstChild("Humanoid")
+    if Humanoid and Humanoid.Health ~= 0 then
+        local Values = Parent:FindFirstChild("Values")
+        if Values and (Values.TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+            game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent)
+            TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                FieldOfView = 70
+            }):Play()
+        end
+    end
+end)
+
+-- Continuously update velocity based on current look vector
+local connection
+connection = RunService.Heartbeat:Connect(function()
+    if Velocity and Velocity.Parent then
+        -- Only apply horizontal velocity (X and Z axes)
+        local lookVector = rootPart.CFrame.lookVector
+        Velocity.Velocity = Vector3.new(lookVector.X * 235, 0, lookVector.Z * 235) -- Speed set to 235
+    else
+        connection:Disconnect() -- Stop updating if Velocity is destroyed
+    end
+end)
+
+-- Cleanup after 3 seconds
+delay(3, function()
+    if connection then
+        connection:Disconnect()
+    end
+    Velocity:Destroy()
+    AntiGravity:Destroy()
+    Gyro:Destroy()
+end)
    end
 end)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
