@@ -279,8 +279,10 @@ CloneHitbox.Touched:Connect(function(hit)
     if Humanoid and Humanoid.Health ~= 0 then
         local Values = Parent:FindFirstChild("Values")
         if Values and (Values.TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
-            for i = 1, 10 do
+            for i = 1, 5 do
+              if Humanoid.Health > 15 then
                 game.ReplicatedStorage.Characters.MrFantastic.Remotes.StretchPunchHit:FireServer(Parent)
+              end
             end
             game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent)
             TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
