@@ -48,7 +48,9 @@ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.n
             if humanoid and humanoid.Health > 0  then
 				table.insert(hitTable, parent)
 			if not table.find(hitTable, parent) then
+for i = 1, 15 do
 Repl.Characters.Homelander.Remotes.LaserEyesHit:FireServer(parent)
+end
 else
 return
 end
