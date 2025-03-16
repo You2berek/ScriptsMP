@@ -27,6 +27,12 @@ local function setupCharacter(char)
             local animTrack2 = humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
 
             -- Play the first animation
+if char:FindFirstChild("ReverseFlash") then
+char:FindFirstChild("ReverseFlash").RunStart:FireServer(unpack(args))
+else
+return
+end
+
             animTrack2:Play()
             game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer(plr)
             animTrack2.Ended:Wait()
@@ -104,6 +110,11 @@ local function setupCharacter(char)
             local animTrack2 = humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
 
             -- Play the first animation
+if char:FindFirstChild("ReverseFlash") then
+char:FindFirstChild("ReverseFlash").RunStart:FireServer(unpack(args))
+else
+return
+end
             animTrack2:Play()
             game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer(plr)
             animTrack2.Ended:Wait()
