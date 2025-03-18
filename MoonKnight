@@ -1,0 +1,85 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+local char = plr.Character
+local Repl = game:GetService("ReplicatedStorage")
+local Anims = char.MoonKnight.Animations
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+if char.BaseVal.Value == true and char.MrKnightVal.Value == false and char.MoonKnightVal.Value == false then
+	Repl.Characters.Moonknight.Remotes.BaseBallEf:FireServer(plr)
+local anim = char.Humanoid:WaitForChild("Animator"):LoadAnimation(Anims.BatSlam)
+anim:Play()
+wait(0.1)
+ local hitbox = Repl.Characters.Combat.Fx.CombatHitbox:Clone()
+ hitbox.Parent = char 
+ local weld = Instance.new("Weld", hitbox)
+ weld.Part0 = hitbox
+ weld.Part1 = char.HumanoidRootPart
+ weld.C0 = CFrame.new(0,0,3.5) * CFrame.Angles(0,0,0)
+
+ game.Debris:AddItem(hitbox, 0.2)
+
+ hitbox.Touched:Connect(function(hit)
+local target = hit.Parent 
+if target:FindFirstChild("Humanoid") and target.Humanoid.Health > 0 then
+  if target.Values.TeamColor.Value ~= char.Values.TeamColor.Value or target.Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value then
+   hitbox:Destroy()
+   Repl.Characters.Combat.Remotes.ComboEndRemote:FireServer(target)
+  end
+end
+ end)
+elseif char.BaseVal.Value == false and char.MrKnightVal.Value == true and char.MoonKnightVal.Value == false then
+local anim = char:WaitForChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(Anims.KnockoutPunch)
+anim:Play()
+Repl.Characters.Moonknight.Remotes.BatonProjectile:FireServer(plr)
+elseif char.BaseVal.Value == false and char.MrKnightVal.Value == false and char.MoonKnightVal.Value == true then
+local anim = char:WaitForChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(Anims.KnockoutPunch)
+anim:Play()
+Repl.Characters.Moonknight.Remotes.KnockoutPunch:FireServer(plr)
+
+end
+elseif input.KeyCode == Enum.KeyCode.Two then
+if char.BaseVal.Value == true and char.MrKnightVal.Value ==  false and char.MoonKnightVal.Value == false then
+	Repl.Characters.Moonknight.Remotes.GunShots:FireServer(plr)
+elseif char.BaseVal.Value == false and char.MrKnightVal.Value == true and char.MoonKnightVal.Value == false then
+local anim = char:WaitForChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(Anims.KnockoutPunch)
+anim:Play()
+Repl.Characters.Moonknight.Remotes.KnockoutPunch:FireServer(plr)
+elseif char.BaseVal.Value == false  and char.MrKnightVal.Value == false and char.MoonKnightVal.Value == true then
+local anim = char:WaitForChild("Humanoid"):LoadAnimation(Anims.CrescentThrow)
+anim:Play()
+char.MoonKnight.Cres:FireServer(plr)
+wait(0.3)
+Repl.Characters.Moonknight.Remotes.CrescentSplash:FireServer(plr)
+end
+elseif input.KeyCode == Enum.KeyCode.Three then
+local CounterPass = Instance.new("BoolValue", char)
+CounterPass.Name = "CounterSucces"
+task.wait(.1)
+CounterPass:Destroy()
+elseif input.KeyCode == Enum.KeyCode.Four then
+if char.BaseVal.Value == true and char.MrKnightVal.Value ==  false and char.MoonKnightVal.Value == false then
+	Repl.Characters.Moonknight.Remotes.CounterPunches:FireServer(plr)
+elseif char.BaseVal.Value == false  and char.MrKnightVal.Value == false and char.MoonKnightVal.Value == true then
+local mouse = plr:GetMouse()
+Repl.Characters.Moonknight.Remotes.GrappleKick:FireServer(mouse.hit.p)
+end
+elseif input.KeyCode == Enum.KeyCode.Five then
+if char.BaseVal.Value == true and char.MrKnightVal.Value ==  false and char.MoonKnightVal.Value == false then
+	Repl.Characters.Moonknight.Remotes.KhonshuSlam:FireServer(plr)
+elseif char.BaseVal.Value == false and char.MrKnightVal.Value == true and char.MoonKnightVal.Value == false then
+Repl.Characters.Moonknight.Remotes.SkyChange:FireServer(plr)
+elseif char.BaseVal.Value == false  and char.MrKnightVal.Value == false and char.MoonKnightVal.Value == true then
+Repl.Characters.Moonknight.Remotes.MoonFinisher:FireServer(plr)
+end
+elseif input.KeyCode == Enum.KeyCode.F then
+local anim = char.Humanoid:WaitForChild("Animator"):LoadAnimation(Anims.Blocking)
+anim:Play()
+Repl.Characters.Combat.Remotes.Blocking:FireServer(plr)
+
+   end
+end)
