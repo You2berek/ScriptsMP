@@ -162,3 +162,4 @@ end)
 end
 
 game.Players.LocalPlayer.CharacterAdded:Connect(prep)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
