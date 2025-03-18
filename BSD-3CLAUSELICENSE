@@ -378,6 +378,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 	
 end)
 
+
+MCUSection:NewButton("Moon Knight", "Alright do it, take control.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/MoonKnight"))()
+	
+end)
+
+
 local SWSection = CharTab:NewSection("Star Wars")
 
 SWSection:NewButton("Darth Vader", "I find your lack of faith disturbing.", function()
