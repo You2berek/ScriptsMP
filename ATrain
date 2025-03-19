@@ -9,13 +9,13 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
    local Animator = Humanoid:WaitForChild("Animator")
    local ATrain = nil
    local Anims = ATrain.Animations
-for _, obj in ipairs(char:GetChildren()) do
-    if obj:IsA("LocalScript") and obj.Name == "A-train" then
-        ATrain = obj
-        break
+
+for _, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+    if v:IsA("LocalScript") and v.Name == "A-train" then
+        ATrain = v
     end
 end
-
+print(ATrain)
 
 
 local function counter()
