@@ -7,7 +7,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
    local char = plr.Character
    local Humanoid = char:WaitForChild("Humanoid")
    local Animator = Humanoid:WaitForChild("Animator")
-   local ATrain = char:GetChildren()[27]
+   local ATrain = char:FindFirstChild("A-train")
    local Anims = ATrain.Animations
 
 local function counter()
