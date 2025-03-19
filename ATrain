@@ -7,8 +7,16 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
    local char = plr.Character
    local Humanoid = char:WaitForChild("Humanoid")
    local Animator = Humanoid:WaitForChild("Animator")
-   local ATrain = char:FindFirstChild("A-train")
+   local ATrain = nil
    local Anims = ATrain.Animations
+for _, obj in ipairs(char:GetChildren()) do
+    if obj:IsA("LocalScript") and obj.Name == "A-train" then
+        ATrain = obj
+        break
+    end
+end
+
+
 
 local function counter()
 local Tealc = Instance.new("BoolValue", char)
