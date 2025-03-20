@@ -384,6 +384,10 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 	
 end)
 
+MCUSection:NewButton("Miguel O'Hara", "Call for backup.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/2099"))()
+	
+end)
 
 local SWSection = CharTab:NewSection("Star Wars")
 
