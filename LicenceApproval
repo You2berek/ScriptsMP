@@ -7,7 +7,8 @@ local allowedUserIds = {
 6100774875,
 5821218412,
 7096002553,
-5689790957
+5689790957,
+5480636416
 }
 local plr = game:GetService("Players").LocalPlayer
 local function tableContains(table, value)
