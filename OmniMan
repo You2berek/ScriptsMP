@@ -1,0 +1,202 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local OmniScript = char:WaitForChild("OmniMan")
+local Anims = OmniScript:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Rems = Repl:WaitForChild("Characters"):WaitForChild("OmniMan"):WaitForChild("Remotes")
+local CombatHitbox = Repl.Characters.Combat.Fx.CombatHitbox
+
+local ChopBash = game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2
+local ChopAnim = Animator:LoadAnimation(Anims.Chop)
+local Clap = Rems.Clap
+local ClapAnim = Animator:LoadAnimation(Anims.Clap)
+local SpikeStart = Rems.Spike
+local SpikeHit = Rems.SpikeHit
+local SpikeAnim = Animator:LoadAnimation(Anims.Spike)
+local BlockAnim = Animator:LoadAnimation(Anims.Blocking)
+local VelVal = 125
+local FlightRem = Rems.Flight
+local FlyRem = OmniScript.Fly
+local ComboERem = Repl.Characters.Combat.Remotes.ComboEndRemote
+local FlyAnim = Animator:LoadAnimation(Anims.Homecrusher)
+local ThrustA = Animator:LoadAnimation(Anims.ChestBash)
+ChopAnim:GetMarkerReachedSignal("Start"):Connect(function(argument)
+Rems.Chop:FireServer(plr)
+end)
+ChopAnim:GetMarkerReachedSignal("Chop"):Connect(function(argument)
+local CloneH = CombatHitbox:Clone()
+CloneH.Parent = char
+local WeldH = Instance.new("Weld", CloneH)
+WeldH.Part0 = CloneH 
+WeldH.Part1 = char.HumanoidRootPart
+WeldH.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(CloneH, .23)
+CloneH.Touched:Connect(function(argument)
+local AntiDoubleTable = {}
+local ParentOfIt = argument.Parent
+local HumanoidOfIt = ParentOfIt:FindFirstChild("Humanoid")
+if not table.find(AntiDoubleTable, ParentOfIt) then 
+ChopBash:FireServer(ParentOfIt)
+table.insert(AntiDoubleTable, ParentOfIt)
+end
+end)
+end)
+SpikeAnim:GetMarkerReachedSignal("Start"):Connect(function()
+SpikeStart:FireServer(plr)
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 60;
+	}):Play()
+		wait(0.6)
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 70;
+	}):Play()
+
+end)
+SpikeAnim:GetMarkerReachedSignal("Attack"):Connect(function()
+local CloneS = CombatHitbox:Clone()
+CloneS.Parent = char
+CloneS.Size = char.Spike.Size
+local WeldS = Instance.new("Weld", CloneS)
+WeldS.Part0 = CloneS 
+WeldS.Part1 = char.Spike
+WeldS.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(CloneS, .4)
+CloneS.Touched:Connect(function(argument)
+local AntiDoubleTable = {}
+local ParentOfIt = argument.Parent
+local HumanoidOfIt = ParentOfIt:FindFirstChild("Humanoid")
+if not table.find(AntiDoubleTable, ParentOfIt) then
+
+SpikeHit:FireServer(ParentOfIt)
+table.insert(AntiDoubleTable, ParentOfIt)
+end
+end)
+
+end)
+local function Countering()
+local Bool = Instance.new("BoolValue")
+Bool.Name = "CounterSucces"
+Bool.Parent = char
+game.Debris:AddItem(Bool, 0.05)
+end
+    if input.KeyCode == Enum.KeyCode.One then
+ChopAnim:Play()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+for i=1,5 do
+Clap:FireServer()
+end
+ClapAnim:Play()
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(Countering)
+elseif input.KeyCode == Enum.KeyCode.Four then
+SpikeAnim:Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+BlockAnim:Play()
+Repl.Characters.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+FlyAnim:Play()
+FlightRem:FireServer(plr)
+FlyRem:FireServer(plr)
+
+local BodyVel = Instance.new("BodyVelocity")
+local function UpdateVelVal()
+task.wait(1.5)
+VelVal = 205
+end
+task.spawn(UpdateVelVal)
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(500000, 500000, 500000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * VelVal
+game.Debris:AddItem(BodyVel, 3)
+local FlyB = CombatHitbox:Clone()
+FlyB.Parent = char
+local WeldFly = Instance.new("Weld", FlyB)
+WeldFly.Part0 = FlyB
+WeldFly.Part1 = char.HumanoidRootPart
+WeldFly.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(FlyB, 3)
+FlyB.Touched:Connect(function(argument)
+local Parent1 = argument.Parent 
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+local ValClone = Repl.Characters.Values.SuperSpeedDmgVal:Clone()
+ValClone.Parent = Parent1
+game.Debris:AddItem(ValClone, 0.2)
+ComboERem:FireServer(Parent1)
+
+end
+end)
+
+local runDuration = 3  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel and VelVal == 125 then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 125
+	elseif BodyVel and VelVal == 205 then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 205
+	elseif not BodyVel then
+	return
+    end
+end
+
+elseif input.KeyCode == Enum.KeyCode.H then 
+Repl.Characters.Invincible.Remotes.Counters:FireServer()
+elseif input.KeyCode == Enum.KeyCode.G then
+ThrustA:Play()
+
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(500000, 500000, 500000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 60
+game.Debris:AddItem(BodyVel, 1)
+local FlyB = CombatHitbox:Clone()
+FlyB.Parent = char
+local WeldFly = Instance.new("Weld", FlyB)
+WeldFly.Part0 = FlyB
+WeldFly.Part1 = char.HumanoidRootPart
+WeldFly.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(FlyB, 1)
+FlyB.Touched:Connect(function(argument)
+local Parent1 = argument.Parent 
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+local ValClone = Repl.Characters.Values.SuperSpeedDmgVal:Clone()
+ValClone.Parent = Parent1
+game.Debris:AddItem(ValClone, 0.2)
+for i=1,15 do
+if Humanoid.Health > 10 then
+Repl.Characters.MrFantastic.Remotes.StretchPunchHit:FireServer(Parent1)
+end
+end
+end
+end)
+
+local runDuration = 1  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 60
+	elseif not BodyVel then
+	return
+    end
+end
+
+   end
+end)
