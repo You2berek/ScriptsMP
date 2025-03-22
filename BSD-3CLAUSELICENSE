@@ -312,8 +312,9 @@ end)
 
 
 
-ScriptSection:NewButton("Hug/Stretch Grab", "WHAAT", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Hug"))()
+ScriptSection:NewButton("Invisiblity", "Very pungent", function()
+
+game:GetService("ReplicatedStorage").Characters['TheBatman'].Remotes.MiniExplosive:FireServer(game.Players.LocalPlayer)
 	
 end)
 
