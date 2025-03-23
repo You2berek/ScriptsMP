@@ -70,11 +70,11 @@ Rems.BigShieldRemote:FireServer(plr)
 DrStrangeS.CounterActive2:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.R then
 DrStrangeS.LoopActivate:FireServer(plr)
-DrStrangeS.PosValue.Value = Vector3.new(Position.X, Position.Y, Position.Z)
 LoopStart:Play()
 local PositioningPartC = Instance.new("Part")
 PositioningPartC.Parent = char
 PositioningPartC.CanCollide = false
+PositioningPartC.Anchored = true
 PositioningPartC.Transparency = 1
 PositioningPartC.Name = "positioningpart"
 PositioningPartC.CFrame = char.HumanoidRootPart.CFrame
