@@ -293,7 +293,7 @@ local function fireTNTs()
         game:GetService("ReplicatedStorage").Characters.Steve.Remotes.TNT:FireServer()
     end
 end
-local ScriptTab = Window:NewTab("CATALOGUED ADDITIONS")
+local ScriptTab = Window:NewTab("CATALOGUED ADDS")
 local ScriptSection = ScriptTab:NewSection("Additions")
 
 ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
