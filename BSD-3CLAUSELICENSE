@@ -18,7 +18,7 @@ local godModeEnabled = false
 local tntPerClick = 1
 
 -- Secret Characters Tab
-local Tab = Window:NewTab("Secret Characters")
+local Tab = Window:NewTab("SECRET CHARACTERS")
 local Section = Tab:NewSection("Secret Characters")
 
 local function fireChangeChar(character, script)
@@ -74,7 +74,7 @@ Section:NewButton("Old Miles", "Turns you into the character", function()
     )
 end)
 -- Characters Tab
-local CharTab = Window:NewTab("Characters")
+local CharTab = Window:NewTab("CHARACTERS")
 local BB = CharTab:NewSection("Breaking Bad")
 BB:NewButton("Walter White", "This is not meth.", function()
     fireChangeChar(
@@ -233,7 +233,7 @@ YOUChar:NewButton("Guinevere Beck", "Hello, YOU.", function()
     )
 end)
 -- Extra Tab
-local ExtraTab = Window:NewTab("Extra")
+local ExtraTab = Window:NewTab("GENERAL ADDITIONS")
 local ExtraSection = ExtraTab:NewSection("Moves that you can use with them")
 
 ExtraSection:NewToggle("KeybindsActive", "If active-check rest.", function(state)
@@ -293,8 +293,8 @@ local function fireTNTs()
         game:GetService("ReplicatedStorage").Characters.Steve.Remotes.TNT:FireServer()
     end
 end
-local ScriptTab = Window:NewTab("Scripts")
-local ScriptSection = ScriptTab:NewSection("Regular Scripts")
+local ScriptTab = Window:NewTab("CATALOGUED ADDITIONS")
+local ScriptSection = ScriptTab:NewSection("Additions")
 
 ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
@@ -310,17 +310,19 @@ while task.wait(.05) do
 end
 end)
 
-
-
 ScriptSection:NewButton("Invisiblity", "Very pungent", function()
 
 game:GetService("ReplicatedStorage").Characters['TheBatman'].Remotes.MiniExplosive:FireServer(game.Players.LocalPlayer)
 	
 end)
 
+ScriptSection:NewButton("Tornado+SuperSpeed", "Roberto.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tornado"))()
+end)
 
-local CharTab = Window:NewTab("The Vault")
-local CharSection = CharTab:NewSection("Lancelot's Vault")
+
+local CharTab = Window:NewTab("SCRIPT STORAGE")
+local CharSection = CharTab:NewSection("Character Scripts")
 
 CharSection:NewButton("Click", "Dont lmfao.", function()
 game:GetService("Players").LocalPlayer:Kick(" [PERMANENT BAN]   You ignorant fuck should have checked the description.")
@@ -345,7 +347,7 @@ BBSection:NewButton("Walter White", "This is not meth.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Heisenberg"))()
 	
 end)
-local SpeedSection = CharTab:NewSection("Speedsters")
+local SpeedSection = CharTab:NewSection("CW Universe")
 
 SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
@@ -354,10 +356,6 @@ end)
 SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
 	
-end)
-SpeedSection:NewButton("Íþróttaálfurinn 'Sportacus'", "I ran as fast as i can", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Sportacus"))()
-
 end)
 
 SpeedSection:NewButton("Amazo", "The one.", function()
@@ -368,8 +366,11 @@ SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
 end)
 
-SpeedSection:NewButton("Tornado+SuperSpeed", "Roberto.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tornado"))()
+local LazySection = CharTab:NewSection("Lazy Town")
+
+LazySection:NewButton("Íþróttaálfurinn 'Sportacus'", "I ran as fast as i can", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Sportacus"))()
+
 end)
 
 local MCUSection = CharTab:NewSection("Marvel Cinematic Universe")
@@ -482,7 +483,7 @@ local function refreshPlayerList()
 end
 
 refreshPlayerList() -- Initial population of the player list
-local OddSection = ScriptTab:NewSection("Odd Section")
+local OddSection = ScriptTab:NewSection("REMOTE SECTION")
 local playerDropdown -- Variable to hold the dropdown
 Select = nil
 local function updateDropdown()
