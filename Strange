@@ -2,164 +2,142 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     if gameProcessedEvent then
         return 
     end
-   
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local DrStrangeS = char:WaitForChild("DoctorStrange")
+local Anims = DrStrangeS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("DoctorStrange"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+	local Position = char.HumanoidRootPart.Position
 
-
-
+local PortalAnim = Animator:LoadAnimation(Anims.OpenPortal)
+local WhipAnim = Animator:LoadAnimation(Anims.Whip)
+local BoltsAnim = Animator:LoadAnimation(Rems.Parent.AnimationsExtra.BowDown)
+local BlockingAnim = Animator:LoadAnimation(Anims.BigShield)
+local LoopStart = Animator:LoadAnimation(Anims.LoopA)
+local LoopBack = Animator:LoadAnimation(Anims.Bargain)
+local function Counter()
+Rems.CounterPush:FireServer(plr)
+end
     if input.KeyCode == Enum.KeyCode.One then
 
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-local anim = Instance.new("Animation")
-
-
-
-anim.AnimationId = "rbxassetid://12177440739"
-
-local plr = game:GetService("Players").LocalPlayer
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-animTrack:Play()
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("PortalBullets"):FireServer(unpack(args))
-
+PortalAnim:Play()
+task.wait(.3)
+for i=1,5 do
+Rems.PortalBullets:FireServer(plr)
+end
 
 elseif input.KeyCode == Enum.KeyCode.Two then
-local combathitbox =  Instance.new("Part")
-combathitbox.Parent = game:GetService("Players").LocalPlayer.Character
-combathitbox.Size = Vector3.new(3, 4, 3)
-combathitbox.CanCollide = false
-combathitbox.CanTouch = true
-combathitbox.Name = "CombatBox"
-combathitbox.Transparency = 1
-while task.wait(0.05) do
-	combathitbox.Position = game:GetService("Players").LocalPlayer.Character:FindFirstChild("BeamEndPart").Position
+WhipAnim:Play()
+Rems.WhipAttack:FireServer(plr)
+local WhipHitbox = CombatHitbox:Clone()
+WhipHitbox.Parent = char
+local Weld = Instance.new("Weld", WhipHitbox)
+Weld.Part0 = WhipHitbox
+Weld.Part1 = char.BeamEndPart
+Weld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(WhipHitbox, .8)
+WhipHitbox.Touched:Connect(function(arg1)
+local Whipped = arg1.Parent
+local HumanoidW = Whipped:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+if Whipped ~= char and not Whipped:FindFirstChild("SuperSpeedDmgVal") then
+local DmgVal = Chars.Values.SuperSpeedDmgVal:Clone()
+DmgVal.Parent = Whipped
+game.Debris:AddItem(DmgVal, .3)
+for i=1,5 do
+Rems.HeavyHitRemote:FireServer(char, Whipped) 
 end
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-local animWHIP = Instance.new("Animation")
-animWHIP.AnimationId = "rbxassetid://9819210819"
-local plr = game:GetService("Players").LocalPlayer
-local animTrackWH = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animWHIP)
-animTrackWH:Play()
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("WhipAttack"):FireServer(unpack(args))
-plr.Character:FindFirstChild("CombatBox").Touched:Connect(function(plrTouch)
--- Ensure `plr` is defined and has a Character property
-local laser = plr.Character:FindFirstChild("CombatBox")
-local debouncetime = 3
-local debounce = false
-if laser then
-
-
-    laser.Touched:Connect(function(plrTouch)
-    if debounce == false then
-
-        debounce = true
-        -- Ensure the touched part is valid and has a parent (likely a character)
-        if plrTouch and plrTouch.Parent then
-            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
-            
-            if playerCharacter then
-                -- Define the args for RemoteEvent firing
-                local args = {
-                    [1] = playerCharacter
-                }
-
-                -- Fire the RemoteEvent safely
-                local replicatedStorage = game:GetService("ReplicatedStorage")
-                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("HeavyHitRemote")
-                if remote then
-                    remote:FireServer(unpack(args))
-                    task.wait(debouncetime)
-                debounce = false
-                else
-                task.wait(debouncetime)
-                debounce = false
-				plr.Character:FindFirstChild("CombatBox").CanTouch = false
-                end
-                
-            end
-        end
-    end
-    end)
+end
 end
 end)
-
 elseif input.KeyCode == Enum.KeyCode.Three then
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("CounterPush"):FireServer(unpack(args))
-
+task.spawn(Counter)
 elseif input.KeyCode == Enum.KeyCode.Four then
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-local animCIN = Instance.new("Animation")
-
-
-
-animCIN.AnimationId = "rbxassetid://12175621372"
-
-local plr = game:GetService("Players").LocalPlayer
-local animTrackCIN = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animCIN)
-animTrackCIN:Play()
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("Bolts"):FireServer(unpack(args))
-
+Rems.Bolts:FireServer()
+BoltsAnim:Play()
 elseif input.KeyCode == Enum.KeyCode.Five then
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("TendrillSlam"):FireServer(unpack(args))
-
+Rems.TendrillSlam:FireServer()
 elseif input.KeyCode == Enum.KeyCode.F then
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-local animSH = Instance.new("Animation")
-
-
-
-animSH.AnimationId = "rbxassetid://9637222216"
-
-local plr = game:GetService("Players").LocalPlayer
-local animTrackSH = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animSH)
-animTrackSH:Play()
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DoctorStrange"):WaitForChild("Remotes"):WaitForChild("BigShieldRemote"):FireServer(unpack(args))
-game:GetService("Players").LocalPlayer.Character.DoctorStrange.CounterActivate2:FireServer(unpack(args))
-elseif input.KeyCode == Enum.KeyCode.K then
-local args = {
-    [1] = game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame,
-    [2] = 150
-}
-local animLOOPs = Instance.new("Animation")
-
-
-
-animLOOPs.AnimationId = "rbxassetid://12173192550"
-
-local plr = game:GetService("Players").LocalPlayer
-local animTrackLOOPs = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animLOOPs)
-animTrackLOOPs:Play()
-game:GetService("Players").LocalPlayer.Character.DoctorStrange.TimeBack:FireServer(unpack(args))
-
-elseif input.KeyCode == Enum.KeyCode.J then
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-local animLOOPA = Instance.new("Animation")
-
-
-
-animLOOPA.AnimationId = "rbxassetid://12173340226"
-
-local plr = game:GetService("Players").LocalPlayer
-local animTrackLOOPA = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animLOOPA)
-animTrackLOOPA:Play()
-game:GetService("Players").LocalPlayer.Character.DoctorStrange.StartTimeBack:FireServer(unpack(args))
-
+BlockingAnim:Play()
+Rems.BigShieldRemote:FireServer(plr)
+DrStrangeS.CounterActive2:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.R then
+DrStrangeS.LoopActivate:FireServer(plr)
+DrStrangeS.PosValue.Value = Vector3.new(Position.X, Position.Y, Position.Z)
+LoopStart:Play()
+local PositioningPartC = Instance.new("Part")
+PositioningPartC.Parent = char
+PositioningPartC.CanCollide = false
+PositioningPartC.Transparency = 1
+PositioningPartC.Name = "positioningpart"
+PositioningPartC.CFrame = char.HumanoidRootPart.CFrame
+elseif input.KeyCode == Enum.KeyCode.T then
+if char:FindFirstChild("positioningpart") then
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+				FieldOfView = 30;
+			}):Play()
+			game.TweenService:Create(game.Lighting.TimeColor, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out, 0, false, 0), {
+				TintColor = game.Lighting.TimeColor.TimeColor.TintColor;
+			}):Play()
+			game.TweenService:Create(game.Lighting.TimeColor, TweenInfo.new(1), {
+				Contrast = 1;
+			}):Play()
+			Humanoid.WalkSpeed = 0
+			Humanoid.JumpPower = 0
+			DrStrangeS.StartTimeBack:FireServer(plr)
+			task.wait(.5)
+		   LoopBack:Play()
+			DrStrangeS.TimeBack:FireServer(char.positioningpart.CFrame, 150)
+				char.CustomShiftlock.Disabled = true
+			char.CameraScript.Disabled = true
+			char.CamForce.Disabled = false
+			workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+			workspace.CurrentCamera.CameraSubject = plr.Character.CamCutscene
+				workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+				workspace.CurrentCamera.CFrame = plr.Character.CamCutscene.CFrame
+			plr.PlayerGui.CharacterGui.Enabled = false
+			plr.PlayerGui["UI thing"].Enabled = false
+			plr.PlayerGui.Vig.Enabled = false
+			game:GetService("UserInputService").MouseIconEnabled = false
+			game.TweenService:Create(game.Lighting.TimeColor, TweenInfo.new(0.8, Enum.EasingStyle.Sine, Enum.EasingDirection.Out, 0, false, 0), {
+				TintColor = game.Lighting.ColorCorrection.TintColor;
+			}):Play()
+			game.TweenService:Create(game.Lighting.TimeColor, TweenInfo.new(1), {
+				Contrast = 0;
+			}):Play()
+			game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+				FieldOfView = 90;
+			}):Play()
+					plr.PlayerGui.Vig.Enabled = true
+			wait(0.5)
+			char.positioningpart:Destroy()
+				game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+				FieldOfView = 70;
+			}):Play()
+				plr.PlayerGui.Vig.Enabled = false
+				wait(1.5)
+							Humanoid.WalkSpeed = 10
+			Humanoid.JumpPower = 30
+					char.CamForce.Disabled = true
+			char.CameraScript.Disabled = false
+			char.CustomShiftlock.Disabled = false
+				workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+					workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+				workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+			workspace.CurrentCamera.CFrame = 	workspace.CurrentCamera.CFrame
+			plr.PlayerGui.CharacterGui.Enabled = true
+			plr.PlayerGui["UI thing"].Enabled = true
+			plr.PlayerGui.Vig.Enabled = true
+		else
+			return
+		
+		end	
    end
 end)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
