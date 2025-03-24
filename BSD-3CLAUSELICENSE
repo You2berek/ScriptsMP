@@ -328,6 +328,14 @@ CharSection:NewButton("Click", "Dont lmfao.", function()
 game:GetService("Players").LocalPlayer:Kick(" [PERMANENT BAN]   You ignorant fuck should have checked the description.")
 	
 end)
+local ShamelessS = CharTab:NewSection("Shameless")
+
+ShamelessS:NewButton("Frank Gallagher", "Nobody said.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FrankGallagher"))()
+	
+end)
+
+
 
 local DexterSection = CharTab:NewSection("Dexter/Original Sin/New Blood")
 DexterSection:NewButton("Dexter Morgan", "Tonight's the night.", function()
