@@ -123,10 +123,7 @@ SniperShot_upvr:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.Five then
 game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Finisher:FireServer()
 elseif input.KeyCode == Enum.KeyCode.Three then
-local Extreme = Instance.new("BoolValue")
-Extreme.Parent = char
-Extreme.Name = "CounterSucces"
-game.Debris:AddItem(Extreme, 0.05)
+game.ReplicatedStorage.Characters.Moonknight.Remotes.SmackDown:FireServer(LocalPlayer_upvr)
 elseif input.KeyCode == Enum.KeyCode.J then
 local anim = Instance.new("Animation")
 
