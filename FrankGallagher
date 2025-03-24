@@ -1,0 +1,215 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local JeffreyS = char:WaitForChild("Jeffrey")
+local Anims = JeffreyS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Jeffrey"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+
+local Drink = Animator:LoadAnimation(Anims.Drink)
+local BlockAnim = Animator:LoadAnimation(Anims.Blocking)
+local BoneAnim = Animator:LoadAnimation(Anims.BoneSmash)
+local PictureAnim = Animator:LoadAnimation(Rems.Parent.AnimationsExtra.Picture)
+local TackleStart = Animator:LoadAnimation(Anims.TackleRun)
+local Tackle = Animator:LoadAnimation(Anims.TackleHit)
+
+local function DrillCounter()
+local Drill = Instance.new("BoolValue")
+Drill.Parent = char
+Drill.Name = "CounterSucces"
+game.Debris:AddItem(Drill, .05)
+end
+function Dash(arg1) 
+	local BodyPosition = Instance.new("BodyPosition")
+	BodyPosition.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+	BodyPosition.P = 50000
+	BodyPosition.D = 3000
+	BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -10)).Position
+	BodyPosition.Parent = arg1
+	game.Debris:AddItem(BodyPosition, 0.7)
+end
+
+    if input.KeyCode == Enum.KeyCode.One then
+	game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {
+			ImageTransparency = 0.3;
+		}):Play()
+TackleStart:Play()
+local TackleVel = Instance.new("BodyVelocity")
+TackleVel.Parent = char.HumanoidRootPart
+TackleVel.P = 1250
+TackleVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+TackleVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 35
+game.Debris:AddItem(TackleVel, 1.1)
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 85;
+		}):Play()
+JeffreyS.ChaseOn:FireServer(plr)
+local DumbellHB = CombatHitbox:Clone()
+DumbellHB.Parent = char
+local DWeld = Instance.new("Weld", DumbellHB)
+DWeld.Part0 = DumbellHB
+DWeld.Part1 = char.HumanoidRootPart
+DWeld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(DumbellHB, 1)
+DumbellHB.Touched:Connect(function(dumbass)
+local org = dumbass.Parent
+local humanoid = org:FindFirstChild("Humanoid")
+ if humanoid and humanoid.Health ~= 0 then
+  if humanoid ~= char then
+   DumbellHB:Destroy()
+   TackleStart:Stop()
+   Chars.Ghostface.Remotes.Stab:FireServer(char, org)
+   Dash(char.HumanoidRootPart)
+   Tackle:Play()
+   TackleVel:Destroy()
+  	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+						FieldOfView = 70;
+					}):Play()
+game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+			ImageTransparency = 1;
+		}):Play()
+		JeffreyS.ChaseOff:FireServer(plr)
+					game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.1), {
+						TintColor = game.Lighting.GoreColorCorrection.TintColor;
+					}):Play()
+					game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.1), {
+						Contrast = game.Lighting.GoreColorCorrection.Contrast;
+					}):Play()
+					game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.1), {
+						Brightness = game.Lighting.GoreColorCorrection.Brightness;
+					}):Play()
+					wait(0.1)
+					game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.1), {
+						TintColor = game.Lighting.BaseColorCorrection.TintColor;
+					}):Play()
+					game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.1), {
+						Contrast = game.Lighting.BaseColorCorrection.Contrast;
+					}):Play()
+					game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.1), {
+						Brightness = game.Lighting.BaseColorCorrection.Brightness;
+					}):Play()
+  end
+ end	
+end)
+local runDuration = 1  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if TackleVel then
+        wait(0.1)
+        TackleVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 35
+    end
+end
+	game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+			ImageTransparency = 1;
+		}):Play()
+			game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 70;
+		}):Play()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+PictureAnim:Play()
+Rems.Picture:FireServer(plr)
+Humanoid.WalkSpeed = 0
+Humanoid.JumpPower = 0
+task.wait(.25)
+local PictureBox = CombatHitbox:Clone()
+PictureBox.Parent = char 
+local PWeld = Instance.new("Weld", PictureBox)
+PWeld.Part0 = PictureBox
+PWeld.Part1 = char.HumanoidRootPart
+PWeld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(PictureBox, .2)
+PictureBox.Touched:Connect(function(Smile)
+local Inside = Smile.Parent
+local Humanoid = Inside:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+   if Inside ~= char then
+    PictureBox:Destroy()
+	Chars.Combat.Remotes.Combo:FireServer(Inside)
+	task.spawn(function()
+    local ImageClone = plr.PlayerGui.CharacterSpecial.Jeffrey.Img:Clone()
+	ImageClone.Parent = plr.PlayerGui.CharacterSpecial.Jeffrey
+	game.Debris:AddItem(ImageClone, 2)
+	game:GetService("TweenService"):Create(ImageClone, TweenInfo.new(0.2), {
+							ImageTransparency = 0;
+						}):Play()
+    task.wait(.2)
+	plr.PlayerGui.CharacterSpecial.Jeffrey.SFX:Play()
+	wait(.6)
+			ImageClone:TweenPosition(UDim2.new(0.718, 0, 0.999, 0))
+			game:GetService("TweenService"):Create(ImageClone, TweenInfo.new(0.8), {
+			ImageTransparency = 1;
+			}):Play()
+
+    
+    end)
+   end
+ end
+end)
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(DrillCounter)
+elseif input.KeyCode == Enum.KeyCode.Four then
+
+BoneAnim:GetMarkerReachedSignal("Start"):Connect(function(arg1)
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.35, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+				FieldOfView = 90;
+			}):Play()
+				Humanoid.WalkSpeed = 0
+			Humanoid.JumpPower = 0
+			JeffreyS.Bone:FireServer(plr)
+
+
+
+end)
+BoneAnim:GetMarkerReachedSignal("Slam"):Connect(function(arg1)
+Rems.BoneSmash:FireServer()
+local SmashBox = CombatHitbox:Clone()
+SmashBox.Parent = char
+local SWeld = Instance.new("Weld", SmashBox)
+SWeld.Part0 = SmashBox
+SWeld.Part1 = char.HumanoidRootPart
+SWeld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(SmashBox, .2)
+SmashBox.Touched:Connect(function(who)
+local whoParent = who.Parent
+local Humanoid = whoParent:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+   if whoParent ~= char then
+    SmashBox:Destroy()
+	Chars.Combat.Remotes.Combo:FireServer(whoParent)
+   end
+end
+end)
+
+
+
+
+
+end)
+BoneAnim:Play()
+wait(1)
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.35, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 70;
+		}):Play()
+		Humanoid.WalkSpeed = 16
+		Humanoid.JumpPower = 50
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+BlockAnim:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+Drink:Play()
+JeffreyS.Drink:FireServer(plr)
+   end
+end)
