@@ -328,9 +328,9 @@ CharSection:NewButton("Click", "Dont lmfao.", function()
 game:GetService("Players").LocalPlayer:Kick(" [PERMANENT BAN]   You ignorant fuck should have checked the description.")
 	
 end)
-local ShamelessS = CharTab:NewSection("Shameless")
+local ShamelessS = CharTab:NewSection("Diary of a Wimpy Kid")
 
-ShamelessS:NewButton("Frank Gallagher", "Nobody said.", function()
+ShamelessS:NewButton("Frank Heffley", "Nobody said.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FrankGallagher"))()
 	
 end)
