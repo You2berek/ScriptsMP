@@ -417,7 +417,7 @@ end)
 
 local TBSection = CharTab:NewSection("The Boys")
 
-TBSection:NewButton("Homelander/Ramsay", "I'm stronger, I'm smarter. I'M BETTER.", function()
+TBSection:NewButton("Homelander", "I'm stronger, I'm smarter. I'M BETTER.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
 end)
 
