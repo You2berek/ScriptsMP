@@ -199,6 +199,13 @@ BBSection:NewButton("Walter White", "This is not meth.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Heisenberg"))()
 	
 end)
+local CelebrityS = CharTab:NewSection("Celebrities")
+CelebrityS:NewButton("Michael Jackson", "Thriller.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/MichaelJackson"))()
+	
+end)
+
+
 local SpeedSection = CharTab:NewSection("CW Universe")
 
 SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
