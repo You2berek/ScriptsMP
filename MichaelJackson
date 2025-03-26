@@ -1,0 +1,194 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local MjS = char:WaitForChild("Michael")
+local Anims = MjS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Michael"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+function Dash(arg1) -- Line 36
+	local BodyPosition = Instance.new("BodyPosition")
+	BodyPosition.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+	BodyPosition.P = 50000
+	BodyPosition.D = 3000
+	BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -10)).Position
+	BodyPosition.Parent = arg1
+	game.Debris:AddItem(BodyPosition, 0.7)
+end
+function DashUp(arg1) -- Line 46
+	local BodyPosition_4 = Instance.new("BodyPosition")
+	BodyPosition_4.MaxForce = Vector3.new(1000000, 0, 1000000)
+	BodyPosition_4.P = 100000
+	BodyPosition_4.D = 3000
+	BodyPosition_4.Position = (arg1.CFrame * CFrame.new(0, 5, 0)).Position
+	BodyPosition_4.Parent = arg1
+	game.Debris:AddItem(BodyPosition_4, 0.2)
+end
+function Bad()
+local Counter = Instance.new("BoolValue")
+Counter.Name = "CounterSucces"
+Counter.Parent = char
+game.Debris:AddItem(Counter, .05)
+end
+local TornadoRun = Animator:LoadAnimation(Anims.TackleRun)
+local TornadoEnd = Animator:LoadAnimation(Anims.TackleHit)
+local BillieKick = Animator:LoadAnimation(Anims.BillieKick)
+local MWalkAnim = Animator:LoadAnimation(Anims.MoonWalk)
+local BlAnim = Animator:LoadAnimation(Anims.Blocking)
+local EarthHealAnim = Animator:LoadAnimation(Anims.EarthSing)
+BillieKick:GetMarkerReachedSignal("Start"):Connect(function()
+MjS.Billie:FireServer(plr)
+MjS.KickStart:FireServer(plr)
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 50;
+	}):Play()
+	Humanoid.WalkSpeed = 0
+	Humanoid.JumpPower = 0
+	DashUp(char.HumanoidRootPart)
+end)
+BillieKick:GetMarkerReachedSignal("Kick"):Connect(function()
+MjS.Kick:FireServer(plr)
+
+Dash(char.HumanoidRootPart)
+Rems.KickHit:FireServer(plr)
+task.wait(.4)
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 70;
+	}):Play()
+	Humanoid.WalkSpeed = 10
+	Humanoid.JumpPower = 30
+end)
+MWalkAnim:GetMarkerReachedSignal("Start"):Connect(function()
+Rems.Moonwalk:FireServer(plr)
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 20
+game.Debris:AddItem(BodyVel, 2.1)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+  FieldOfView = 40;
+ }):Play()
+game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {
+  ImageTransparency = 0;
+ }):Play()
+game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.3), {
+  Contrast = 0.3;
+ }):Play()
+local AttackBox = CombatHitbox:Clone()
+AttackBox.Parent = char
+local Weld = Instance.new("Weld", AttackBox)
+Weld.Part0 = AttackBox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(AttackBox, 3)
+AttackBox.Touched:Connect(function(arg1)
+local Parent_1 = arg1.Parent 
+local Humanoid = Parent_1:FindFirstChild("Humanoid")
+ if Humanoid and Humanoid.Health ~= 0 then
+  if Parent_1 ~= char and not Parent_1.Head:FindFirstChild(Parent_1.Name) then
+  print(touched)
+  local BoolValue = Instance.new("BoolValue")
+  BoolValue.Name = Parent_1.Name
+  BoolValue.Parent = Parent_1.Head
+  game.Debris:AddItem(BoolValue, .4)
+  Chars.Combat.Remotes.Combo:FireServer(plr)
+  end
+ end
+end)
+local runDuration = 2.1  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 20
+    end
+end
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 70;
+	}):Play()
+		game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {
+		ImageTransparency = 1;
+	}):Play()
+		game:GetService("TweenService"):Create(game.Lighting.ColorCorrection, TweenInfo.new(0.3), {
+		Contrast = 0;
+	}):Play()
+	end)
+
+    if input.KeyCode == Enum.KeyCode.One then
+game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {ImageTransparency = 0.3;}):Play()
+TornadoRun:Play()
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 35
+game.Debris:AddItem(BodyVel, 1.1)
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 85;
+		}):Play()
+MjS.ChaseOn:FireServer(plr)
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 =  CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 1)
+Hitbox.Touched:Connect(function(operator)
+local Char1 = operator.Parent
+local Humanoid = Char1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then 
+  if Char1 ~= char and not Char1:FindFirstChild(Char1.Name) then
+    local Bool = Instance.new("BoolValue")
+	Bool.Parent = Char1
+	Bool.Name = Char1.Name
+	game.Debris:AddItem(Bool, .4)
+	Chars.Combat.Remotes.ComboEndRemote:FireServer(Char1)
+  end
+end
+end)
+
+local runDuration = 1.1  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 35
+    end
+end
+MjS.ChaseOff:FireServer()
+TornadoRun:Stop()
+TornadoEnd:Play()
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 70;
+		}):Play()
+game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {ImageTransparency = 1;}):Play()
+
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+BillieKick:Play()
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(Bad)
+elseif input.KeyCode == Enum.KeyCode.Four then
+MWalkAnim:Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+BlAnim:Play()
+Chars.Combat.Remotes.Blocking:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+EarthHealAnim:Play()
+Rems.Earth:FireServer(plr)
+   end
+end)
