@@ -1,5 +1,5 @@
 local allowedUserIds = {
-8054367032,
+8054690298,
 8054812997
 }
 local plr = game:GetService("Players").LocalPlayer
