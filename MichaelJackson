@@ -100,7 +100,7 @@ local Humanoid = Parent_1:FindFirstChild("Humanoid")
   BoolValue.Name = Parent_1.Name
   BoolValue.Parent = Parent_1.Head
   game.Debris:AddItem(BoolValue, .4)
-  Chars.Combat.Remotes.Combo:FireServer(plr)
+  Chars.Combat.Remotes.Combo:FireServer(Parent_1)
   end
  end
 end)
