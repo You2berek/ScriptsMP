@@ -8,7 +8,13 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
  local Anims = InvScript:WaitForChild("Animations")
 
 local Repl = game:getService("ReplicatedStorage")
+local function Counter()
+local CounterWork = Instance.new("BoolValue")
+CounterWork.Parent = char
+CounterWork.Name = "CounterSucces"
+game.Debris:AddItem(CounterWork, .05)
 
+end
 
     if input.KeyCode == Enum.KeyCode.One then
 Repl.Characters.Invincible.Remotes.Swipes:FireServer()
@@ -16,11 +22,7 @@ Repl.Characters.Invincible.Remotes.Swipes:FireServer()
 elseif input.KeyCode == Enum.KeyCode.Two then
 Repl.Characters.Invincible.Remotes.ComboPunch:FireServer()
 elseif input.KeyCode == Enum.KeyCode.Three then
-local player = game.Players.LocalPlayer
-local CounterWork = Instance.new("BoolValue")
-CounterWork.Parent = char
-CounterWork.Name = "CounterSucces"
-game.Debris:AddItem(CounterWork, .1)
+task.spawn(Counter)
 elseif input.KeyCode == Enum.KeyCode.Four then
 -- Services
 local Players = game:GetService("Players")
