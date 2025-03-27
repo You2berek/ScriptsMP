@@ -1,0 +1,166 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local GhostFS = char:WaitForChild("Ghostface")
+local Anims = GhostFS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Ghostface"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local TweenService = game:GetService("TweenService")
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+function Dash(arg1) -- Line 36
+	local BodyPosition = Instance.new("BodyPosition")
+	BodyPosition.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+	BodyPosition.P = 50000
+	BodyPosition.D = 3000
+	BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -10)).Position
+	BodyPosition.Parent = arg1
+	game.Debris:AddItem(BodyPosition, 0.7)
+end
+
+local TackleRun = Animator:LoadAnimation(Anims.TackleRun)
+local TackleHit = Animator:LoadAnimation(Anims.TackleHit)
+local CallA = Animator:LoadAnimation(Anims.QuickCall)
+local BlockA = Animator:LoadAnimation(Anims.Blocking)
+
+
+local function Counter()
+local Bool = Instance.new("BoolValue")
+Bool.Parent = char
+Bool.Name = "CounterSucces"
+game.Debris:AddItem(Bool, .05)
+end
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {
+	ImageTransparency = 0.3;
+}):Play()
+TackleRun:Play()
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 35
+game.Debris:AddItem(BodyVel, 1.5)
+TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 85;
+}):Play()
+GhostFS.ChaseOn:FireServer(plr)
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = 	CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 1.5)
+Hitbox.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+if Humanoid1 and Humanoid1.Health ~= 0 then
+ if Parent1 ~= char then
+    Hitbox:Destroy()
+	BodyVel:Destroy()
+	TackleRun:Stop()
+	TackleHit:Play()
+	Rems.Stab:FireServer(char, Parent1)
+	Dash(char.HumanoidRootPart)
+	TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+						FieldOfView = 70;
+	}):Play()
+ 		TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+						ImageTransparency = 1;
+	}):Play()
+	GhostFS.ChaseOff:FireServer(plr)
+  end
+ end
+end)
+local runDuration = 1.5  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 35
+    end
+end
+GhostFS.ChaseOff:FireServer(plr)
+	TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+						FieldOfView = 70;
+	}):Play()
+ 		TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+						ImageTransparency = 1;
+	}):Play()
+
+elseif input.KeyCode == Enum.KeyCode.H then
+Rems.Vanish:FireServer(MouseHit)
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(Counter)
+elseif input.KeyCode == Enum.KeyCode.Four then
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Size = Vector3.new(3.5, 3.5, 15)
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 13) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .2)
+Hitbox.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+ if Parent1 ~= char then
+   Hitbox:Destroy()
+   Rems.Double:FireServer(Parent1)
+ end
+end
+end)
+CallA:Play()
+GhostFS.Call:FireServer(plr)
+TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 50;
+}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+	ImageTransparency = 0.5;
+}):Play()
+wait(1)
+TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+	ImageTransparency = 1;
+}):Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+BlockA:Play()
+elseif input.KeyCode == Enum.KeyCode.E then
+CallA:Play()
+GhostFS.Call2:FireServer(plr)
+Rems.Call:FireServer(plr)
+TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 50;
+}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+	ImageTransparency = 0.5;
+}):Play()
+wait(1)
+TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.5), {
+	ImageTransparency = 1;
+}):Play()
+   end
+end)
