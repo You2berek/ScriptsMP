@@ -179,7 +179,12 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 	
 end)
 
+local ScreamS = CharTab:NewSection("Scream")
 
+ScreamS:NewButton("Ghostface", "Wanna die, Sidney?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/GhostFace"))()
+	
+end)
 
 local DexterSection = CharTab:NewSection("Dexter/Original Sin/New Blood")
 DexterSection:NewButton("Dexter Morgan", "Tonight's the night.", function()
