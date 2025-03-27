@@ -304,6 +304,10 @@ IBSection:NewButton("Invincible", "And if you still think you can stop us.", fun
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Invincible"))()
 end)
 
+IBSection:NewButton("Conquest", "I WANT MORE!", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Conquest"))()
+end)
+
 local DCSection = CharTab:NewSection("Detective Comics Extended Universe")
 
 DCSection:NewButton("The Batman", "Do you bleed?", function()
