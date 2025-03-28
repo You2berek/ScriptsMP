@@ -2,192 +2,118 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     if gameProcessedEvent then
         return 
     end
-   
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local PibbyS = char:WaitForChild("Pibby")
+local Anims = PibbyS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Pibby"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
 
+local MoveOneA = Animator:LoadAnimation(Anims.MoveOne)
+local SwordRushA = Animator:LoadAnimation(Anims.SwordRush)
+local MoveFourA = Animator:LoadAnimation(Anims.MoveFour)
+local GuardAnim = Animator:LoadAnimation(Anims.Blocking)
+
+local function CounterDo()
+local Counter = Instance.new("BoolValue")
+Counter.Parent = char
+Counter.Name = "CounterSucces"
+game.Debris:AddItem(Counter, .05)
+end
 
 
     if input.KeyCode == Enum.KeyCode.One then
-local args = {
-
-   [1] = game:GetService("Players").LocalPlayer
-
-
-}
-
-
-game:GetService("ReplicatedStorage"):FindFirstChild("Characters"):FindFirstChild("Pibby"):FindFirstChild("Remotes"):FindFirstChild("GlitchSwipe"):FireServer(unpack(args))
+MoveOneA:Play()
+Rems.GlitchSwipe:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.Two then
-function getNearestPlayer()
-    local closestPlayer = nil
-    local shortestDistance = math.huge
-    local character = game:GetService("Players").LocalPlayer.Character
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        local humanoidRootPart = character.HumanoidRootPart
-        for _, player in pairs(game:GetService("Players"):GetPlayers()) do
-            if player ~= game:GetService("Players").LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                local playerHumanoidRootPart = player.Character.HumanoidRootPart
-                local distance = (humanoidRootPart.Position - playerHumanoidRootPart.Position).Magnitude
-                if distance < shortestDistance then
-                    closestPlayer = player
-                    shortestDistance = distance
-                end
-            end
-        end
+
+
+SwordRushA:Play()
+PibbyS.Rush:FireServer(plr)
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 35
+game.Debris:AddItem(BodyVel, 1)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 85;
+}):Play()
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+Hitbox.Size *= 1.5
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 5.25) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 1)
+Hitbox.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+ if Humanoid and Humanoid.Health ~= 0 then
+   if Parent1 ~= char then
+   Hitbox:Destroy()
+   Rems.RushHit:FireServer(plr)
+   SwordRushA:Stop()
+   BodyVel:Destroy()
+   PibbyS.RushOff:FireServer(plr)
+   game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 70;
+	}):Play()
+   end
+  end
+ end)
+ 
+ local runDuration = 1  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 35
     end
-    return closestPlayer
 end
+  
+ PibbyS.RushOff:FireServer(plr)
+ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
 
-local nearestPlayer = getNearestPlayer()
-
-
-local anim2 = Instance.new("Animation")
-
-
-
-anim2.AnimationId = "rbxassetid://139984271236853"
-local plr = game.Players.LocalPlayer
-
-local animTrack2 = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim2)
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-
-
-game:GetService("Players").LocalPlayer.Character.Pibby.Rush:FireServer(unpack(args))
-
-
-
-
-
-animTrack2:Play()
--- Variables to manage the forced speed and movement
-local Player = game.Players.LocalPlayer
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-local character = nil
-local humanoid = nil
-local bodyVelocity = nil
-local rotationSpeed = 2 -- Speed of rotation when pressing A or D
-local lastRemoteTime = 0
-local remoteInterval = 5 -- Time in seconds between remote events
-local isRunning = false -- Flag to control the loop
-
--- Function to start forcing the player to run involuntarily
-local function startForcedMovement()
-    character = Player.Character or Player.CharacterAdded:Wait()
-    humanoid = character:WaitForChild("Humanoid")
-
-    -- Set WalkSpeed to 100 for the desired running effect
-    humanoid.WalkSpeed = 30
-
-
-    -- Create a BodyVelocity to enforce constant movement
-    bodyVelocity = Instance.new("BodyVelocity")
-    bodyVelocity.MaxForce = Vector3.new(4000, 4000, 4000) -- High force to overcome inertia
-    bodyVelocity.Velocity = Vector3.new(0, 0, 0) -- Will be updated each frame
-    bodyVelocity.Parent = humanoid.RootPart
-
-    -- Set the isRunning flag to true to start the loop
-    isRunning = true
-
-    -- Update velocity and handle rotation every frame
-    RunService.Heartbeat:Connect(function()
-        if isRunning and humanoid and humanoid.RootPart then
-            -- Update velocity to match the direction the player is facing
-            local moveDirection = humanoid.RootPart.CFrame.LookVector
-            bodyVelocity.Velocity = moveDirection * humanoid.WalkSpeed
-local nearestPlayer, distance = getNearestPlayer()
-    if nearestPlayer then
-      local args = {
-    [1] = workspace:FindFirstChild(nearestPlayer.Name)
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Pibby"):WaitForChild("Remotes"):WaitForChild("RushHit"):FireServer(unpack(args))
-
-    else
-        print("No players found within radius.")
-    end
-            -- Fire the remote event every 5 seconds
-        
-        end
-    end)
-
-    -- Allow rotation using A and D keys
-    UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if gameProcessed then return end
-
-        if input.KeyCode == Enum.KeyCode.A then
-            -- Rotate character slightly to the left
-            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(-rotationSpeed), 0))
-        elseif input.KeyCode == Enum.KeyCode.D then
-            -- Rotate character slightly to the right
-            character:SetPrimaryPartCFrame(character.PrimaryPart.CFrame * CFrame.Angles(0, math.rad(rotationSpeed), 0))
-        end
-    end)
-end
-
--- Function to stop forcing the player to run
-local function stopForcedMovement()
-    if bodyVelocity then
-        bodyVelocity:Destroy()
-        bodyVelocity = nil
-    end
-
-    if humanoid then
-        humanoid.WalkSpeed = 10 -- Reset to default WalkSpeed
-    end
-
-    -- Set the isRunning flag to false to stop the loop
-    isRunning = false
-end
-
-
-startForcedMovement()
-animTrack2.Ended:Wait()
-stopForcedMovement()
-game:GetService("Players").LocalPlayer.Character.Pibby.RushOff:FireServer(unpack(args))
 elseif input.KeyCode == Enum.KeyCode.Three then
-local args = {
-
-   [1] = game:GetService("Players").LocalPlayer
-
-
-}
-
-
-game:GetService("ReplicatedStorage"):FindFirstChild("Characters"):FindFirstChild("Pibby"):FindFirstChild("Remotes"):FindFirstChild("Counter"):FireServer()
+task.spawn(CounterDo)
 elseif input.KeyCode == Enum.KeyCode.Four then
-local args = {
-
-   [1] = game:GetService("Players").LocalPlayer
-
-
-}
-
-
-game:GetService("ReplicatedStorage"):FindFirstChild("Characters"):FindFirstChild("Pibby"):FindFirstChild("Remotes"):FindFirstChild("DisruptedDash"):FireServer(unpack(args))
+Rems.DisruptedDash:FireServer()
+MoveFourA:Play()
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 40;
+}):Play()
+wait(0.5)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 90;
+}):Play()
+wait(0.2)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
 elseif input.KeyCode == Enum.KeyCode.Five then
-
-
-game:GetService("ReplicatedStorage"):FindFirstChild("Characters"):FindFirstChild("Pibby"):FindFirstChild("Remotes"):FindFirstChild("Finisher"):FireServer()
+Rems.Finisher:FireServer()
 elseif input.KeyCode == Enum.KeyCode.F then
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Combat"):WaitForChild("Remotes"):WaitForChild("Blocking"):FireServer(unpack(args))
+GuardAnim:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.E then
-local args = {
-
-   [1] = game:GetService("Players").LocalPlayer
-
-
-}
-
-
-game:GetService("ReplicatedStorage"):FindFirstChild("Characters"):FindFirstChild("Pibby"):FindFirstChild("Remotes"):FindFirstChild("Darkness"):FireServer(unpack(args))
+Rems.Darkness:FireServer()
+wait(4)
+for i=1,5 do
+PibbyS.EMove:FireServer(plr)
+end
    end
 end)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
