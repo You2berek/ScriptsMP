@@ -2458,4 +2458,4 @@
 
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/BSD-3CLAUSELICENSE"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicensingAgreement"))()
