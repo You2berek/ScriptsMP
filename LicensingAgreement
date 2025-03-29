@@ -95,8 +95,49 @@ Section:NewButton("Old Miles", "Turns you into the character", function()
 end)
 -- Characters Tab
 local CharTab = Window:NewTab("CHARACTERS")
-local WIPMsg = CharTab:NewSection("Rework in progress.")
--- Extra Tab
+local CharSection = CharTab:NewSection("Characters")
+local SkinSelection = 0
+CharSection:NewSlider("Skin", "Skin to use.", 7, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    SkinSelection = s
+end)
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local SelectACharacter = ReplicatedStorage:FindFirstChild("SelectACharacter")
+local Section = script.Parent -- Assuming this is where you want to add buttons
+
+-- Initialize SkinSelection
+ -- Set the initial skin selection to 0
+
+-- Loop through each character in SelectACharacter
+local excludedCharacters = {"GigaChad", "Thanos", "Wanda", "Speed", "nilRandomCharacter"}  -- List of characters to exclude
+
+for _, character in pairs(SelectACharacter:GetChildren()) do
+    -- Check if the character is in the excluded list
+    if not table.find(excludedCharacters, character.Name) then
+        -- Create a new button for each character that's not excluded
+        CharSection:NewButton(character.Name, "Turns you into the character", function()
+            -- Construct the path to the skin dynamically
+            local skinPath = game:GetService("ReplicatedStorage").Skins:FindFirstChild(character.Name)
+                and game:GetService("ReplicatedStorage").Skins[character.Name]:FindFirstChild("Skin" .. SkinSelection)
+
+            -- Check if the skin exists
+            if skinPath then
+                -- If skin exists, use it
+                fireChangeChar(
+                    skinPath,
+                    game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+                )
+            else
+                -- If no skins, use the default character
+                fireChangeChar(
+                    ReplicatedStorage.SelectACharacter[character.Name],
+                    game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+                )
+            end
+        end)
+    end
+end
+
 local ExtraTab = Window:NewTab("GENERAL ADDITIONS")
 local ExtraSection = ExtraTab:NewSection("Moves that you can use with them")
 
