@@ -253,6 +253,34 @@ SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
 end)
 
+local MCUSection = CharTab:NewSection("Marvel Cinematic Universe")
+
+MCUSection:NewButton("Doctor Strange", "DORMAMMU", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Strange"))()
+	
+end)
+
+
+MCUSection:NewButton("Moon Knight", "Alright do it, take control.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/MoonKnight"))()
+	
+end)
+
+MCUSection:NewButton("Miguel O'Hara", "Call for backup.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/2099"))()
+	
+end)
+
+MCUSection:NewButton("The Amazing Spider-man", "Byee!", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tams"))()
+	
+end)
+
+MCUSection:NewButton("Reed Richards", "Of the Fantastic Four.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/ReedRichards"))()
+	
+end)
+
 local HalloweenS = CharTab:NewSection("Halloween")
 
 HalloweenS:NewButton("Michael Myers", "...", function()
@@ -303,24 +331,6 @@ local LazySection = CharTab:NewSection("Lazy Town")
 LazySection:NewButton("Íþróttaálfurinn 'Sportacus'", "I ran as fast as i can", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Sportacus"))()
 
-end)
-
-local MCUSection = CharTab:NewSection("Marvel Cinematic Universe")
-
-MCUSection:NewButton("Doctor Strange", "DORMAMMU", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Strange"))()
-	
-end)
-
-
-MCUSection:NewButton("Moon Knight", "Alright do it, take control.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/MoonKnight"))()
-	
-end)
-
-MCUSection:NewButton("Miguel O'Hara", "Call for backup.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/2099"))()
-	
 end)
 
 local SWSection = CharTab:NewSection("Star Wars")
