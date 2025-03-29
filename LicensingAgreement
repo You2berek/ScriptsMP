@@ -308,6 +308,11 @@ end)
 TBSection:NewButton("Soldier Boy", "Fab Five Freddy told me everybody's fly DJ spinnin' and I said my, my.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FabFiveFreddyToldMeEverybodysFlyDjSpinninISaidMyMy"))()
 end)
+
+TBSection:NewButton("StarLight", "Understand me?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Starlight"))()
+end)
+
 local RamboSection = CharTab:NewSection("Rambo")
 
 RamboSection:NewButton("Rambo", "Don't push it! ", function()
