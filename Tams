@@ -1,0 +1,216 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local SpiderS = char:WaitForChild("SpiderMan")
+local Anims = SpiderS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("SpiderMan"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+local SymDB = false
+function Dash(arg1) -- Line 131
+	local BodyPosition_2 = Instance.new("BodyPosition")
+	BodyPosition_2.MaxForce = Vector3.new(1000000, 0, 1000000)
+	BodyPosition_2.P = 100000
+	BodyPosition_2.D = 3000
+	BodyPosition_2.Position = (arg1.CFrame * CFrame.new(0, 0, -45)).Position
+	BodyPosition_2.Parent = arg1
+	game.Debris:AddItem(BodyPosition_2, 0.5)
+end
+
+local function CounterTrigger()
+  local Counter = Instance.new("BoolValue")
+  Counter.Parent = char
+  Counter.Name = "CounterSucces"
+  game.Debris:AddItem(Counter, .05)
+end
+
+local SpideyStingA = Animator:LoadAnimation(Anims.Sting)
+local WebUpA = Animator:LoadAnimation(Anims.Webball)
+local SwingStartA = Animator:LoadAnimation(Anims.WebswingStart)
+local SwingA = Animator:LoadAnimation(Anims.Webswing)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+local SymStrike = Animator:LoadAnimation(Anims.SymbioteStrike)
+
+    if input.KeyCode == Enum.KeyCode.One then
+SpideyStingA:Play()
+Rems.UpperCut:FireServer(plr)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+	FieldOfView = 55;
+}):Play()
+wait(.3)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+	FieldOfView = 100;
+}):Play()
+wait(.4)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+if char.SymVal.Value == false then
+WebUpA:Play()
+Rems.WebBallRem:FireServer(plr)
+elseif char.SymVal.Value == true then
+SymStrike:Play()
+Rems.SymbiotePunch:FireServer(plr)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+  FieldOfView = 130;
+}):Play()
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(500000, 500000, 500000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 100
+game.Debris:AddItem(BodyVel, 3)
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+Hitbox.Size = Vector3.new(8,7,8)
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 2)
+Hitbox.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+  if Parent1 ~= char and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+  local Clone = Chars.Values.SuperSpeedDmgVal:Clone()
+  Clone.Parent = Parent1
+  game.Debris:AddItem(Clone, .6)
+  for i=1,4 do
+  Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+  Chars.Combat.Remotes.Combo:FireServer(Parent1)
+  end
+  end
+ end
+end)
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 60
+    else
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+    end
+end
+BodyVel:Destroy()
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+end
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(CounterTrigger)
+elseif input.KeyCode == Enum.KeyCode.Four then
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 40;
+}):Play()
+SwingStartA:Play()
+wait(.4)
+local SwingStartVel = Instance.new("BodyVelocity")
+SwingStartVel.Parent = char.HumanoidRootPart
+SwingStartVel.P = 1250
+SwingStartVel.MaxForce = Vector3.new(500000, 500000, 500000)
+SwingStartVel.Velocity = char.HumanoidRootPart.CFrame.UpVector * 20
+SpiderS.SwingShoot:FireServer(plr)
+wait(.1)
+SwingStartVel:Destroy()
+Rems.Webswing:FireServer(plr)
+SwingA:Play()
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 100;
+}):Play()
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(500000, 500000, 500000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 60
+game.Debris:AddItem(BodyVel, 1)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 85;
+}):Play()
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 1)
+Hitbox.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+  if Parent1 ~= char and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+  local Clone = Chars.Values.SuperSpeedDmgVal:Clone()
+  Clone.Parent = Parent1
+  game.Debris:AddItem(Clone, .5)
+  for i=1,2 do
+  Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+  Chars.Combat.Remotes.Combo:FireServer(Parent1)
+  end
+  end
+ end
+end)
+local runDuration = 1
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 60
+    else
+	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+    end
+end
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Chars.Miles.Remotes.FinisherTasm:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+if SymDB == false then
+SymDB = true
+plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Spider-String"
+plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Symbiote Strike"
+plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Blizzard Counter"
+plr.PlayerGui.Moveset.Frame.Hold.FourMove.Text = "Webswing Kick"
+plr.PlayerGui.Moveset.Frame.Hold.FiveMove.Text = "Sticky Finisher"
+Rems.Symbiote:FireServer()
+wait(1)
+	game.TweenService:Create(plr.PlayerGui.CharacterSpecial.Spidey.Sym, TweenInfo.new(2), {
+			ImageTransparency = 0;
+		}):Play()
+wait(120)
+plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Spider-String"
+plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Web Ball"
+plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Blizzard Counter"
+plr.PlayerGui.Moveset.Frame.Hold.FourMove.Text = "Webswing Kick"
+plr.PlayerGui.Moveset.Frame.Hold.FiveMove.Text = "Sticky Finisher"
+wait(1)
+	game.TweenService:Create(plr.PlayerGui.CharacterSpecial.Spidey.Sym, TweenInfo.new(1), {
+			ImageTransparency = 1;
+		}):Play()
+		SymDB = false
+   end
+   end
+end)
