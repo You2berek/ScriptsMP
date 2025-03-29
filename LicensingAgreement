@@ -234,25 +234,6 @@ game:GetService("Players").LocalPlayer:Kick(" [PERMANENT BAN]   You ignorant fuc
 	
 end)
 
-local SpeedSection = CharTab:NewSection("CW Universe")
-
-SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
-	
-end)
-SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
-	
-end)
-
-SpeedSection:NewButton("Amazo", "The one.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
-end)
-
-SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
-end)
-
 local MCUSection = CharTab:NewSection("Marvel Cinematic Universe")
 
 MCUSection:NewButton("Doctor Strange", "DORMAMMU", function()
@@ -279,6 +260,25 @@ end)
 MCUSection:NewButton("Reed Richards", "Of the Fantastic Four.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/ReedRichards"))()
 	
+end)
+
+local SpeedSection = CharTab:NewSection("CW Universe")
+
+SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
+	
+end)
+SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
+	
+end)
+
+SpeedSection:NewButton("Amazo", "The one.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
+end)
+
+SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
 end)
 
 local TBSection = CharTab:NewSection("The Boys")
@@ -315,6 +315,18 @@ end)
 
 IBSection:NewButton("Conquest", "I WANT MORE!", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Conquest"))()
+end)
+
+local DexterSection = CharTab:NewSection("Dexter/Original Sin/New Blood")
+
+DexterSection:NewButton("Dexter Morgan", "Tonight's the night.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Dexter"))()
+	
+end)
+
+DexterSection:NewButton("James Doakes", "Surprise, motherfucker.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Doakes"))()
+	
 end)
 
 local SWSection = CharTab:NewSection("Star Wars")
@@ -354,12 +366,6 @@ local ScreamS = CharTab:NewSection("Scream")
 
 ScreamS:NewButton("Ghostface", "Wanna die, Sidney?", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/GhostFace"))()
-	
-end)
-
-local DexterSection = CharTab:NewSection("Dexter/Original Sin/New Blood")
-DexterSection:NewButton("Dexter Morgan", "Tonight's the night.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Dexter"))()
 	
 end)
 
