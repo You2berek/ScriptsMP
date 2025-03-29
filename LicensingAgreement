@@ -109,7 +109,7 @@ local Section = script.Parent -- Assuming this is where you want to add buttons
  -- Set the initial skin selection to 0
 
 -- Loop through each character in SelectACharacter
-local excludedCharacters = {"GigaChad", "Thanos", "Wanda", "Speed", "nilRandomCharacter"}  -- List of characters to exclude
+local excludedCharacters = {"GigaChad", "Thanos", "Wanda", "Speed", "nilRandomCharacter", "Fx"}  -- List of characters to exclude
 
 for _, character in pairs(SelectACharacter:GetChildren()) do
     -- Check if the character is in the excluded list
