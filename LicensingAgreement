@@ -214,7 +214,7 @@ end)
 
 local HalloweenS = CharTab:NewSection("Halloween")
 
-ShamelessS:NewButton("Michael Myers", "...", function()
+HalloweenS:NewButton("Michael Myers", "...", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Myers"))()
 	
 end)
