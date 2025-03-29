@@ -335,6 +335,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 	
 end)
 
+local STSection = CharTab:NewSection("Stranger Things")
+
+STSection:NewButton("Steve Harrington", "...", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Harrington"))()
+	
+end)
+
+
 local ShamelessS = CharTab:NewSection("Diary of a Wimpy Kid")
 
 ShamelessS:NewButton("Frank Heffley", "Nobody said.", function()
