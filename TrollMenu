@@ -2,11 +2,32 @@
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local colors = {
+  SchemeColor = Color3.fromRGB(54, 93, 150),
+Background = Color3.fromRGB(27, 42, 74),
+Header = Color3.fromRGB(39, 69, 99),
+TextColor = Color3.fromRGB(197, 235, 255),
+ElementColor = Color3.fromRGB(27, 49, 110)
+}
+local colorsN = {
+  SchemeColor = Color3.fromRGB(54, 93, 150),
+Background = Color3.fromRGB(27, 42, 74),
+Header = Color3.fromRGB(39, 69, 99),
+TextColor = Color3.fromRGB(197, 235, 255),
+ElementColor = Color3.fromRGB(27, 49, 110)
+}
+local colorsBH = {
     SchemeColor = Color3.fromRGB(120, 59, 142 ),
     Background = Color3.fromRGB(82, 22, 103),
     Header = Color3.fromRGB(60, 9, 89),
     TextColor = Color3.fromRGB(229, 172, 172 ),
     ElementColor = Color3.fromRGB(79, 9, 89)
+}
+local colorsY2 = {
+    SchemeColor = Color3.fromRGB(150, 54, 54),
+    Background = Color3.fromRGB(74, 27, 27),
+    Header = Color3.fromRGB(99, 39, 39),
+    TextColor = Color3.fromRGB(235, 197, 197 ),
+    ElementColor = Color3.fromRGB(110, 27, 27)
 }
 local Window = Library.CreateLib("Marvellous Fairground", colors)
 
@@ -348,6 +369,30 @@ local uiTab = Window:NewTab("UI")
 local uiSection = uiTab:NewSection("UI")
 uiSection:NewKeybind("Hide UI", "KeybindInfo", Enum.KeyCode.N, function()
     Library:ToggleUI()
+end)
+uiSection:NewButton("Shady Scheme", "Changes scheme.", function()
+for theme, _ in pairs(colors) do
+  local newColor = colorsY2[theme]
+  if newColor then
+    Library:ChangeColor(theme, newColor)
+  end
+end
+end)
+uiSection:NewButton("BH Scheme", "Changes scheme.", function()
+for theme, _ in pairs(colors) do
+  local newColor = colorsBH[theme]
+  if newColor then
+    Library:ChangeColor(theme, newColor)
+  end
+end
+end)
+uiSection:NewButton("Neutral Scheme", "Changes scheme.", function()
+for theme, _ in pairs(colors) do
+  local newColor = colorsN[theme]
+  if newColor then
+    Library:ChangeColor(theme, newColor)
+  end
+end
 end)
 -- Feel free to change anything you want :)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
