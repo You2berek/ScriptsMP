@@ -1,0 +1,136 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local FantasticS = char:WaitForChild("MrFantastic")
+local Anims = FantasticS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("MrFantastic"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+local function TweenCameraMoveOne(arg1, arg2, arg3) -- Line 162, Named "TweenCameraMoveOne"
+	--[[ Upvalues[2]:
+		[1]: TweenService_upvr (readonly)
+		[2]: CurrentCamera_upvr (readonly)
+	]]
+	local tbl_5 = {}
+	tbl_5.FieldOfView = arg1
+	game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(arg2, arg3, Enum.EasingDirection.InOut), tbl_5):Play()
+	wait(arg2)
+end
+
+
+local ElastStrA = Animator:LoadAnimation(Anims.MoveOne)
+local FrogLeapA = Animator:LoadAnimation(Anims.FrogLeap)
+local AxeSpinA = Animator:LoadAnimation(Anims.AxeSpin)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+local ReflectA = Animator:LoadAnimation(Anims.ReflectPose)
+
+local function CounterTrigger()
+local Counter = Instance.new("BoolValue")
+Counter.Parent = char
+Counter.Name = "CounterSucces"
+game.Debris:AddItem(Counter, .05)
+end
+
+    if input.KeyCode == Enum.KeyCode.One then
+ElastStrA:Play()
+Rems.StretchPunch:FireServer(plr)
+TweenCameraMoveOne(70, 0.2, Enum.EasingStyle.Linear)
+TweenCameraMoveOne(50, 0.2, Enum.EasingStyle.Linear)
+TweenCameraMoveOne(40, 0.4, Enum.EasingStyle.Linear)
+TweenCameraMoveOne(70, 0.3, Enum.EasingStyle.Linear)
+elseif input.KeyCode == Enum.KeyCode.Two then
+FrogLeapA:Play()
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.7, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 100;
+		}):Play()
+Rems.MoveTwo:FireServer()
+wait(.7)
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 1250
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 80
+game.Debris:AddItem(BodyVel, 0.5)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 85;
+		}):Play()
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 70;
+		}):Play()
+		wait(0.4)
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 70;
+		}):Play()
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(CounterTrigger)
+elseif input.KeyCode == Enum.KeyCode.Four then
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.25, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 85;
+}):Play()
+FantasticS.ReleaseSpin:FireServer(plr)
+AxeSpinA:Play(.1)
+local clone = CombatHitbox:Clone()
+clone.Parent = char
+clone.Size = Vector3.new(9.18000, 3.5, 3.5)
+local Weld = Instance.new("Weld", clone)
+Weld.Part0 = clone
+Weld.Part1 = char.RightLowerArm
+Weld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, (math.pi/2))
+game.Debris:AddItem(clone, 1)
+clone.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+   if Parent1 ~= char and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+    local clone = game.ReplicatedStorage.Characters.Values.SuperSpeedDmgVal:Clone()
+					clone.Parent = Parent1
+					game.Debris:AddItem(clone, 0.2)
+					Rems.HitSpin:FireServer(Parent1)
+   end
+end
+end)
+local clone1 = CombatHitbox:Clone()
+clone1.Parent = char
+clone1.Size = Vector3.new(9.18000, 3.5, 3.5)
+local Weld = Instance.new("Weld", clone1)
+Weld.Part0 = clone1
+Weld.Part1 = char.LeftLowerArm
+Weld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, (math.pi/2))
+game.Debris:AddItem(clone1, 1)
+clone1.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+   if Parent1 ~= char and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+    local clone = game.ReplicatedStorage.Characters.Values.SuperSpeedDmgVal:Clone()
+					clone.Parent = Parent1
+					game.Debris:AddItem(clone, 0.2)
+					Rems.HitSpin:FireServer(Parent1)
+   end
+end
+end)
+wait(1)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+ReflectA:Play()
+FantasticS.ReflectOn:FireServer(plr)
+   end
+end)
