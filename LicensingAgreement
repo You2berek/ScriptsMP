@@ -184,7 +184,7 @@ ScriptSection:NewButton("Tornado+SuperSpeed", "Roberto.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Tornado"))()
 end)
 
-
+ -- my dumb ass tried to define it to a variable that didnt exist yet
 local CharTab = Window:NewTab("SCRIPT STORAGE")
 local CharSection = CharTab:NewSection("Character Scripts")
 
