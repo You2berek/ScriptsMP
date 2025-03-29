@@ -347,6 +347,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 	
 end)
 
+local APsychoS = CharTab:NewSection("American Psycho")
+
+HalloweenS:NewButton("Patrick Bateman", "...", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/AmericanPsycho"))()
+	
+end)
+
 local STSection = CharTab:NewSection("Stranger Things")
 
 STSection:NewButton("Steve Harrington", "...", function()
