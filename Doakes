@@ -1,0 +1,138 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local DoakesS = char:WaitForChild("Zodiac")
+local Anims = DoakesS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Zodiac"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+function Dash(arg1) -- Line 22
+	local BodyPosition = Instance.new("BodyPosition")
+	BodyPosition.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+	BodyPosition.P = 50000
+	BodyPosition.D = 3000
+	BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -30)).Position
+	BodyPosition.Parent = arg1
+	game.Debris:AddItem(BodyPosition, 0.7)
+end
+
+
+local MoveOneA = Animator:LoadAnimation(Anims.FlashShot)
+local MoveFoA = Animator:LoadAnimation(Anims.Stomp)
+local HogTieA = Animator:LoadAnimation(Anims.Rope)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+
+MoveOneA:GetMarkerReachedSignal("Start"):Connect(function()
+DoakesS.MoveOne:FireServer(plr)
+local clone = CombatHitbox:Clone()
+clone.Parent = char
+clone.Size = Vector3.new(3.5, 3.5, 15)
+local Weld = Instance.new("Weld", clone)
+Weld.Part0 = clone
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 13) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(clone, .7)
+clone.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+  if Humanoid1 and Humanoid1.Health ~= 0 then
+     if Parent1 ~= char and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+                local DmgClone = Chars.Values.SuperSpeedDmgVal:Clone()
+				DmgClone.Parent = Parent1
+				game.Debris:AddItem(DmgClone, 2)
+				Rems.LightHit:FireServer(Parent1)
+				print("We got the bitch on lock")
+	 end	
+  end
+ end)
+end)
+MoveOneA:GetMarkerReachedSignal("Shoot"):Connect(function()
+local clone = CombatHitbox:Clone()
+clone.Parent = char
+clone.Size = Vector3.new(3.5, 3.5, 15)
+local Weld = Instance.new("Weld", clone)
+Weld.Part0 = clone
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 13) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(clone, .2)
+clone.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+  if Humanoid1 and Humanoid1.Health ~= 0 then
+     if Parent1 ~= char then
+               clone:Destroy()
+               Rems.ShotHit:FireServer(Parent1)
+	 end	
+  end
+ end)
+ DoakesS.MoveOneShoot:FireServer(plr)
+ 	game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+		FieldOfView = 95;
+	}):Play()
+		wait(0.1)
+		game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+		FieldOfView = 70;
+	}):Play()
+end)
+MoveOneA:GetMarkerReachedSignal("End"):Connect(function()
+DoakesS.MoveOneOff:FireServer(plr)
+end)
+MoveFoA:GetMarkerReachedSignal("Start"):Connect(function()
+DoakesS.MoveFour:FireServer(plr)
+Humanoid.WalkSpeed = 0
+Humanoid.JumpPower = 0
+end)
+MoveFoA:GetMarkerReachedSignal("Stomp"):Connect(function()
+DoakesS.Stomp:FireServer(plr)
+Rems.Stomp:FireServer()
+Humanoid.WalkSpeed = 0
+Humanoid.JumpPower = 0
+end)
+MoveFoA:GetMarkerReachedSignal("Kick"):Connect(function()
+DoakesS.Kick:FireServer(plr)
+Rems.Kick:FireServer()
+Humanoid.WalkSpeed = 10
+Humanoid.JumpPower = 30
+end)
+
+local function CounterTrigger()
+local Counter = Instance.new("BoolValue")
+Counter.Parent = char
+Counter.Name = "CounterSucces"
+game.Debris:AddItem(Counter, .05)
+end
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+MoveOneA:Play()
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+HogTieA:Play()
+DoakesS.Rope:FireServer()
+Rems.Rope:FireServer()
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(CounterTrigger)
+elseif input.KeyCode == Enum.KeyCode.Four then
+MoveFoA:Play()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+Rems.Mark:FireServer()
+   end
+end)
