@@ -281,6 +281,53 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 	
 end)
 
+local TBSection = CharTab:NewSection("The Boys")
+
+TBSection:NewButton("Homelander", "I'm stronger, I'm smarter. I'M BETTER.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
+end)
+
+TBSection:NewButton("A-Train", "Run faster than THAT!", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/ATrain"))()
+end)
+
+TBSection:NewButton("The Deep", "Real eyes realize real lies", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Deep"))()
+end)
+
+TBSection:NewButton("Soldier Boy", "Fab Five Freddy told me everybody's fly DJ spinnin' and I said my, my.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FabFiveFreddyToldMeEverybodysFlyDjSpinninISaidMyMy"))()
+end)
+
+TBSection:NewButton("StarLight", "Understand me?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Starlight"))()
+end)
+
+local IBSection = CharTab:NewSection("Invincible")
+
+IBSection:NewButton("Omni-Man", "Why did you make me do this?", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
+end)
+
+IBSection:NewButton("Invincible", "And if you still think you can stop us.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Invincible"))()
+end)
+
+IBSection:NewButton("Conquest", "I WANT MORE!", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Conquest"))()
+end)
+
+local SWSection = CharTab:NewSection("Star Wars")
+
+SWSection:NewButton("Darth Vader", "I find your lack of faith disturbing.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/BeCarefulNotToChokeOnYourAspirationsDirector"))()
+end)
+
+SWSection:NewButton("Anakin", "You turned her against me.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Anakin"))()
+end)
+
+
 local HalloweenS = CharTab:NewSection("Halloween")
 
 HalloweenS:NewButton("Michael Myers", "...", function()
@@ -333,62 +380,16 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 
 end)
 
-local SWSection = CharTab:NewSection("Star Wars")
-
-SWSection:NewButton("Darth Vader", "I find your lack of faith disturbing.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/BeCarefulNotToChokeOnYourAspirationsDirector"))()
-end)
-
-SWSection:NewButton("Anakin", "You turned her against me.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Anakin"))()
-end)
-
 local SGSection = CharTab:NewSection("Squid Game")
 
 SGSection:NewButton("Hwang-In-Ho", "Why?", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/HwangInHo"))()
 end)
 
-local TBSection = CharTab:NewSection("The Boys")
-
-TBSection:NewButton("Homelander", "I'm stronger, I'm smarter. I'M BETTER.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Homander"))()
-end)
-
-TBSection:NewButton("A-Train", "Run faster than THAT!", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/ATrain"))()
-end)
-
-TBSection:NewButton("The Deep", "Real eyes realize real lies", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Deep"))()
-end)
-
-TBSection:NewButton("Soldier Boy", "Fab Five Freddy told me everybody's fly DJ spinnin' and I said my, my.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/FabFiveFreddyToldMeEverybodysFlyDjSpinninISaidMyMy"))()
-end)
-
-TBSection:NewButton("StarLight", "Understand me?", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Starlight"))()
-end)
-
 local RamboSection = CharTab:NewSection("Rambo")
 
 RamboSection:NewButton("Rambo", "Don't push it! ", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Rambo"))()
-end)
-
-local IBSection = CharTab:NewSection("Invincible")
-
-IBSection:NewButton("Omni-Man", "Why did you make me do this?", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/OmniMan"))()
-end)
-
-IBSection:NewButton("Invincible", "And if you still think you can stop us.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Invincible"))()
-end)
-
-IBSection:NewButton("Conquest", "I WANT MORE!", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Conquest"))()
 end)
 
 local DCSection = CharTab:NewSection("Detective Comics Extended Universe")
