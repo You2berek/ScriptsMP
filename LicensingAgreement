@@ -192,6 +192,33 @@ CharSection:NewButton("Click", "Dont lmfao.", function()
 game:GetService("Players").LocalPlayer:Kick(" [PERMANENT BAN]   You ignorant fuck should have checked the description.")
 	
 end)
+
+local SpeedSection = CharTab:NewSection("CW Universe")
+
+SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
+	
+end)
+SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
+	
+end)
+
+SpeedSection:NewButton("Amazo", "The one.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
+end)
+
+SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
+end)
+
+local HalloweenS = CharTab:NewSection("Halloween")
+
+ShamelessS:NewButton("Michael Myers", "...", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Myers"))()
+	
+end)
+
 local ShamelessS = CharTab:NewSection("Diary of a Wimpy Kid")
 
 ShamelessS:NewButton("Frank Heffley", "Nobody said.", function()
@@ -228,26 +255,6 @@ local CelebrityS = CharTab:NewSection("Celebrities")
 CelebrityS:NewButton("Michael Jackson", "Thriller.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/MichaelJackson"))()
 	
-end)
-
-
-local SpeedSection = CharTab:NewSection("CW Universe")
-
-SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
-	
-end)
-SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
-	
-end)
-
-SpeedSection:NewButton("Amazo", "The one.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
-end)
-
-SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
 end)
 
 local LazySection = CharTab:NewSection("Lazy Town")
