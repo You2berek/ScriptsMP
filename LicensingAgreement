@@ -205,7 +205,12 @@ ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
 end)
 
-ScriptSection:NewButton("Lance's Troll Menu", "Not patched. YET.", function()
+ScriptSection:NewButton("Stunlock Killer (expm.)", "Testing. (experimental)", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/DREDAYNIGGA"))()
+end)
+
+
+ScriptSection:NewButton("Galahad's Menu 2", "Not patched. YET.", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/TrollMenu"))()
 end)
 
