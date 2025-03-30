@@ -1,0 +1,27 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local animationsFolder = nil
+
+
+for _, descendant in ipairs(character:GetDescendants()) do
+    if descendant:IsA("Folder") and descendant.Name == "Animations" then
+        animationsFolder = descendant
+        break
+    end
+end
+local CharacterScript = animationsFolder.Parent
+
+CharacterScript.Disabled = true
+wait(1)
+CharacterScript.Enabled = true
+
+while true do
+task.wait(.1)
+for i, v in pairs(CharacterScript.Parent:GetChildren()) do
+	if v.Name == "Disabled" or v.Name == "CantAttack" then
+        v:Destroy()
+		print("Found:", v.Name)
+    end
+end
+end
