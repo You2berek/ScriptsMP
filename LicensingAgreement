@@ -138,7 +138,7 @@ for _, character in pairs(SelectACharacter:GetChildren()) do
     end
 end
 
-local ExtraTab = Window:NewTab("GENERAL ADDITIONS")
+local ExtraTab = Window:NewTab("MP ADDITIONS")
 local ExtraSection = ExtraTab:NewSection("Moves that you can use with them")
 
 ExtraSection:NewToggle("KeybindsActive", "If active-check rest.", function(state)
@@ -198,7 +198,7 @@ local function fireTNTs()
         game:GetService("ReplicatedStorage").Characters.Steve.Remotes.TNT:FireServer()
     end
 end
-local ScriptTab = Window:NewTab("CATALOGUED ADDS")
+local ScriptTab = Window:NewTab("USEFUL SCRIPTS")
 local ScriptSection = ScriptTab:NewSection("Additions")
 
 ScriptSection:NewButton("Infinite Yield", "THE GOAT!", function()
