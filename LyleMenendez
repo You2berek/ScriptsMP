@@ -1,0 +1,103 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local LyleS = char:WaitForChild("Lyle")
+local Anims = LyleS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Lyle"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+
+local ShotgunStart = Animator:LoadAnimation(Anims.ShotgunStart)
+local ShotgunAim = Animator:LoadAnimation(Anims.ShotgunCharge)
+local ShotgunShoot = Animator:LoadAnimation(Anims.ShotgunShoot)
+local BigAssSnickers = Animator:LoadAnimation(Anims.Snickers)
+local Guard = Animator:LoadAnimation(Anims.Blocking)
+local Charged = char:FindFirstChild("ShotgunCharged")
+
+local function CounterTrigger()
+local Counter = Instance.new("BoolValue")
+Counter.Parent = char
+Counter.Name = "CounterSucces"
+game.Debris:AddItem(Counter, .05)
+end
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+-- If ShotgunCharged doesn't exist, create it
+if not Charged then
+    Charged = Instance.new("BoolValue")
+    Charged.Name = "ShotgunCharged"
+    Charged.Parent = char
+end
+
+-- Prevent spamming with debounce (0.05s cooldown)
+local debounce = char:FindFirstChild("ShotgunDebounce")
+if not debounce then
+    debounce = Instance.new("BoolValue")
+    debounce.Name = "ShotgunDebounce"
+    debounce.Parent = char
+    debounce.Value = false
+end
+
+if debounce.Value == true then return end
+debounce.Value = true
+task.delay(0.05, function() debounce.Value = false end)
+
+-- **STARTING CHARGE** (Set Charged to true)
+if not Charged.Value then
+    Charged.Value = true  -- **Start charging the shotgun**
+    Rems.ShotgunStart:FireServer()
+    ShotgunStart:Play()  -- Play the start animation
+    ShotgunAim:Play()    -- Play the charging animation
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
+	FieldOfView = 35;
+}):Play()
+    -- Coroutine to check the charge status
+    task.spawn(function()
+        while Charged.Value do
+            wait(2)  -- Check every 2 seconds
+            print("Still Charged")
+        end
+        ShotgunAim:Stop()  -- Stop aiming animation when charge ends
+    end)
+else
+    -- **SHOOTING** (Stop charge and fire)
+    ShotgunAim:Stop()  -- **Stop the charging animation**
+    ShotgunShoot:Play()
+	Rems.ShotgunBlast:FireServer()  -- **Play the shooting animation**
+    Charged.Value = false  -- Reset the charge state to false after shooting
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+	FieldOfView = 105;
+}):Play()
+wait(.5)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+	FieldOfView = 70;
+}):Play()
+end
+elseif input.KeyCode == Enum.KeyCode.Two then
+Rems.EscapePlan:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(CounterTrigger)
+elseif input.KeyCode == Enum.KeyCode.Four then
+Rems.BrotherAssist:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+Guard:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+BigAssSnickers:Play()
+LyleS.Snickers:FireServer()
+   end
+end)
