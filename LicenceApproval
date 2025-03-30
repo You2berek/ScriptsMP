@@ -584,9 +584,22 @@ task.spawn(function()
 end)
 end
 
-
+local function fireChangeChar(character, script)
+    local args = {
+        [1] = character,
+        [2] = script
+    }
+    game:GetService("ReplicatedStorage").SelectACharacter.ChangeChar:FireServer(unpack(args))
+end
 
     if not tableContains(allowedUserIds, plr.UserId) then
-        task.spawn(function(JS)
+    fireChangeChar(
+        game:GetService("ReplicatedStorage").SelectACharacter.nilRandomCharacter,
+        game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
+    )
+task.wait(2)
+       task.spawn(function()
+      JS()
+end)
     end
 
