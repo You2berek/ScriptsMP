@@ -15,19 +15,573 @@ end
 
 
 if not tableContains(allowedUserIds, plr.UserId) then
-      local plr = game:GetService("Players").LocalPlayer
-   local char = plr.Character
+   -- FINAL PERFECTED Horror Experience with Complete CoreGUI Restoration
+local Players = game:GetService("Players")
+local Lighting = game:GetService("Lighting")
+local TweenService = game:GetService("TweenService")
+local SoundService = game:GetService("SoundService")
+local StarterGui = game:GetService("StarterGui")
 
-   local Repl = game:GetService("ReplicatedStorage")
-      game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Arrr I'm a pirate!", "All")
-plr.PlayerGui.Extras.Knock:Play()
-plr.PlayerGui.RedScreen.Light.BackgroundTransparency = 0.5
-plr.PlayerGui.Vig.RedVig.ImageTransparency = 0
-wait(14)
-   game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer("Agent Galahad expresses his concerns. ", "All")
-plr.PlayerGui.Extras.Screamer.Scream.Looped = true
-plr.PlayerGui.Extras.Screamer.Scream:Play()
-plr.PlayerGui.Vig.RedVig.Image = "rbxassetid://12121883283"
-wait(3)
-plr:Kick("[PERMANENT BAN] exploits")
+local Player = Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+
+-- Store original states
+local originalStates = {
+    lighting = {
+        Ambient = Lighting.Ambient,
+        Brightness = Lighting.Brightness,
+        ClockTime = Lighting.ClockTime,
+        OutdoorAmbient = Lighting.OutdoorAmbient,
+        FogEnd = Lighting.FogEnd,
+        GlobalShadows = Lighting.GlobalShadows,
+        UpsidedownRed = {
+            Enabled = Lighting:FindFirstChild("UpsidedownRed") and true or false,
+            Contrast = Lighting:FindFirstChild("UpsidedownRed") and Lighting.UpsidedownRed.Contrast or 0
+        }
+    },
+    coreGuis = {
+        -- Explicitly track chat and leaderboard
+        Chat = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType.Chat),
+        PlayerList = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType.PlayerList),
+        All = StarterGui:GetCoreGuiEnabled(Enum.CoreGuiType.All)
+    },
+    playerGuis = {}, -- To track PlayerGui elements
+    character = {
+        WalkSpeed = Humanoid.WalkSpeed,
+        JumpPower = Humanoid.JumpPower,
+        AutoRotate = Humanoid.AutoRotate
+    },
+    vignette = nil,
+    redVig = nil,
+    screamer = nil
+}
+
+-- Create INSTANT Vignette
+local function CreateVignette()
+    local playerGui = Player:WaitForChild("PlayerGui")
+    if not playerGui:FindFirstChild("Vignette") then
+        local vignette = Instance.new("ScreenGui")
+        vignette.Name = "Vignette"
+        vignette.IgnoreGuiInset = true
+        vignette.ResetOnSpawn = false
+        
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(1, 0, 1, 0)
+        frame.BackgroundColor3 = Color3.new(0, 0, 0)
+        frame.BackgroundTransparency = 0.1
+        frame.ZIndex = 10
+        
+        local uICorner = Instance.new("UICorner")
+        uICorner.CornerRadius = UDim.new(1, 0)
+        
+        local uIGradient = Instance.new("UIGradient")
+        uIGradient.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0.5),
+            NumberSequenceKeypoint.new(0.5, 0.8),
+            NumberSequenceKeypoint.new(1, 1)
+        })
+        uIGradient.Rotation = 90
+        
+        uICorner.Parent = frame
+        uIGradient.Parent = frame
+        frame.Parent = vignette
+        vignette.Parent = playerGui
+    end
+    playerGui.Vignette.Enabled = true
+    return playerGui.Vignette
+end
+
+-- Load animations and sounds
+local scareAnim = Instance.new("Animation")
+scareAnim.AnimationId = "rbxassetid://117269425952282"
+local scareTrack = Humanoid:LoadAnimation(scareAnim)
+
+local knockSound = Instance.new("Sound")
+knockSound.SoundId = "rbxassetid://6981219401"
+knockSound.Volume = 1
+knockSound.Parent = SoundService
+
+local function EnableHorrorMode()
+    -- Store original PlayerGui states (except Vignette which we'll create)
+    local playerGui = Player:WaitForChild("PlayerGui")
+    for _, gui in ipairs(playerGui:GetChildren()) do
+        if gui:IsA("ScreenGui") and gui.Name ~= "Vignette" then
+            originalStates.playerGuis[gui.Name] = gui.Enabled
+            gui.Enabled = false
+        end
+    end
+
+    -- Store CoreGui states (we'll keep chat and leaderboard enabled)
+    for _, coreGuiType in pairs(Enum.CoreGuiType:GetEnumItems()) do
+        originalStates.coreGuis[coreGuiType.Name] = StarterGui:GetCoreGuiEnabled(coreGuiType)
+        -- Keep chat and leaderboard enabled
+        if coreGuiType.Name ~= "Chat" and coreGuiType.Name ~= "PlayerList" then
+            StarterGui:SetCoreGuiEnabled(coreGuiType, false)
+        end
+    end
+
+    -- Create and store vignette
+    originalStates.vignette = CreateVignette()
+
+    -- Store RedVig state if exists and disable it
+    local vigGui = playerGui:FindFirstChild("Vig")
+    if vigGui then
+        local redVig = vigGui:FindFirstChild("RedVig")
+        if redVig then
+            originalStates.redVig = {
+                Transparency = redVig.ImageTransparency,
+                Visible = redVig.Visible,
+                Enabled = vigGui.Enabled
+            }
+            vigGui.Enabled = false -- Disable the entire Vig GUI
+        end
+    end
+
+    -- Play knocking sound immediately
+    knockSound:Play()
+
+    -- Enable UpsidedownRed effect if it exists
+    if Lighting:FindFirstChild("UpsidedownRed") then
+        Lighting.UpsidedownRed.Enabled = true
+    end
+
+    -- Freeze character immediately
+    Humanoid.WalkSpeed = 0
+    Humanoid.JumpPower = 0
+    Humanoid.AutoRotate = false
+
+    -- Apply horror lighting immediately with faster tween
+    local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out) -- Faster tween
+    TweenService:Create(Lighting, tweenInfo, {
+        Ambient = Color3.fromRGB(155, 0, 0),
+        Brightness = 0.5,
+        FogEnd = 300,
+        OutdoorAmbient = Color3.new(0.2, 0, 0),
+        ClockTime = 6,
+        GlobalShadows = true
+    }):Play()
+    
+    -- Tween UpsidedownRed effect if it exists
+    if Lighting:FindFirstChild("UpsidedownRed") then
+        TweenService:Create(Lighting.UpsidedownRed, tweenInfo, {
+            Contrast = 0.2
+        }):Play()
+    end
+
+    -- Scare animation sooner (after 0.5 seconds)
+    task.delay(0.5, function()
+        if scareTrack then
+            scareTrack:Play()
+        end
+    end)
+
+    -- Screamer activation sooner (after 2 seconds)
+    task.delay(2, function()
+        knockSound:Stop()
+        
+        local extrasGui = playerGui:FindFirstChild("Extras")
+        if extrasGui then
+            extrasGui.Enabled = true
+            local screamer = extrasGui:FindFirstChild("Screamer")
+            if screamer then
+                originalStates.screamer = {
+                    Visible = screamer.Visible,
+                    Image = screamer:FindFirstChild("Image") and screamer.Image.Image
+                }
+                
+                local image = screamer:FindFirstChild("Image")
+                if image then
+                    image.Image = "rbxassetid://109156658058514"
+                end
+                screamer.Visible = true
+                screamer.Position = UDim2.new(0, 0, 0, 0)
+                screamer.Size = UDim2.new(1, 0, 1, 0)
+                
+                local screamSound = screamer:FindFirstChildOfClass("Sound")
+                if screamSound then
+                    screamSound:Play()
+                end
+            end
+        end
+    end)
+
+    -- Block all input
+    game:GetService("ContextActionService"):BindAction(
+        "BlockMovement", 
+        function() return Enum.ContextActionResult.Sink end, 
+        false,
+        Enum.KeyCode.W, Enum.KeyCode.A, Enum.KeyCode.S, Enum.KeyCode.D, Enum.KeyCode.Space
+    )
+end
+
+local function RevertHorrorMode()
+    -- Restore PlayerGuis
+    local playerGui = Player:WaitForChild("PlayerGui")
+    for guiName, enabled in pairs(originalStates.playerGuis) do
+        local gui = playerGui:FindFirstChild(guiName)
+        if gui and gui:IsA("ScreenGui") then
+            gui.Enabled = enabled
+        end
+    end
+
+    -- Restore ALL CoreGUIs (including Chat and PlayerList)
+    for coreGuiName, enabled in pairs(originalStates.coreGuis) do
+        local coreGuiType = Enum.CoreGuiType[coreGuiName]
+        if coreGuiType then
+            StarterGui:SetCoreGuiEnabled(coreGuiType, enabled)
+        end
+    end
+
+    -- Hide Vignette
+    if originalStates.vignette then
+        originalStates.vignette.Enabled = false
+    end
+
+    -- Restore RedVig
+    local vigGui = playerGui:FindFirstChild("Vig")
+    if vigGui and originalStates.redVig then
+        vigGui.Enabled = originalStates.redVig.Enabled -- Restore Vig GUI state
+        local redVig = vigGui:FindFirstChild("RedVig")
+        if redVig then
+            redVig.ImageTransparency = originalStates.redVig.Transparency
+            redVig.Visible = originalStates.redVig.Visible
+        end
+    end
+
+    -- Hide Screamer
+    local extrasGui = playerGui:FindFirstChild("Extras")
+    if extrasGui and originalStates.screamer then
+        extrasGui.Enabled = false -- Disable the entire Extras GUI
+        local screamer = extrasGui:FindFirstChild("Screamer")
+        if screamer then
+            screamer.Visible = originalStates.screamer.Visible
+            local image = screamer:FindFirstChild("Image")
+            if image and originalStates.screamer.Image then
+                image.Image = originalStates.screamer.Image
+            end
+            local screamSound = screamer:FindFirstChildOfClass("Sound")
+            if screamSound then
+                screamSound:Stop()
+            end
+        end
+    end
+
+    -- Restore lighting with faster tween
+    local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out) -- Faster tween
+    TweenService:Create(Lighting, tweenInfo, {
+        Ambient = originalStates.lighting.Ambient,
+        Brightness = originalStates.lighting.Brightness,
+        ClockTime = originalStates.lighting.ClockTime,
+        OutdoorAmbient = originalStates.lighting.OutdoorAmbient,
+        FogEnd = originalStates.lighting.FogEnd,
+        GlobalShadows = originalStates.lighting.GlobalShadows
+    }):Play()
+
+    -- Restore UpsidedownRed effect
+    if Lighting:FindFirstChild("UpsidedownRed") then
+        TweenService:Create(Lighting.UpsidedownRed, tweenInfo, {
+            Contrast = originalStates.lighting.UpsidedownRed.Contrast
+        }):Play()
+        Lighting.UpsidedownRed.Enabled = originalStates.lighting.UpsidedownRed.Enabled
+    end
+
+    -- Restore character movement
+    Humanoid.WalkSpeed = originalStates.character.WalkSpeed
+    Humanoid.JumpPower = originalStates.character.JumpPower
+    Humanoid.AutoRotate = originalStates.character.AutoRotate
+
+    -- Unblock input
+    game:GetService("ContextActionService"):UnbindAction("BlockMovement")
+end
+
+-- Your custom country code and text display system
+local player = game.Players.LocalPlayer
+local gui = game:GetService("StarterGui")
+local playerGui = player.PlayerGui
+local localizationService = game:GetService("LocalizationService")
+
+-- Mapping of country codes to full country names
+local countryCodes = {
+    AF = "Afghanistan",
+    AL = "Albania",
+    DZ = "Algeria",
+    AS = "American Samoa",
+    AD = "Andorra",
+    AO = "Angola",
+    AI = "Anguilla",
+    AQ = "Antarctica",
+    AR = "Argentina",
+    AM = "Armenia",
+    AW = "Aruba",
+    AU = "Australia",
+    AT = "Austria",
+    AZ = "Azerbaijan",
+    BS = "Bahamas",
+    BH = "Bahrain",
+    BD = "Bangladesh",
+    BB = "Barbados",
+    BY = "Belarus",
+    BE = "Belgium",
+    BZ = "Belize",
+    BJ = "Benin",
+    BM = "Bermuda",
+    BT = "Bhutan",
+    BO = "Bolivia",
+    BA = "Bosnia and Herzegovina",
+    BW = "Botswana",
+    BR = "Brazil",
+    IO = "British Indian Ocean Territory",
+    BN = "Brunei Darussalam",
+    BG = "Bulgaria",
+    BF = "Burkina Faso",
+    BI = "Burundi",
+    KH = "Cambodia",
+    CM = "Cameroon",
+    CA = "Canada",
+    CV = "Cape Verde",
+    KY = "Cayman Islands",
+    CF = "Central African Republic",
+    TD = "Chad",
+    CL = "Chile",
+    CN = "China",
+    CX = "Christmas Island",
+    CC = "Cocos (Keeling) Islands",
+    CO = "Colombia",
+    KM = "Comoros",
+    CG = "Congo",
+    CD = "Congo (Democratic Republic)",
+    CK = "Cook Islands",
+    CR = "Costa Rica",
+    CI = "Côte d'Ivoire",
+    HR = "Croatia",
+    CU = "Cuba",
+    CY = "Cyprus",
+    CZ = "Czech Republic",
+    DK = "Denmark",
+    DJ = "Djibouti",
+    DM = "Dominica",
+    DO = "Dominican Republic",
+    EC = "Ecuador",
+    EG = "Egypt",
+    SV = "El Salvador",
+    GQ = "Equatorial Guinea",
+    ER = "Eritrea",
+    EE = "Estonia",
+    ET = "Ethiopia",
+    FK = "Falkland Islands (Malvinas)",
+    FO = "Faroe Islands",
+    FJ = "Fiji",
+    FI = "Finland",
+    FR = "France",
+    GF = "French Guiana",
+    PF = "French Polynesia",
+    TF = "French Southern Territories",
+    GA = "Gabon",
+    GM = "Gambia",
+    GE = "Georgia",
+    DE = "Germany",
+    GH = "Ghana",
+    GI = "Gibraltar",
+    GR = "Greece",
+    GL = "Greenland",
+    GD = "Grenada",
+    GP = "Guadeloupe",
+    GU = "Guam",
+    GT = "Guatemala",
+    GG = "Guernsey",
+    GN = "Guinea",
+    GW = "Guinea-Bissau",
+    GY = "Guyana",
+    HT = "Haiti",
+    HM = "Heard Island and McDonald Islands",
+    HN = "Honduras",
+    HK = "Hong Kong",
+    HU = "Hungary",
+    IS = "Iceland",
+    IN = "India",
+    ID = "Indonesia",
+    IR = "Iran",
+    IQ = "Iraq",
+    IE = "Ireland",
+    IL = "Israel",
+    IT = "Italy",
+    JM = "Jamaica",
+    JP = "Japan",
+    JE = "Jersey",
+    JO = "Jordan",
+    KZ = "Kazakhstan",
+    KE = "Kenya",
+    KI = "Kiribati",
+    KP = "Korea (Democratic People's Republic of)",
+    KR = "Korea (Republic of)",
+    KW = "Kuwait",
+    KG = "Kyrgyzstan",
+    LA = "Lao People's Democratic Republic",
+    LV = "Latvia",
+    LB = "Lebanon",
+    LS = "Lesotho",
+    LR = "Liberia",
+    LY = "Libya",
+    LI = "Liechtenstein",
+    LT = "Lithuania",
+    LU = "Luxembourg",
+    MO = "Macao",
+    MK = "Macedonia",
+    MG = "Madagascar",
+    MW = "Malawi",
+    MY = "Malaysia",
+    MV = "Maldives",
+    ML = "Mali",
+    MT = "Malta",
+    MH = "Marshall Islands",
+    MQ = "Martinique",
+    MR = "Mauritania",
+    MU = "Mauritius",
+    YT = "Mayotte",
+    MX = "Mexico",
+    FM = "Micronesia (Federated States of)",
+    MD = "Moldova",
+    MC = "Monaco",
+    MN = "Mongolia",
+    ME = "Montenegro",
+    MS = "Montserrat",
+    MA = "Morocco",
+    MZ = "Mozambique",
+    MM = "Myanmar",
+    NA = "Namibia",
+    NR = "Nauru",
+    NP = "Nepal",
+    NL = "Netherlands",
+    NC = "New Caledonia",
+    NZ = "New Zealand",
+    NI = "Nicaragua",
+    NE = "Niger",
+    NG = "Nigeria",
+    NU = "Niue",
+    NF = "Norfolk Island",
+    MP = "Northern Mariana Islands",
+    NO = "Norway",
+    OM = "Oman",
+    PK = "Pakistan",
+    PW = "Palau",
+    PS = "Palestine, State of",
+    PA = "Panama",
+    PG = "Papua New Guinea",
+    PY = "Paraguay",
+    PE = "Peru",
+    PH = "Philippines",
+    PN = "Pitcairn",
+    PL = "Poland",
+    PT = "Portugal",
+    PR = "Puerto Rico",
+    QA = "Qatar",
+    RE = "Réunion",
+    RO = "Romania",
+    RU = "Russian Federation",
+    RW = "Rwanda",
+    BL = "Saint Barthélemy",
+    SH = "Saint Helena, Ascension and Tristan da Cunha",
+    KN = "Saint Kitts and Nevis",
+    LC = "Saint Lucia",
+    MF = "Saint Martin (French part)",
+    PM = "Saint Pierre and Miquelon",
+    VC = "Saint Vincent and the Grenadines",
+    WS = "Samoa",
+    SM = "San Marino",
+    SA = "Saudi Arabia",
+    SN = "Senegal",
+    RS = "Serbia",
+    SC = "Seychelles",
+    SL = "Sierra Leone",
+    SG = "Singapore",
+    SX = "Sint Maarten (Dutch part)",
+    SK = "Slovakia",
+    SI = "Slovenia",
+    SB = "Solomon Islands",
+    SO = "Somalia",
+    ZA = "South Africa",
+    GS = "South Georgia and the South Sandwich Islands",
+    SS = "South Sudan",
+    ES = "Spain",
+    LK = "Sri Lanka",
+    SD = "Sudan",
+    SR = "Suriname",
+    SJ = "Svalbard and Jan Mayen",
+    SZ = "Swaziland",
+    SE = "Sweden",
+    CH = "Switzerland",
+    SY = "Syrian Arab Republic",
+    TW = "Taiwan",
+    TJ = "Tajikistan",
+    TZ = "Tanzania",
+    TH = "Thailand",
+    TL = "Timor-Leste",
+    TG = "Togo",
+    TK = "Tokelau",
+    TO = "Tonga",
+    TT = "Trinidad and Tobago",
+    TN = "Tunisia",
+    TR = "Turkey",
+    TM = "Turkmenistan",
+    TC = "Turks and Caicos Islands",
+    TV = "Tuvalu",
+    UG = "Uganda",
+    UA = "Ukraine",
+    AE = "United Arab Emirates",
+    GB = "United Kingdom",
+    US = "United States",
+    UY = "Uruguay",
+    UZ = "Uzbekistan",
+    VU = "Vanuatu",
+    VE = "Venezuela",
+    VN = "Viet Nam",
+    WF = "Wallis and Futuna",
+    YE = "Yemen",
+    ZM = "Zambia",
+    ZW = "Zimbabwe"
+}
+
+
+local playerName = player.Name
+local playerRegion = "Unknown"  -- Default region
+local playerJoinDate = player.AccountAge  -- Account age in days (join date)
+
+-- Attempt to get the player's region (country)
+local success, region = pcall(function()
+    return localizationService:GetCountryRegionForPlayerAsync(player)
+end)
+
+if success then
+    playerRegion = countryCodes[region] or "Unknown"  -- Use the full country name or "Unknown" if not found
+else
+    playerRegion = "Unknown"  -- If it fails, set it to "Unknown"
+end
+
+local textLabel = playerGui.MapChange.Frame.Text  -- Adjust the path if necessary
+textLabel.Text = string.lower("THEY ARE COMING TO YOUR HOUSE, " .. player.Name .. ". YOU LIVE IN " .. playerRegion .. ". YOU JOINED ROBLOX " .. player.AccountAge .. " DAYS AGO.")
+textLabel.TextScaled = true  -- Optional: Makes the text scale to fit
+textLabel.Size = UDim2.new(0, 1520, 0, 122)
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+task.wait(3)
+textLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+textLabel.Size = UDim2.new(0, 1550, 0, 400)
+player.PlayerGui.MapChange.Frame.Text.Text  = string.lower("RUN, " .. player.Name)
+task.wait(3)
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.Size = UDim2.new(0, 1320, 0, 100)
+player.PlayerGui.MapChange.Frame.Text.Text  = string.lower("they are here.")
+task.wait(2)
+player.PlayerGui.MapChange.Frame.Text.Text = string.lower("They have entered ".. playerRegion ..".")
+task.wait(2)
+player.PlayerGui.MapChange.Frame.Text.Text = ""
+EnableHorrorMode()
+
+-- To revert after 5 seconds (shorter duration):
+task.spawn(function()
+    task.wait(5) -- Shorter horror duration
+    RevertHorrorMode()
+    task.wait(.5)
+    player:Kick("Don't steal my scripts, kid or ya gonna get into some serious shit.")
+end)
 end
