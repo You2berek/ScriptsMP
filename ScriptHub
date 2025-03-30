@@ -2455,7 +2455,10 @@
 
 
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
+task.wait(1.5)
+if _G.isAllowed then
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicensingAgreement"))()
+end
 
 
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicensingAgreement"))()
