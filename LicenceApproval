@@ -3,6 +3,7 @@ local allowedUserIds = {
 8054770292,
 52378311
 }
+local isSkid = false
 local plr = game:GetService("Players").LocalPlayer
 local function tableContains(table, value)
     for _, v in pairs(table) do
@@ -597,9 +598,15 @@ end
         game:GetService("ReplicatedStorage").SelectACharacter.nilRandomCharacter,
         game:GetService("Players").LocalPlayer.PlayerGui.Menu.Frame.TopMiddle.Select.SelectScript
     )
+isSkid = true
+_G.isAllowed = not isSkid
 task.wait(2)
        task.spawn(function()
       JS()
 end)
+
+  elseif tableContains(allowedUserIds, plr.UserId) then
+isSkid = false
+_G.isAllowed = not isSkid
     end
 
