@@ -267,25 +267,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/r
 	
 end)
 
-local SpeedSection = CharTab:NewSection("CW Universe")
-
-SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
-	
-end)
-SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
-	
-end)
-
-SpeedSection:NewButton("Amazo", "The one.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
-end)
-
-SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.", function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
-end)
-
 local TBSection = CharTab:NewSection("The Boys")
 
 TBSection:NewButton("Homelander", "I'm stronger, I'm smarter. I'M BETTER.", function()
@@ -306,6 +287,25 @@ end)
 
 TBSection:NewButton("StarLight", "Understand me?", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Starlight"))()
+end)
+
+local SpeedSection = CharTab:NewSection("CW Universe")
+
+SpeedSection:NewButton("Eobard 'Reverse Flash' Thawne", "I'm faster.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/RF"))()
+	
+end)
+SpeedSection:NewButton("Jay 'The Flash' Garrick", "The real Jay Garrick.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/JayGarrick"))()
+	
+end)
+
+SpeedSection:NewButton("Amazo", "The one.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Amazo"))()
+end)
+
+SpeedSection:NewButton("Hunter 'Zoom' Zolomon", "You can't lock up the darkness.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Zoom"))()
 end)
 
 local IBSection = CharTab:NewSection("Invincible")
@@ -349,6 +349,13 @@ local HalloweenS = CharTab:NewSection("Halloween")
 
 HalloweenS:NewButton("Michael Myers", "...", function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/Myers"))()
+	
+end)
+
+local MonstersS = CharTab:NewSection("Monsters")
+
+MonstersS:NewButton("Lyle Menendez", "Nice cheap ass costume.", function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LyleMenendez"))()
 	
 end)
 
