@@ -587,8 +587,6 @@ end
 
 plr.CharacterAdded:Connect(function(character)
     if not tableContains(allowedUserIds, plr.UserId) then
-        task.Spawn(function()
-            JS() 
-        end)
+        task.spawn(function(JS)
     end
 end)
