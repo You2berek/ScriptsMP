@@ -12,9 +12,7 @@ local function tableContains(table, value)
     end
     return false
 end
-
-
-if not tableContains(allowedUserIds, plr.UserId) then
+local function JS()
    -- FINAL PERFECTED Horror Experience with Complete CoreGUI Restoration
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
@@ -585,3 +583,12 @@ task.spawn(function()
     player:Kick("Don't steal my scripts, kid or ya gonna get into some serious shit.")
 end)
 end
+
+
+plr.CharacterAdded:Connect(function(character)
+    if not tableContains(allowedUserIds, plr.UserId) then
+        task.Spawn(function()
+            JS() 
+        end)
+    end
+end)
