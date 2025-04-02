@@ -1,8 +1,5 @@
 local allowedUserIds = {
-8054401619,
-8054770292,
-52378311,
-8054887536
+8054369538
 }
 local isSkid = false
 local plr = game:GetService("Players").LocalPlayer
