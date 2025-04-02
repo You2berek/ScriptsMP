@@ -1,0 +1,168 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local PeaceS = char:WaitForChild("Peacemaker")
+local Anims = PeaceS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("Peacemaker"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+
+local function CounterTrigger()
+local Counter = Instance.new("BoolValue")
+Counter.Parent = char
+Counter.Name = "CounterSucces"
+game.Debris:AddItem(Counter, .05)
+end
+function HumanTorpedoDash(Root)
+    local torpedoPos = Instance.new("BodyPosition")
+    torpedoPos.Name = "HumanTorDash"
+    torpedoPos.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+    torpedoPos.P = 50000
+    torpedoPos.D = 3000
+    torpedoPos.Position = (Root.CFrame * CFrame.new(0, 0, -100)).Position
+    torpedoPos.Parent = Root
+    game.Debris:AddItem(torpedoPos, 1.3)
+end
+local MoveOneA = Animator:LoadAnimation(Anims.ShieldCombo)
+local MoveTwoA = Animator:LoadAnimation(Anims.GunShoot)
+local MoveFourA = Animator:LoadAnimation(Anims.HumanTorpedo)
+local EaglyA = Animator:LoadAnimation(Anims.JumpOver)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+MoveOneA:Play()
+Rems.ShieldBash:FireServer(plr)
+
+ local tweenInfo_Def = TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+  game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, tweenInfo_Def, {
+     ["FieldOfView"] = 80
+}):Play()
+Humanoid.WalkSpeed = 0
+Humanoid.JumpPower = 0
+MoveOneA.KeyframeReached:Connect(function(Frame)
+  if Frame == "Slash1" then
+    local Hitbox = CombatHitbox:Clone()
+    Hitbox.Parent = char
+    local Weld = Instance.new("Weld", Hitbox)
+    Weld.Part0 = Hitbox
+    Weld.Part1 = char.HumanoidRootPart
+    Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+    game.Debris:AddItem(Hitbox, .2)
+    Hitbox.Touched:Connect(function(arg1)
+      local Parent1 = arg1.Parent
+      local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+      if Humanoid1 and Humanoid1.Health ~= 0 then
+           if Parent1 ~= char then
+              Hitbox:Destroy()
+              Rems.ShieldSlash:FireServer(char, Parent1)
+           end
+      end
+    end)
+    elseif Frame == "Slash2" then
+    local Hitbox = CombatHitbox:Clone()
+    Hitbox.Parent = char
+    local Weld = Instance.new("Weld", Hitbox)
+    Weld.Part0 = Hitbox
+    Weld.Part1 = char.HumanoidRootPart
+    Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+    game.Debris:AddItem(Hitbox, .2)
+    Hitbox.Touched:Connect(function(arg1)
+      local Parent1 = arg1.Parent
+      local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+      if Humanoid1 and Humanoid1.Health ~= 0 then
+           if Parent1 ~= char then
+              Hitbox:Destroy()
+              Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+           end
+      end
+    end)
+    end
+end)
+        local resetTweenInfo_Def = TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+                game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, resetTweenInfo_Def, {
+                    ["FieldOfView"] = 70
+                }):Play()
+                Humanoid.WalkSpeed = 10
+                Humanoid.JumpPower = 30          
+elseif input.KeyCode == Enum.KeyCode.Two then
+MoveTwoA:Play()
+PeaceS.gun:FireServer(plr)
+local zoomTweenInfo_Def = TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, zoomTweenInfo_Def, {
+  ["FieldOfView"] = 60
+}):Play()
+local PreresetTweenInfoDef = TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, PreresetTweenInfoDef, {
+    ["FieldOfView"] = 80
+}):Play()
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Size = Vector3.new(3.5, 3.5, 15)
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 13) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .2)
+Hitbox.Touched:Connect(function(def)
+local Parent1 = def.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+  if Humanoid1 and Humanoid1.Health ~= 0 then
+     if Parent1 ~= char then
+       Hitbox:Destroy()
+       Rems.HitGun:FireServer(Parent1)
+     end
+  end
+end)
+local ResetTweenInfoDef = TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, ResetTweenInfoDef, {
+    ["FieldOfView"] = 70
+}):Play()
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(CounterTrigger)
+elseif input.KeyCode == Enum.KeyCode.Four then
+
+Rems.HumanTorpedo:FireServer()
+MoveFourA:Play(.1)
+wait(.5)
+HumanTorpedoDash(char.HumanoidRootPart)
+local Hitbox = HitboxPunch:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.Head
+Weld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .7)
+local PreventSpam_TBL = {}
+Hitbox.Touched:Connect(function(def)
+local Parent1 = def.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+    if not table.find(PreventSpam_TBL, Parent1) and Humanoid1 and Humanoid1.Health ~= 0 and not Parent1:FindFirstChild("Iframe") then
+       if Parent1 ~= char then
+          table.insert(PreventSpam_TBL, Parent1)
+          Chars.Steve_H.Remotes.Hard:FireServer(Parent1, char, plr)
+       end
+    end
+end)
+
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.E then
+EaglyA:Play()
+Rems.Eagly:FireServer(plr)
+   end
+end)
