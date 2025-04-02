@@ -1,6 +1,4 @@
-local allowedUserIds = {
-8054369538
-}
+local allowedUserIds = loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/TableOfAllows"))()
 local isSkid = false
 local plr = game:GetService("Players").LocalPlayer
 local function tableContains(table, value)
