@@ -9,7 +9,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
 
 local Animator = char:FindFirstChild("Humanoid"):WaitForChild("Animator")
 local ClapAnim = Animator:LoadAnimation(Anims.Clap)
-local Repl = game:getService("ReplicatedStorage")
+local Repl = game:GetService("ReplicatedStorage")
 local function Counter()
 local CounterWork = Instance.new("BoolValue")
 CounterWork.Parent = char
