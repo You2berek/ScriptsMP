@@ -7,7 +7,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
   local InvScript = char:WaitForChild("Invincible")
  local Anims = InvScript:WaitForChild("Animations")
 
-local Repl = game:getService("ReplicatedStorage")
+local Repl = game:GetService("ReplicatedStorage")
 local function Counter()
 local CounterWork = Instance.new("BoolValue")
 CounterWork.Parent = char
