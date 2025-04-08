@@ -20,7 +20,9 @@ local TweenService = game:GetService("TweenService")
    local godModeEnabled = false
 
 local CutsA = Animator:LoadAnimation(Anims.Nuke2)
-
+local StylishBust = Animator:LoadAnimation(Chars.Moonknight.AnimationsExtra.Death)
+local Charge = Animator:LoadAnimation(Anims.SoldierBoyCharge)
+local Boom = Animator:LoadAnimation(game:GetService("ReplicatedStorage").SelectACharacter.ReverseFlash.ReverseFlash.Animations.Explode)
 
 
     if input.KeyCode == Enum.KeyCode.G then
@@ -115,7 +117,25 @@ char.CamForce.Disabled = true
 char.CameraScript.Disabled = false
 char.CustomShiftlock.Disabled = false
 godModeEnabled = false
-
+elseif input.KeyCode == Enum.KeyCode.Z then
+Charge:Play()
+godModeEnabled = true
+    coroutine.wrap(function()
+            while godModeEnabled do
+                SBS.DestroyCounter:FireServer(plr)
+                wait(.2)
+            end
+        end)()
+SBS.Steam:FireServer(plr)
+Charge.Ended:Wait()
+StylishBust:Play()
+wait(1)
+Rems.Radiation2:FireServer(plr)
+wait(2.21)
+StylishBust:Stop()
+Boom:Play()
+wait(.1)
+godModeEnabled = false
 elseif input.KeyCode == Enum.KeyCode.One then
 local Character_upvr = game.Players.LocalPlayer.Character
 local CombatHitbox_upvr = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
