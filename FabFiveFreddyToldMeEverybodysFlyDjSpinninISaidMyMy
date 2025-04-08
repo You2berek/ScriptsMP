@@ -2,7 +2,24 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     if gameProcessedEvent then
         return 
     end
-   
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local SBS = char:WaitForChild("SoldierBoy")
+local Anims = SBS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:WaitForChild("SoldierBoy"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+   local godModeEnabled = false
+
+local CutsA = Animator:LoadAnimation(Anims.Nuke2)
 
 
 
@@ -23,6 +40,82 @@ local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(
 
 animTrack:Play()
 game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Radiation2:FireServer()
+elseif input.KeyCode == Enum.KeyCode.K then
+
+godModeEnabled = true
+    coroutine.wrap(function()
+            while godModeEnabled do
+                SBS.DestroyCounter:FireServer(plr)
+                wait(.2)
+            end
+        end)()
+char.CameraScript.Disabled = true
+char.CamForce.Disabled = false
+char.CustomShiftlock.Disabled = true
+SBS.Steam:FireServer()
+SBS.Warn:FireServer()
+CutsA:Play()
+SBS.HeartBeat:Play()
+TweenService:Create(game.Lighting, TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Ambient = Color3.fromRGB(250, 100, 50)}):Play()
+TweenService:Create(game.Lighting.ColorCorrection, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {Brightness = -0.5}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {ImageTransparency = 0}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(250, 100, 50)}):Play()
+char.BeamMain.Attachment.Wind1.Enabled = true
+char.BeamMain.Attachment.p1.Enabled = true
+char.BeamMain.Attachment.p2.Enabled = true
+char.BeamMain.Attachment.p3.Enabled = true
+wait(2)
+for i=1,5 do
+game:GetService("ReplicatedStorage").Characters.Thanos.Remotes.PowerDetonation:FireServer(game.Players.LocalPlayer)
+end
+wait(2)
+local Wind2 = char.BeamMain.Attachment.Wind1:Clone()
+Wind2.Name = "Wind2"
+Wind2.Parent = char.BeamMain.Attachment
+Wind2.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
+game.Debris:AddItem(Wind2, 4)
+local d1 = char.BeamMain.Attachment.p1:Clone()
+d1.Name = "d1"
+d1.Parent = char.BeamMain.Attachment
+d1.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
+game.Debris:AddItem(d1, 4)
+local d2 = char.BeamMain.Attachment.p2:Clone()
+d2.Name = "d2"
+d2.Parent = char.BeamMain.Attachment
+d2.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
+game.Debris:AddItem(d2, 4)
+local d3 = char.BeamMain.Attachment.p3:Clone()
+d3.Name = "d3"
+d3.Parent = char.BeamMain.Attachment
+d3.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
+game.Debris:AddItem(d3, 4)
+char.BeamMain.Attachment.Wind1.Enabled = false
+char.BeamMain.Attachment.p1.Enabled = false
+char.BeamMain.Attachment.p2.Enabled = false
+char.BeamMain.Attachment.p3.Enabled = false
+char.BeamMain.Attachment.Wind2.Enabled = true
+char.BeamMain.Attachment.d1.Enabled = true
+char.BeamMain.Attachment.d2.Enabled = true
+char.BeamMain.Attachment.d3.Enabled = true
+TweenService:Create(game.Lighting, TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Ambient = Color3.fromRGB(0, 100, 255)}):Play()
+TweenService:Create(game.Lighting.ColorCorrection, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {Brightness = 0}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(0, 100, 255)}):Play()
+for i=1,5 do
+game:GetService("ReplicatedStorage").Characters.Thanos.Remotes.Blackhole:FireServer(game.Players.LocalPlayer)
+end
+CutsA.Ended:Wait()
+char.BeamMain.Attachment.Wind2.Enabled = false
+char.BeamMain.Attachment.d1.Enabled = false
+char.BeamMain.Attachment.d2.Enabled = false
+char.BeamMain.Attachment.d3.Enabled = false
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Linear), {ImageTransparency = 1}):Play()
+TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Linear), {ImageColor3 = Color3.fromRGB(0, 0, 0)}):Play()
+TweenService:Create(game.Lighting, TweenInfo.new(1, Enum.EasingStyle.Linear), {Ambient = Color3.fromRGB(0, 0, 0)}):Play()
+char.CamForce.Disabled = true
+char.CameraScript.Disabled = false
+char.CustomShiftlock.Disabled = false
+godModeEnabled = false
+
 elseif input.KeyCode == Enum.KeyCode.One then
 local Character_upvr = game.Players.LocalPlayer.Character
 local CombatHitbox_upvr = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
