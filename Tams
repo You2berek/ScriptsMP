@@ -1,4 +1,4 @@
-local IsSymbiote = false
+local SymDB = false
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then
         return 
@@ -18,7 +18,7 @@ local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
 local Mouse = plr:GetMouse()
 local MouseHit = Mouse.Hit.Position
 local TweenService = game:GetService("TweenService")
-local SymDB = false
+
 function Dash(arg1) -- Line 131
 	local BodyPosition_2 = Instance.new("BodyPosition")
 	BodyPosition_2.MaxForce = Vector3.new(1000000, 0, 1000000)
@@ -202,6 +202,8 @@ wait(1)
 			ImageTransparency = 0;
 		}):Play()
 elseif SymDB == true then
+SymDB = false
+Rems.Symbiote:FireServer()
 plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Spider-String"
 plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Web Ball"
 plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Blizzard Counter"
@@ -211,7 +213,6 @@ wait(1)
 	game.TweenService:Create(plr.PlayerGui.CharacterSpecial.Spidey.Sym, TweenInfo.new(1), {
 			ImageTransparency = 1;
 		}):Play()
-		SymDB = false
    end
    end
 end)
