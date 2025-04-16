@@ -1,0 +1,155 @@
+local CDVar = false
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local XenoS = char:WaitForChild("Demogorgon")
+local Anims = XenoS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+
+
+local SlashA = Animator:LoadAnimation(Anims.Chop)
+local PounceA = Animator:LoadAnimation(Anims.Jumpscare)
+local CounterA = Animator:LoadAnimation(Anims.Counter)
+local RageA = Animator:LoadAnimation(Anims.PhantomRage)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+
+local function Rage()
+if CDVar == false then
+CDVar = true
+RageA:Play()
+ XenoS.Rage:FireServer(plr)
+ local v72 = TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v72, {
+       ["FieldOfView"] = 50
+ }):Play()
+ wait(0.2)
+local v73 = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+  game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v73, {
+     ["FieldOfView"] = 110
+}):Play()
+ Chars.Springtrap.Remotes.Phantom:FireServer()
+ wait(1)
+local v74 = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v74, {
+       ["FieldOfView"] = 70
+ }):Play()
+wait(10)
+CDVar = false
+ end
+ end
+
+local function CounterTrigger()
+XenoS.CounterActivate:FireServer(plr)
+wait(.05)
+XenoS.DestroyCounter:FireServer(plr)
+CounterA:Play()
+Chars.Ghostface.Remotes.CounterStab:FireServer(plr)
+end
+
+function DashForward2(Root)
+local BPos = Instance.new("BodyPosition")
+BPos.MaxForce = Vector3.new(100000, 0, 100000)
+BPos.P = 100000
+BPos.D = 2000
+BPos.Position = (Root.CFrame * CFrame.new(0, 0, -35)).Position
+BPos.Parent = Root
+game.Debris:AddItem(BPos, .5)
+end
+
+SlashA:GetMarkerReachedSignal("Start"):Connect(function()
+Chars.OmniMan.Remotes.Chop:FireServer(plr)
+end)
+
+SlashA:GetMarkerReachedSignal("Chop"):Connect(function()
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .23)
+Hitbox.Touched:Connect(function(MSM)
+local Parent1 = MSM.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+local AntiSpamTable = {}
+ if not table.find(AntiSpamTable, Parent1) and Humanoid1 and Humanoid1.Health ~= 0 then
+   if Parent1 ~= char then
+     table.insert(AntiSpamTable, Parent1)
+     Chars.DarthVader.Remotes.Bash2:FireServer(Parent1)
+   end
+ end
+ end)
+end)
+
+    if input.KeyCode == Enum.KeyCode.One then
+SlashA:Play()
+ local v59 = TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v59, {
+            ["FieldOfView"] = 50
+        }):Play()
+        wait(0.3)
+        local v60 = TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v60, {
+            ["FieldOfView"] = 80
+        }):Play()
+        wait(0.3)
+        local v61 = TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v61, {
+            ["FieldOfView"] = 70
+        }):Play()
+elseif input.KeyCode == Enum.KeyCode.Two then
+XenoS.Leap:FireServer()
+DashForward2(char.HumanoidRootPart)
+PounceA:Play()
+       local v62 = TweenInfo.new(0.25, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v62, {
+            ["FieldOfView"] = 100
+        }):Play()
+local Hitbox = HitboxPunch:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.Head
+Weld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .4)
+local AntiSpam = {}
+Hitbox.Touched:Connect(function(MSM2)
+local Parent1 = MSM2.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+if not table.find(AntiSpam, Parent1) and Humanoid1.Health ~= 0 and Humanoid1 then
+   if Parent1 ~= char then
+      table.insert(AntiSpam, Parent1)
+      Chars.DarthVader.Remotes.Bash2:FireServer(Parent1)
+      XenoS.Impact:FireServer(plr)
+   end
+end
+end)
+        wait(0.5)
+        local v70 = TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, v70, {
+            ["FieldOfView"] = 70
+        }):Play()
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(CounterTrigger)
+elseif input.KeyCode == Enum.KeyCode.R then
+ task.spawn(Rage)
+elseif input.KeyCode == Enum.KeyCode.Five then
+Chars.Springtrap.Remotes.Finisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+   end
+end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
