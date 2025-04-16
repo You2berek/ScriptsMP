@@ -4,7 +4,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     end
    local plr = game:GetService("Players").LocalPlayer
    local char = plr.Character
-  local InvScript = char:WaitForChild("Invincible")
+  local InvScript = char:WaitForChild("Conquest")
  local Anims = InvScript:WaitForChild("Animations")
 
 local Animator = char:FindFirstChild("Humanoid"):WaitForChild("Animator")
@@ -84,7 +84,7 @@ local animTrack1 = humanoid:WaitForChild("Animator"):LoadAnimation(anim1)
 
 -- Play the animation and fire the flight remote
 animTrack1:Play()
-char.Invincible.Fly:FireServer(plr)
+char.Conquest.Fly:FireServer(plr)
 
 -- Movement setup (initial speed set to 180)
 local Velocity = Instance.new("BodyVelocity")
