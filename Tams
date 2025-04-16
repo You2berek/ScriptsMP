@@ -188,7 +188,7 @@ Chars.Miles.Remotes.FinisherTasm:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.F then
 GuardA:Play()
 Chars.Combat.Remotes.Blocking:FireServer()
-elseif input.KeyCode == Enum.KeyCode.E then
+elseif input.KeyCode == Enum.KeyCode.R then
 if SymDB == false then
 SymDB = true
 plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Spider-String"
