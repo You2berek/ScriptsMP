@@ -27,7 +27,7 @@ elseif input.KeyCode == Enum.KeyCode.Three then
 task.spawn(Counter)
 elseif input.KeyCode == Enum.KeyCode.Four then
 ClapAnim:Play()
- game.ReplicatedStorage.Characters.OmniMan.Clap:FireServer(plr)
+ game.ReplicatedStorage.Characters.Gigachad.Remotes.Lunge:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.Five then
 local player = game.Players.LocalPlayer
 local finisher = game.ReplicatedStorage.Characters.Invincible.Remotes.Finisher
