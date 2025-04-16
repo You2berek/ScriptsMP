@@ -1,3 +1,4 @@
+local IsSymbiote = false
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then
         return 
@@ -200,7 +201,7 @@ wait(1)
 	game.TweenService:Create(plr.PlayerGui.CharacterSpecial.Spidey.Sym, TweenInfo.new(2), {
 			ImageTransparency = 0;
 		}):Play()
-wait(120)
+elseif SymDB == true then
 plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Spider-String"
 plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Web Ball"
 plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Blizzard Counter"
