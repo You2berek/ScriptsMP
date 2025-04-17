@@ -1,0 +1,445 @@
+ function Execute()
+wait(.5)
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local MilesS = char:WaitForChild("Miles")
+local Anims = MilesS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:FindFirstChild("Miles").Remotes
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+local Debris = game:GetService("Debris")
+MilesS.Disabled = true
+
+plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Venom Absorb"
+plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Webswing"
+plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Zap Counter"
+plr.PlayerGui.Moveset.Frame.Hold.FourMove.Text = "Invisible Kick"
+plr.PlayerGui.Moveset.Frame.Hold.FiveMove.Text = "Beatdown Finisher"
+plr.PlayerGui.Moveset.Frame.Hold.Emove.Text = "Spidey Sense"
+-- Run system setup
+local RunAnim = Instance.new("Animation")
+RunAnim.AnimationId = "rbxassetid://13730235228"
+local RunAnimation = Animator:LoadAnimation(RunAnim)
+local DeadAnim = Instance.new("Animation")
+DeadAnim.AnimationId = "rbxassetid://13730241635"
+local DeadAnimation = Animator:LoadAnimation(DeadAnim)
+
+local isRunning = false
+local runWS = 25
+local normalWS = 10
+local normalFOV = 70
+local runFOV = 80
+local SpideySense = false
+
+-- Combat variables
+local CDVar = false
+local DoEndRemote = false
+local AttackCD = false
+local CurCombo = 1
+local LastClick = 0
+local ComboResetTime = 1.25 
+
+function DodgeFunction(Root)
+ local BodyPos = Instance.new("BodyPosition")
+ BodyPos.MaxForce = Vector3.new(1000000, 0, 1000000)
+ BodyPos.P = 100000
+ BodyPos.D = 3000
+ BodyPos.Position = (Root.CFrame * CFrame.new(0, 0, 15)).Position
+ BodyPos.Parent = Root
+ game.Debris:AddItem(BodyPos, .5)
+end
+
+function SideDodgeFunction(Root)
+ local BodyPos = Instance.new("BodyPosition")
+ BodyPos.MaxForce = Vector3.new(1000000, 0, 1000000)
+ BodyPos.P = 100000
+ BodyPos.D = 3000
+ BodyPos.Position = (Root.CFrame * CFrame.new(15, 0, 0)).Position
+ BodyPos.Parent = Root
+ game.Debris:AddItem(BodyPos, .7)
+end
+
+function Dash(Root)
+ local BodyPos = Instance.new("BodyPosition")
+ BodyPos.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+ BodyPos.P = 50000
+ BodyPos.D = 3000
+ BodyPos.Position = (Root.CFrame * CFrame.new(0, 0, -30)).Position
+ BodyPos.Parent = Root
+ game.Debris:AddItem(BodyPos, .7)
+end
+
+-- Load combo animations
+local Combo1 = Animator:LoadAnimation(Anims.Combo1)
+local Combo2 = Animator:LoadAnimation(Anims.Combo2)
+local Combo3 = Animator:LoadAnimation(Anims.Combo3)
+local Combo4 = Animator:LoadAnimation(Anims.Combo4)
+local Combos = {Combo1, Combo2, Combo3, Combo4}
+local BackDodge = Animator:LoadAnimation(Anims.DodgeBack)
+local SideDodge = Animator:LoadAnimation(Anims.DodgeSide)
+local VenomAbsorbA = Animator:LoadAnimation(Anims.Absorb)
+local WebswingA = Animator:LoadAnimation(Anims.Webswing)
+local InvisKickA = Animator:LoadAnimation(Anims.JumpKick)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+local SpideySense = false
+local CounterDB = false
+
+-- Run input handler (fixed and moved outside InputBegan)
+local function HandleRunInput(actionName, inputState)
+    if AttackCD or char:FindFirstChild("CantAttack") then
+        return
+    end
+    
+    if inputState == Enum.UserInputState.Begin and actionName == "RunBind" then
+        isRunning = true
+        Humanoid.WalkSpeed = runWS
+        
+        -- Smooth camera zoom out
+        local fovTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        TweenService:Create(workspace.CurrentCamera, fovTweenInfo, {
+            FieldOfView = runFOV
+        }):Play()
+        
+    elseif inputState == Enum.UserInputState.End and actionName == "RunBind" then
+        isRunning = false
+        
+        if RunAnimation.IsPlaying then
+            RunAnimation:Stop(0.2)
+        end
+
+        Humanoid.WalkSpeed = normalWS
+
+        -- Smooth camera zoom back
+        local fovTweenInfo = TweenInfo.new(0.45, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        TweenService:Create(workspace.CurrentCamera, fovTweenInfo, {
+            FieldOfView = normalFOV
+        }):Play()
+    end
+end
+
+-- Movement state handler
+Humanoid.Running:Connect(function(speed)
+    if speed >= 10 and isRunning and not (RunAnimation.IsPlaying or AttackCD or char:FindFirstChild("CantAttack")) then
+        RunAnimation:Play(0.2)
+        Humanoid.WalkSpeed = runWS
+    elseif speed >= 10 and not isRunning and RunAnimation.IsPlaying then
+        RunAnimation:Stop(0.2)
+        Humanoid.WalkSpeed = normalWS
+    elseif speed < 10 and RunAnimation.IsPlaying then
+        RunAnimation:Stop(0.2)
+        Humanoid.WalkSpeed = normalWS
+    end
+end)
+
+function DoCounter()
+MilesS.CounterActivate:FireServer(plr)
+wait(.05)
+local Counter = Instance.new("BoolValue")
+Counter.Name = "CounterSucces"
+Counter.Parent = char
+game.Debris:AddItem(Counter,.05)
+end
+
+Humanoid.Died:Connect(function()
+AttackCD = true
+ local fovTweenInfo = TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+        TweenService:Create(game.Lighting.DeadColor, fovTweenInfo, {
+            ['TintColor'] = Color3.new(1, 0, 0)
+        }):Play()
+  DeadAnimation:Play()
+plr.PlayerGui.Menu.DeadSound:Play()
+char.HumanoidRootPart.Anchored = true
+MilesS.Death:FireServer(plr)
+end)
+
+-- Handle jumping while running
+Humanoid.Changed:Connect(function()
+    if Humanoid.Jump and RunAnimation.IsPlaying then
+        RunAnimation:Stop(0.2)
+    end
+end)
+
+-- Bind run controls
+game:GetService("ContextActionService"):BindAction(
+    "RunBind",
+    HandleRunInput,
+    true,
+    Enum.KeyCode.LeftShift,
+    Enum.KeyCode.ButtonL3
+)
+
+-- Combat functions
+local function ResetCombo()
+    CurCombo = 1
+    DoEndRemote = false
+end
+
+local function Combat()
+    if AttackCD then return end
+    if char:FindFirstChild("Cantattack") or char:FindFirstChild("CantAttack") or char:FindFirstChild("Blocking") then return end
+
+    AttackCD = true
+
+    local Hitbox = CombatHitbox:Clone()
+    Hitbox.Parent = char
+    local Weld = Instance.new("Weld")
+    Weld.Part0 = Hitbox
+    Weld.Part1 = char.HumanoidRootPart
+    Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+    Weld.Parent = Hitbox
+
+    Debris:AddItem(Hitbox, 0.2)
+
+    Hitbox.Touched:Connect(function(Player1)
+        local Parent1 = Player1.Parent
+        local Humanoid = Parent1:FindFirstChild("Humanoid")
+        if Humanoid and Humanoid.Health ~= 0 and Parent1 ~= char then
+            Hitbox:Destroy()
+            if DoEndRemote == true then
+                Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+            else
+                Chars.Combat.Remotes.Combo:FireServer(Parent1)
+            end
+        end
+    end)
+
+    -- Play Combo Animation
+    local CurrentAnim = Combos[CurCombo]
+    if CurrentAnim then
+        CurrentAnim:Play()
+    end
+
+    -- Handle combo progression
+    if CurCombo < 4 then
+        CurCombo = CurCombo + 1
+    else
+        DoEndRemote = true
+        task.wait(0.65)
+        ResetCombo()
+    end
+
+    LastClick = tick()
+    task.wait(0.1)
+    AttackCD = false
+end
+
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+
+
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if tick() - LastClick > ComboResetTime then
+            ResetCombo()
+        end
+        task.spawn(Combat)
+
+    elseif input.KeyCode == Enum.KeyCode.One then
+VenomAbsorbA:Play()
+Rems.Absorb:FireServer(plr)
+
+ TweenService:Create(workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     FieldOfView = 40
+ }):Play()
+ wait(1)
+  TweenService:Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     FieldOfView = 70
+ }):Play()
+
+    elseif input.KeyCode == Enum.KeyCode.Two then
+ WebswingA:Play()
+Rems.Webswing:FireServer(plr)
+TweenService:Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     FieldOfView = 100
+ }):Play()
+ local BodyVel = Instance.new("BodyVelocity")
+ BodyVel.Parent = char.HumanoidRootPart
+ BodyVel.P = 1250
+ BodyVel.MaxForce = Vector3.new(500000, 500000, 500000)
+ BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 80
+ game.Debris:AddItem(BodyVel, 1)
+ TweenService:Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     FieldOfView = 85
+ }):Play()
+ local Hitbox = CombatHitbox:Clone()
+ Hitbox.Parent = char
+ local Weld = Instance.new("Weld", Hitbox)
+ Weld.Part0 = Hitbox
+ Weld.Part1 = char.HumanoidRootPart
+ Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+ game.Debris:AddItem(Hitbox, 1)
+ local AntiSpamTbl = {}
+ Hitbox.Touched:Connect(function(hit)
+
+ local Parent1 = hit.Parent
+ local Humanoid = Parent1:FindFirstChild("Humanoid")
+ if Humanoid and Humanoid.Health ~= 0 and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+    if Parent1 ~= char then
+       print("Hit ".. Parent1.Name .. " successfully.")
+       local ValC = Chars.Values.SuperSpeedDmgVal:Clone()
+       ValC.Parent = Parent1
+       game.Debris:AddItem(ValC, .5)
+       for i=1,3 do
+       Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+       end
+    end
+ end
+ end)
+
+ local runDuration = 1
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 80
+    end
+end
+TweenService:Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     FieldOfView = 70
+ }):Play()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(DoCounter)
+
+    elseif input.KeyCode == Enum.KeyCode.Four then
+MilesS.Invis:FireServer(plr)
+local OutlineClone = Rems.Parent.Fx.BlueHighlight:Clone()
+OutlineClone.Parent = char
+  TweenService:Create(OutlineClone, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     FillTransparency = .5
+ }):Play()
+  TweenService:Create(OutlineClone, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     OutlineTransparency = .3
+ }):Play()
+game.Debris:AddItem(OutlineClone, 3)
+wait(.8)
+InvisKickA:Play()
+Dash(char.HumanoidRootPart)
+local Hitbox = HitboxPunch:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.RightHand
+Weld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .6)
+local HitT = {}
+Hitbox.Touched:Connect(function(who)
+local Parent1 = who.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+if Humanoid1 and Humanoid1.Health ~= 0 and not table.find(HitT, Parent1) then
+ if Parent1 ~= char then
+  table.insert(HitT, Parent1)
+  print("Successfully kicked ".. Parent1.Name)
+  for i=1,3 do
+  Chars.MrFantastic.Remotes.StretchPunchHit:FireServer(Parent1)
+  end
+   end
+end
+end)
+  TweenService:Create(OutlineClone, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     FillTransparency = 1
+ }):Play()
+  TweenService:Create(OutlineClone, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+     OutlineTransparency = 1
+ }):Play()
+    elseif input.KeyCode == Enum.KeyCode.Five then
+Chars.SpiderMan.Remotes.TomFinisher:FireServer(plr)
+    elseif input.KeyCode == Enum.KeyCode.F then
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+GuardA:Play()
+    elseif input.KeyCode == Enum.KeyCode.E then
+   if SpideySense == false then
+plr.PlayerGui.Moveset.Frame.Hold.Ecd.ImageColor3 = Color3.fromRGB(0,100,255)
+plr.PlayerGui.Moveset.Frame.Hold.Ecd.ImageTransparency = 0.5
+plr.PlayerGui.Moveset.Frame.Hold.Emove.Text = "Spidey Sense [Active]"
+MilesS.SenseCounterActivate:FireServer(plr)
+SpideySense = true
+char.Head.Sense2:Play()
+char.HumanoidRootPart.RootRigAttachment.Shockwave:Emit(1)
+MilesS.Bass:Play()
+MilesS.Tingle:FireServer(plr)
+char.Head.SenseAttachment.Shock.Enabled = true
+for _,emitters in pairs(char.Head:GetDescendants()) do
+     if emitters.Name == "SensePtcl" then
+        emitters.Enabled = true
+     end
+end
+wait(4)
+char.Head.SenseAttachment.Shock.Enabled = false
+for _,emitters in pairs(char.Head:GetDescendants()) do
+     if emitters.Name == "SensePtcl" then
+        emitters.Enabled = false
+     end
+end
+wait(1)
+plr.PlayerGui.Moveset.Frame.Hold.Ecd.ImageTransparency = 1
+plr.PlayerGui.Moveset.Frame.Hold.Emove.Text = "Spidey Sense"
+plr.PlayerGui.Moveset.Frame.Hold.Ecd.ImageColor3 = Color3.fromRGB(255,0,0)
+SpideySense = false
+else
+return
+end
+    end
+end)
+while true do
+      while true do
+          wait()
+          if char:FindFirstChild("CounterSucces") and (SpideySense and not CounterDB) then
+             break
+          end
+          if char:FindFirstChild("CounterSucces") and not CounterDB then
+          CounterDB = true
+          Chars.SpiderMan.Remotes.DownSlam:FireServer(plr)
+          MilesS.DestroyCounter:FireServer(plr)
+          local fovTweenInfo = TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+          TweenService:Create(workspace.CurrentCamera, fovTweenInfo, {
+            FieldOfView = 80
+          }):Play()
+          wait(.5)
+          local fovTweenInfo2 = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+          
+          TweenService:Create(workspace.CurrentCamera, fovTweenInfo2, {
+            FieldOfView = 70
+          }):Play()
+          CounterDB = false
+        
+      end
+      end
+    CounterDB = true
+    local DodgeSel = math.random(1,2)
+    if DodgeSel == 1 then
+     SideDodge:Play()
+     SideDodgeFunction(char.HumanoidRootPart)
+    elseif DodgeSel == 2 then
+     BackDodge:Play()
+     DodgeFunction(char.HumanoidRootPart)
+    end
+    wait(.5)
+    CounterDB = false
+end
+end
+local StarterGui = game:GetService("StarterGui") 
+
+StarterGui:SetCore("SendNotification", {
+	Title = "Harry's Scripts",
+	Text = "RESPAWN FOR THE SCRIPT TO WORK",
+	Duration = 3
+})
+game.Players.LocalPlayer.CharacterAdded:Connect(function()
+wait(.5)
+if game.Players.LocalPlayer.Character:FindFirstChild("Miles") then
+task.spawn(Execute)
+else
+print("Not using Miles or in Lobby")
+end
+end)
