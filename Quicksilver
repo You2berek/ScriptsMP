@@ -1,0 +1,140 @@
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local QuickS = char:WaitForChild("Quicksilver")
+local Anims = QuickS:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local RemsA = Chars:FindFirstChild("A-Train").Remotes
+local RemsQ = Chars:FindFirstChild("Quicksilver").Remotes
+local RemsF = Chars:FindFirstChild("TheFlashCw").Remotes
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+local Debris = game:GetService("Debris")
+
+local GutA = Animator:LoadAnimation(Anims.BellyPunch)
+local StartRunA = Animator:LoadAnimation(Anims.StartRun)
+local RunA = Animator:LoadAnimation(Anims.SuperSpeed)
+local GuardA = Animator:LoadAnimation(Anims.Blocking)
+
+    if input.KeyCode == Enum.KeyCode.One then
+GutA:Play()
+RemsA.BellyPunch:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Two then
+StartRunA:Play()
+RemsF.FastestMan1:FireServer(plr)
+wait(1)
+RemsF.FastestMan:FireServer(plr)
+RunA:Play()
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 5500
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 160
+game.Debris:AddItem(BodyVel, 3)
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 3)
+Hitbox.Touched:Connect(function(Dark)
+local Parent1 = Dark.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+   if Parent1 ~= char then
+      local Val = Chars.Values.SuperSpeedDmgVal:Clone()
+      Val.Parent = Parent1
+      game.Debris:AddItem(Val, .3)
+      for i=1,3 do
+      Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)   
+      end
+      end
+end
+end)
+
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 140
+    end
+end
+
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+RemsF.Rush:FireServer(MouseHit)
+elseif input.KeyCode == Enum.KeyCode.Four then
+RemsA.Grab:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Five then
+RemsA.QuicksilverFinisher:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Chars.Combat.Remotes.Blocking:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.G then
+RemsA.Hammer:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.H then
+GutA:Play()
+RemsA.BehindYou:FireServer(plr)
+elseif input.KeyCode == Enum.KeyCode.Z then
+StartRunA:Play()
+RemsF.FastestMan1:FireServer(plr)
+wait(1)
+RemsF.FastestMan:FireServer(plr)
+RunA:Play()
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 5500
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 235
+game.Debris:AddItem(BodyVel, 3)
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 3)
+Hitbox.Touched:Connect(function(Dark)
+local Parent1 = Dark.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+   if Parent1 ~= char then
+      local Val = Chars.Values.SuperSpeedDmgVal:Clone()
+      Val.Parent = Parent1
+      game.Debris:AddItem(Val, .3)
+      for i=1,55 do
+      Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)   
+      end
+      end
+end
+end)
+
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 200
+    end
+end
+
+elseif input.KeyCode == Enum.KeyCode.E then
+StartRunA:Play()
+RemsQ.TimeStop:FireServer(plr)
+   end
+end)
