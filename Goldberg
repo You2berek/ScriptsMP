@@ -10,7 +10,17 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     
     local plr = Players.LocalPlayer
     local char = plr.Character
-    
+    local Animations = char.Joe.Animations
+    local Animator = char.Humanoid:WaitForChild("Animator")
+    local Joe = char.Joe
+    local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+
+    local stalkerAnim = Animator:LoadAnimation(Animations.StalkerMode)
+        local RunAnim = Animator:LoadAnimation(Animations.RunnersHigh)
+
     if input.KeyCode == Enum.KeyCode.One or input.KeyCode == Enum.KeyCode.Two or 
        input.KeyCode == Enum.KeyCode.Three or input.KeyCode == Enum.KeyCode.Four or 
        input.KeyCode == Enum.KeyCode.Five or input.KeyCode == Enum.KeyCode.F then
@@ -21,7 +31,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         end
     end
     
-    if input.KeyCode == Enum.KeyCode.One then
+    if input.KeyCode == Enum.KeyCode.G then
         local hammerAnim = Instance.new("Animation")
         hammerAnim.AnimationId = "rbxassetid://17514323805"
         local hammerTrack = char:FindFirstChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(hammerAnim)
@@ -31,7 +41,65 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         ReplicatedStorage.Characters.Joe.Remotes.BugsSlam:FireServer(plr)
         hammerTrack.Ended:Wait()
         char:FindFirstChild("Joe").HammerOff:FireServer(plr)
-    
+        elseif input.KeyCode == Enum.KeyCode.One then
+         RunAnim:Play()
+         game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 85;
+}):Play()
+  game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	ImageTransparency = .3;
+}):Play()
+         Joe.ChaseOn:FireServer(plr)
+         local BodyVel = Instance.new("BodyVelocity")
+         BodyVel.Parent = char.HumanoidRootPart
+         BodyVel.P = 1250
+         BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+         BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 40
+         game.Debris:AddItem(BodyVel, 2.1)
+         local Hitbox = CombatHitbox:Clone()
+         Hitbox.Parent = char
+        local Weld = Instance.new("Weld", Hitbox)
+        Weld.Part0 = Hitbox
+        Weld.Part1 = char.HumanoidRootPart
+        Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+        game.Debris:AddItem(Hitbox, 2)
+        Hitbox.Touched:Connect(function(a)
+        local Parent1 = a.Parent
+        local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+        if Parent1 ~= char and Humanoid1 and Humanoid1.Health ~= 0 then
+          Joe.ChaseOff:FireServer()
+          BodyVel:Destroy()
+          Hitbox:Destroy()
+          RunAnim:Stop()
+          for i=1,5 do
+           ReplicatedStorage.Characters.Joe.Remotes.BugsSlam:FireServer(plr)
+          end
+     game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+  game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	ImageTransparency = 1;
+}):Play()
+        end
+        end)
+
+        local runDuration = 2
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 40
+    end
+end
+    game:GetService("TweenService"):Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	ImageTransparency = 1;
+}):Play()
+    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+	FieldOfView = 70;
+}):Play()
+Joe.ChaseOff:FireServer(plr)
+        
     elseif input.KeyCode == Enum.KeyCode.Two then
         ReplicatedStorage.Characters.Joe.Remotes.ChokeSlam:FireServer(plr)
     
@@ -51,10 +119,9 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         -- MoveE (Stalker Mode) without cooldown
         stalkerModeActive = true
         ReplicatedStorage.Characters.Joe.Remotes.StalkerMode:FireServer(plr)
-        local stalkerAnim = Instance.new("Animation")
-        stalkerAnim.AnimationId = "rbxassetid://17545601178"
-        local stalkerTrack = char:FindFirstChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(stalkerAnim)
-        stalkerTrack:Play()
+        
+      
+        stalkerAnim:Play()
         char.Head.StalkLoop.Volume = 1.5
         char.Head.StalkLoop:Play()
     
