@@ -33,12 +33,24 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
 
     -- Phaseloop logic, fires Phase every 0.5 seconds if enabled
     task.spawn(function()
-        while task.wait(0.8) do
+        while task.wait(3) do
             if phaseloop == true then
                 game:GetService("Players").LocalPlayer.Character.ReverseFlash.Phase:FireServer(unpack(args))
             end
         end
     end)
+
+ -- Rushloop logic, fires Rush every 0.5 seconds if enabled
+task.spawn(function()
+    while task.wait(1) do
+        if rushloop == true then
+            local args2 = {
+                [1] = workspace.hejka_lenka10:FindFirstChild("HumanoidRootPart").Position
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args2))
+        end
+    end
+end)
 
     -- Input handling for different keys
     if input.KeyCode == Enum.KeyCode.One then
@@ -90,15 +102,4 @@ elseif input.KeyCode == Enum.KeyCode.Three then
     end
 end)
 
--- Rushloop logic, fires Rush every 0.5 seconds if enabled
-task.spawn(function()
-    while task.wait(0.1) do
-        if rushloop == true then
-            local args2 = {
-                [1] = workspace.hejka_lenka10:FindFirstChild("HumanoidRootPart").Position
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args2))
-        end
-    end
-end)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
