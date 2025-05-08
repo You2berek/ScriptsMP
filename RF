@@ -1,9 +1,17 @@
+
 local args = {
     [1] = game:GetService("Players").LocalPlayer
 }
 local phaseloop = false
 local rushloop = false
 
+    local char = game.Players.LocalPlayer.Character
+            local Animator = char:WaitForChild("Humanoid"):WaitForChild("Animator")
+
+            local VibArmAnim = Animator:LoadAnimation(char.ReverseFlash.Animations.VibratingArm)
+                     local BarrageAnim = Animator:LoadAnimation(game:GetService("ReplicatedStorage").SelectACharacter.TheFlashCW.TheFlashCW.Animations.BarragePunches)
+local TornadoAnimRun = Animator:LoadAnimation(game:GetService("ReplicatedStorage").Skins["A-Train"].Skin7.RedRush.Animations.TornadoRun)
+   
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then
         return 
@@ -96,10 +104,23 @@ elseif input.KeyCode == Enum.KeyCode.Three then
         local args = {
             [1] = game:GetService("Players").LocalPlayer
         }
-        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("ReverseFinisher"):FireServer(unpack(args))
+        game:GetService("ReplicatedStorage"):WaitForChild(" Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("ReverseFinisher"):FireServer(unpack(args))
     elseif input.KeyCode == Enum.KeyCode.E then
         game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Sonic"):WaitForChild("Remotes"):WaitForChild("SonicBoom"):FireServer()
+            elseif input.KeyCode == Enum.KeyCode.Y then
+           VibArmAnim:Play()
+           game:GetService("ReplicatedStorage").Characters.TheFlashCw.Remotes.VibrateArm:FireServer(game.Players.LocalPlayer)
+           elseif input.KeyCode == Enum.KeyCode.R then
+           BarrageAnim:Play()
+   for i=1,5 do
+           game:GetService("ReplicatedStorage").Characters.TheFlashCw.Remotes.Barrage:FireServer(game.Players.LocalPlayer)
+           end
+              elseif input.KeyCode == Enum.KeyCode.U then
+       TornadoAnimRun:Play()
+           game:GetService("ReplicatedStorage").Characters.TheFlashCw.Remotes.Mirrage:FireServer(game.Players.LocalPlayer)
     end
 end)
+
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
