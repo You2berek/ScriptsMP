@@ -93,6 +93,8 @@ elseif input.KeyCode == Enum.KeyCode.Three then
             [1] = game:GetService("Players").LocalPlayer
         }
                game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("ReverseFlash"):WaitForChild("Remotes"):WaitForChild("Counter"):FireServer()
+     elseif input.KeyCode == Enum.KeyCode.L then
+                    game.Players.LocalPlayer.Character.ReverseFlash.DestroyCounter:FireServer()          
     elseif input.KeyCode == Enum.KeyCode.Four then
          local args = {
             [1] =  game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position
@@ -104,7 +106,7 @@ elseif input.KeyCode == Enum.KeyCode.Three then
         local args = {
             [1] = game:GetService("Players").LocalPlayer
         }
-        game:GetService("ReplicatedStorage"):WaitForChild(" Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("ReverseFinisher"):FireServer(unpack(args))
+        game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("ReverseFinisher"):FireServer(unpack(args))
     elseif input.KeyCode == Enum.KeyCode.E then
         game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Sonic"):WaitForChild("Remotes"):WaitForChild("SonicBoom"):FireServer()
             elseif input.KeyCode == Enum.KeyCode.Y then
@@ -120,6 +122,9 @@ elseif input.KeyCode == Enum.KeyCode.Three then
            game:GetService("ReplicatedStorage").Characters.TheFlashCw.Remotes.Mirrage:FireServer(game.Players.LocalPlayer)
     end
 end)
+
+
+
 
 
 
