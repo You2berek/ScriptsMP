@@ -15,6 +15,7 @@ local function moveTwo()
 Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.Harpoon:FireServer(plr)
 end
 local function Counter()
+game.Players.LocalPlayer.Dexter.DestroyCounter:FireServer(plr)
 Repl:WaitForChild("Characters"):FindFirstChild("Dexter").Remotes.Counter:FireServer(plr)
 end
 local function moveFour()
