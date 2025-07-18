@@ -1,0 +1,133 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Characters = ReplicatedStorage.Characters
+local SniperShotRemote = Characters.Vigilante.Remotes.SniperShot
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+local Animator = char.Humanoid.Animator
+local Walker = char:WaitForChild("SoldierBoy")
+local CombatHitbox = Characters.Combat.Fx.CombatHitbox
+local Animations = Walker:WaitForChild("Animations")
+
+local Move2Anim = Animator:LoadAnimation(Animations.GunShoot)
+local TackleStart = Animator:LoadAnimation(Animations.TackleRun)
+local TackleBash = Animator:LoadAnimation(Animations.TackleHit)
+local LeapA = Animator:LoadAnimation(Animations.Leap)
+local GuardA = Animator:LoadAnimation(Animations.Blocking)
+local Move4A = Animator:LoadAnimation(Animations.Gun)
+
+local function Leap(hrp)
+local BodyPos = Instance.new("BodyPosition")
+BodyPos.MaxForce = Vector3.new(100000, 100000, 100000)
+BodyPos.P = 100000
+BodyPos.D = 3000
+BodyPos.Position = (hrp.CFrame * CFrame.new(0, 40, -70)).Position
+BodyPos.Parent = hrp
+game.Debris:AddItem(BodyPos, 0.5)
+end
+
+local function MoveE()
+LeapA:Play()
+Walker.Leap:FireServer()
+task.wait(.5)
+Characters.Combat.Remotes.M4:FireServer()
+Leap(char.HumanoidRootPart)
+end
+
+    if input.KeyCode == Enum.KeyCode.One then
+local BodyVelocity = Instance.new("BodyVelocity", char)
+BodyVelocity.Parent = char.HumanoidRootPart
+BodyVelocity.MaxForce = Vector3.new(500000,0,500000)
+BodyVelocity.P = 1250
+BodyVelocity.Velocity = char.HumanoidRootPart.CFrame.lookVector * 50
+game.Debris:AddItem(BodyVelocity, 1.5)
+TackleStart:Play()
+ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        FieldOfView = 120;
+                    }):Play()
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Weld, 1.5)
+  Hitbox.Touched:Connect(function(hit)
+local Parent1 = hit.Parent
+local Humanoid1 = Parent1:FindFirstChild("Humanoid")
+if Humanoid1 and Humanoid1.Health ~= 0 and Humanoid1 ~= char.Humanoid then
+TackleStart:Stop()
+TackleBash:Play()
+BodyVelocity:Destroy()
+Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        FieldOfView = 70;
+                    }):Play()
+Walker.Strong:FireServer()
+Hitbox:Destroy()
+end
+  end)
+
+local runDuration = 1.5
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVelocity then
+        wait(0.1)
+        BodyVelocity.Velocity = char.HumanoidRootPart.CFrame.LookVector * 50
+    end
+end
+TackleStart:Stop()
+   game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                        FieldOfView = 70;
+                    }):Play()
+                    
+elseif input.KeyCode == Enum.KeyCode.Two then
+Move2Anim:Play()
+Walker.Slap:FireServer()
+SniperShotRemote:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Three then
+Walker.DestroyCounter:FireServer()
+Characters:WaitForChild("Moonknight"):WaitForChild("Remotes"):WaitForChild("CounterPunches"):FireServer(game.Players.LocalPlayer)
+
+elseif input.KeyCode == Enum.KeyCode.Four then
+local GunCounterR = Characters.Walter.Remotes.GunCounter
+local GunCounterHR = Characters.Walter.Remotes.GunCounterHit
+Move4A:Play()
+Walker.Warn:FireServer()
+
+Move4A.KeyframeReached:Connect(function(frame)
+if frame == "Shoot1" or frame == "Shoot2" then
+GunCounterR:FireServer()
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(Hitbox, .2)
+Hitbox.Touched:Connect(function(arg)
+local Parent1 = arg.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+
+if Humanoid and Humanoid.Health ~= 0 and Humanoid ~= char.Humanoid then
+Hitbox:Destroy()
+GunCounterHR:FireServer(Parent1)
+end
+end)
+end
+end)
+elseif input.KeyCode == Enum.KeyCode.Five then
+Characters.SoldierBoy.Remotes.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Characters.Combat.Remotes.Blocking:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+coroutine.wrap(function()
+MoveE()
+end)()
+   end
+end)
