@@ -172,6 +172,8 @@ animTrack:Play()
 plr.Character:FindFirstChild("DarthVader").SaberBlocking:FireServer(plr)
 game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Blocking:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.Five then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DarthVader"):WaitForChild("Remotes"):WaitForChild("Finisher"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
 local anim = Instance.new("Animation")
 
 anim.AnimationId = "rbxassetid://10738038469"
@@ -186,12 +188,7 @@ game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Rem
 plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
 plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
 plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
+
 
 elseif input.KeyCode == Enum.KeyCode.H then
 game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes.QuickChoke:FireServer(plr)
