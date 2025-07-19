@@ -1,0 +1,89 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Characters = ReplicatedStorage.Characters
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+local Animator = char.Humanoid.Animator
+local Ghost = char:WaitForChild("ReverseFlash")
+local CombatHitbox = Characters.Combat.Fx.CombatHitbox
+local Animations = Ghost:WaitForChild("Animations")
+local GetMouse = plr:GetMouse()
+
+local GuardA = Animator:LoadAnimation(Animations.Blocking)
+local RampantFlurry = Characters.ReverseFlash.Remotes.RampantFlurry
+local Counter = Characters.ReverseFlash.Remotes.Counter
+local Finisher = Characters.TheFlashCw.Remotes.ReverseFinisher
+local Rush = Characters.TheFlashCw.Remotes.Rush
+local RushAnim = Animator:LoadAnimation(Animations.SwordRush)
+local RushHit = Characters.Pibby.Remotes.RushHit
+
+local function moveE()
+RushAnim:Play()
+Ghost.Rush:FireServer()
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+Hitbox.Size = Hitbox.Size * 1.5
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0,0,5.25) * CFrame.Angles(0,0,0)
+local BodyVelocity = Instance.new("BodyVelocity")
+BodyVelocity.Parent = char.HumanoidRootPart
+BodyVelocity.P = 1250
+BodyVelocity.MaxForce = Vector3.new(100000000, 0, 10000000)
+BodyVelocity.Velocity = char.HumanoidRootPart.CFrame.lookVector * 50
+game.Debris:AddItem(Hitbox, 1)
+game.Debris:AddItem(BodyVelocity, 1)
+Hitbox.Touched:Connect(function(arg1)
+local Parent1 = arg1.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and Humanoid ~= char.Humanoid then
+RushAnim:Stop()
+Hitbox:Destroy()
+BodyVelocity:Destroy()
+Ghost.RushOff:FireServer()
+RushHit:FireServer(plr)
+end
+end)
+
+local runDuration = 1
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVelocity then
+        wait(0.1)
+        BodyVelocity.Velocity = char.HumanoidRootPart.CFrame.LookVector * 50
+    end
+end
+Ghost.RushOff:FireServer()
+
+
+end
+
+    if input.KeyCode == Enum.KeyCode.One then
+                   RampantFlurry:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Two then
+
+elseif input.KeyCode == Enum.KeyCode.Three then
+Ghost.DestroyCounter:FireServer()
+Counter:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Four then
+Rush:FireServer(GetMouse.hit.p)
+elseif input.KeyCode == Enum.KeyCode.Five then
+Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+GuardA:Play()
+Characters.Combat.Remotes.Blocking:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+coroutine.wrap(function()
+moveE()
+end)()
+elseif input.KeyCode == Enum.KeyCode.T then
+task.spawn(function()
+Ghost.Phase:FireServer()
+end)
+   end
+end)
