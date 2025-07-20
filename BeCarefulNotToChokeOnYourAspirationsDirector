@@ -12,7 +12,9 @@ function ForceLeap(arg1) -- Line 37
     BodyPosition_2.Parent = arg1
     game.Debris:AddItem(BodyPosition_2, 0.7)
 end
-
+  local Vader = game.Players.LocalPlayer.Character.DarthVader
+    local CombatHitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+    local saberOn = true
 
     if input.KeyCode == Enum.KeyCode.One then
 local PCHitbox = game.ReplicatedStorage.Characters.Combat.Peacemaker.HitboxPunch
@@ -49,6 +51,33 @@ game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireSer
 
 end
 end)
+   elseif input.KeyCode == Enum.KeyCode.R then
+        if saberOn == true then
+            Vader.SaberOff:FireServer()
+            saberOn = false
+            else
+            Vader.SaberOn:FireServer()
+            saberOn = true
+        end
+        -- R key pressed
+    elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
+        -- Left mouse button (LMB) clicked
+        local Hitbox = CombatHitbox:Clone()
+        Hitbox.Parent = game.Players.LocalPlayer.Character
+        local Weld = Instance.new("Weld", Hitbox)
+        Weld.Part0 = Hitbox
+        Weld.Part1 = game.Players.LocalPlayer.Character.HumanoidRootPart
+        Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0,0,0)
+        game.Debris:AddItem(Hitbox, .2)
+        Hitbox.Touched:Connect(function(what)
+        local A1 = what.Parent
+        local Humanoid = A1:FindFirstChild("Humanoid")
+        if Humanoid and Humanoid.Health ~= 0 and Humanoid ~= game.Players.LocalPlayer.Character.Humanoid then
+        Hitbox:Destroy()
+        Vader.Combat:FireServer()
+        game.ReplicatedStorage.Characters.Combat.Remotes.Combo:FireServer(A1)
+        end
+        end)
 
 elseif input.KeyCode == Enum.KeyCode.Two then
 local anim = Instance.new("Animation")
