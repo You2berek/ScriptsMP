@@ -44,8 +44,9 @@ local Parent_9 = arg1.Parent
 local Humanoid_3 = Parent_9:FindFirstChild("Humanoid")
 if not table.find(tbl_upvr, Parent_9) and Humanoid_3 and Humanoid_3.Health ~= 0 and Parent_9 ~= Character_upvr then
 table.insert(tbl_upvr, Parent_9)
-
+for i=1,10 do
 game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireServer(Parent_9)
+end
 end
 end)
 
@@ -94,8 +95,9 @@ if saber then
                 local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("DarthVader")
                                 :WaitForChild("Remotes"):WaitForChild("SaberThrowHit")
                 if remote then
+                    for i=1,10 do
                     remote:FireServer(unpack(args))
-
+                    end
                     task.wait(debouncetime)
                 debounce = false
                 else
