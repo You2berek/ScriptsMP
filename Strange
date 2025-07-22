@@ -98,7 +98,7 @@ if char:FindFirstChild("positioningpart") then
 		   LoopBack:Play()
 			DrStrangeS.TimeBack:FireServer(char.positioningpart.CFrame, 150)
 				char.CustomShiftlock.Disabled = true
-			char.CameraScript.Disabled = true
+			char.CAMERAFIX.Disabled = true
 			char.CamForce.Disabled = false
 			workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
 			workspace.CurrentCamera.CameraSubject = plr.Character.CamCutscene
@@ -128,7 +128,7 @@ if char:FindFirstChild("positioningpart") then
 							Humanoid.WalkSpeed = 10
 			Humanoid.JumpPower = 30
 					char.CamForce.Disabled = true
-			char.CameraScript.Disabled = false
+			char.CAMERAFIX.Disabled = false
 			char.CustomShiftlock.Disabled = false
 				workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
 					workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
