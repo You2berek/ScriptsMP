@@ -184,6 +184,8 @@ elseif input.KeyCode == Enum.KeyCode.E then
 anim:Play()
 
 homanderScript.Milk:FireServer()
+elseif input.KeyCode == Enum.KeyCode.G then
+Repl.Characters.Homelander.Remotes.Slamdown:FireServer(plr)
    end
 end)
 end
