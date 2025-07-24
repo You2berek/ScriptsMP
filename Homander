@@ -71,8 +71,8 @@ end
             local parent = hit.Parent
             local humanoid = parent:FindFirstChild("Humanoid")
             if humanoid and humanoid.Health > 0  then
-				table.insert(hitTable, parent)
 			if not table.find(hitTable, parent) then
+	table.insert(hitTable, parent)
 for i = 1, 15 do
 Repl.Characters.Homelander.Remotes.LaserEyesHit:FireServer(parent)
 end
