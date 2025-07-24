@@ -232,7 +232,7 @@ animTrack:Play()
 elseif input.KeyCode == Enum.KeyCode.B then
 	game:GetService("Players").LocalPlayer.Character:FindFirstChild("Paul").Voice:FireServer()
 elseif input.KeyCode == Enum.KeyCode.V then
-replicatedStorage.Characters.Paul.Worm:FireServer(plr)
+game.ReplicatedStorage.Characters.Paul.Remotes.Worm:FireServer(plr)
 
 
 
