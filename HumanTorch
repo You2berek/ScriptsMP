@@ -1,0 +1,116 @@
+local plr = game.Players.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+if not char:FindFirstChild("HumanTorch") then return end
+local HT = char.HumanTorch
+local Animator = char.Humanoid.Animator
+local Move1A = Animator:LoadAnimation(HT.Animations.Combo1)
+local Move1B = Animator:LoadAnimation(HT.Animations.Combo2)
+local Move3A = Animator:LoadAnimation(HT.Animations.Combo3)
+local Move4A = Animator:LoadAnimation(HT.Animations.MoveFour)
+local CombatHitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+local StrikeAnim =  Animator:LoadAnimation(HT.Animations.Homecrusher)
+local StrikeHit =  Animator:LoadAnimation(HT.Animations.HomeCrusherHit)
+local BA =  Animator:LoadAnimation(HT.Animations.Blocking)
+
+local function zoom()
+game.TweenService:Create(workspace.CurrentCamera, TweenInfo.new(.2,Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 90}):Play()
+task.wait(.2)
+game.TweenService:Create(workspace.CurrentCamera, TweenInfo.new(.4,Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 70}):Play()
+end
+
+local function MoveOne()
+Move1A:Play()
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveOne:FireServer()
+zoom()
+task.wait(.3)
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveOne:FireServer()
+zoom()
+Move1B:Play()
+task.wait(.3)
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveOne:FireServer()
+Move1A:Play()
+zoom()
+end
+local function M4()
+Move4A:Play()
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveFour:FireServer()
+end
+
+local function M2()
+
+HT.SmokeOn:FireServer(plr)
+StrikeAnim:Play()
+local StrikeVel = Instance.new("BodyVelocity")
+StrikeVel.Parent = char.HumanoidRootPart
+StrikeVel.P = 1250
+StrikeVel.MaxForce = Vector3.new(500000, 500000, 500000)
+StrikeVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 100
+game.Debris:AddItem(StrikeVel, 3)
+local StrikeBox = CombatHitbox:Clone()
+StrikeBox.Parent = char 
+local WeldStrike = Instance.new("Weld", StrikeBox)
+WeldStrike.Part0 = StrikeBox
+WeldStrike.Part1 = char.HumanoidRootPart
+WeldStrike.C0 = CFrame.new(0,0,3.5) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(StrikeBox,3)
+StrikeBox.Touched:Connect(function(arg1)
+local SParent = arg1.Parent
+local Humanoid = SParent:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+StrikeAnim:Stop()
+StrikeBox:Destroy()
+StrikeHit:Play()
+for i=1,15 do
+game.ReplicatedStorage.Characters.Homelander.Remotes.EagleStrike:FireServer(plr, SParent)
+end
+HT.SmokeOff:FireServer(plr)
+StrikeVel:Destroy()
+end
+end)
+local runDuration = 3  -- Duration of the run in seconds
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if StrikeVel then
+        wait(0.1)
+        StrikeVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 100
+    end
+end
+HT.SmokeOff:FireServer(plr)
+
+end
+local function M3()
+HT.DestroyCounter:FireServer()
+Move3A:Play()
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.Counter:FireServer()
+end
+local function F()
+BA:Play()
+game.ReplicatedStorage.Characters.Combat.Remotes.Blocking:FireServer(plr)
+end
+local function M5()
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveFive:FireServer()
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+MoveOne()
+elseif input.KeyCode == Enum.KeyCode.Two then
+M2()
+elseif input.KeyCode == Enum.KeyCode.Three then
+M3()
+elseif input.KeyCode == Enum.KeyCode.Four then
+M4()
+elseif input.KeyCode == Enum.KeyCode.Five then
+M5()
+elseif input.KeyCode == Enum.KeyCode.F then
+F()
+   end
+end)
