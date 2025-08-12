@@ -158,8 +158,11 @@ Emove()
 elseif input.KeyCode == Enum.KeyCode.H then
 	Batmobile()
 elseif input.KeyCode == Enum.KeyCode.G then
-local plr = game.Players.LocalPlayer
-game:GetService("ReplicatedStorage").Characters.Wanda.Remotes.Torture:FireServer(plr)
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveOne:FireServer()
+elseif input.KeyCode == Enum.KeyCode.J then
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveFour:FireServer()
+elseif input.KeyCode == Enum.KeyCode.X then
+game.ReplicatedStorage.Characters.HumanTorch.Remotes.MoveFive:FireServer()
    end
 end)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
