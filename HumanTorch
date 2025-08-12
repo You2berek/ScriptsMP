@@ -96,7 +96,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     if gameProcessedEvent then
         return 
     end
-   
+   if not char:FindFirstChild("HumanTorch") then return end
 
 
 
