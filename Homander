@@ -266,7 +266,9 @@ task.wait(1.2)
 			ImageTransparency = 1;
 		}):Play()
        elseif input.KeyCode == Enum.KeyCode.J then
-       local laser = animator:LoadAnimation(game.ReplicatedStorage.SelectACharacter.Amazo.Amazo.Animations.QuickEyes)
+        local anim = Instance.new("Animation")
+        anim.AnimationId = "rbxassetid://13548212618"
+       local laser = animator:LoadAnimation(anim)
 local PunchHitbox =  game.ReplicatedStorage.Characters.Combat.Peacemaker.HitboxPunch
 char.Homelander.Eyes:FireServer()
 task.wait(.5)
@@ -347,7 +349,9 @@ end
 task.wait(1.2)
 print('ended')
 elseif input.KeyCode == Enum.KeyCode.X then
-local laser = animator:LoadAnimation(game.ReplicatedStorage.SelectACharacter.Amazo.Amazo.Animations.LaserEyes)
+    local anim = Instance.new("Animation")
+        anim.AnimationId = "rbxassetid://9931538657"
+       local laser = animator:LoadAnimation(anim)
 local PunchHitbox =  game.ReplicatedStorage.Characters.Combat.Peacemaker.HitboxPunch
 laser:Play()
 char.Homelander.Eyes:FireServer()
