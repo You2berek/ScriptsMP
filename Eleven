@@ -196,5 +196,9 @@ UIS.InputBegan:Connect(function(input, processed)
     elseif input.KeyCode == Enum.KeyCode.E then
         remotes.ElevenE:FireServer()
         EnterVoidOverlay(7, 1)
+elseif input.KeyCode == Enum.KeyCode.G then
+for i=1,150 do
+  remotes.ArmBreak:FireServer()
+  end
     end
 end)
