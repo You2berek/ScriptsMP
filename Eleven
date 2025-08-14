@@ -1,0 +1,233 @@
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("ReplicatedStorage")
+local Plrs = game:GetService("Players")
+local TS = game:GetService("TweenService")
+local RunS = game:GetService("RunService")
+local SS = game:GetService("SoundService")
+local Debris = game:GetService("Debris")
+
+local LP = Plrs.LocalPlayer
+local Char = LP.Character
+
+-- Function: Full screen void overlay
+local function EnterVoidOverlay(duration, fadeTime, opts)
+    duration = duration or 5
+    fadeTime = fadeTime or 0.35
+    opts = opts or {}
+
+    local faceAway = opts.faceAway or false
+    local excludeRoots = opts.exclude or {}
+    local reverbType = opts.reverbType or Enum.ReverbType.Cave
+
+    -- Play sound
+    local headSound = Char.Head:FindFirstChild("MoveE")
+    if headSound and headSound:IsA("Sound") then
+        local sClone = headSound:Clone()
+        sClone.Parent = SS
+        sClone:Play()
+        Debris:AddItem(sClone, sClone.TimeLength)
+    end
+
+    -- Exclusion check
+    local function isExcluded(inst)
+        for _, root in ipairs(excludeRoots) do
+            if inst and root and inst:IsDescendantOf(root) then
+                return true
+            end
+        end
+        return false
+    end
+
+    -- Build overlay
+    local playerGui = LP:WaitForChild("PlayerGui")
+    local existing = playerGui:FindFirstChild("BlackViewportOverlay")
+    if existing then existing:Destroy() end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "BlackViewportOverlay"
+    gui.IgnoreGuiInset = true
+    gui.ResetOnSpawn = false
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.Parent = playerGui
+
+    local overlay = Instance.new("Frame")
+    overlay.Size = UDim2.fromScale(1, 1)
+    overlay.BackgroundColor3 = Color3.new(0, 0, 0)
+    overlay.BackgroundTransparency = 1
+    overlay.BorderSizePixel = 0
+    overlay.ZIndex = 1
+    overlay.Parent = gui
+
+    local vp = Instance.new("ViewportFrame")
+    vp.Size = UDim2.fromScale(1, 1)
+    vp.BackgroundTransparency = 1
+    vp.ImageTransparency = 1
+    vp.Ambient = Color3.fromRGB(200, 200, 200)
+    vp.LightColor = Color3.fromRGB(255, 255, 255)
+    vp.ZIndex = 2
+    vp.Parent = gui
+
+    local world = Instance.new("WorldModel", vp)
+    local liveChar = LP.Character or LP.CharacterAdded:Wait()
+    if not liveChar then gui:Destroy() return end
+
+    -- Clone character
+    local charClone = liveChar:Clone()
+    for _, d in ipairs(charClone:GetDescendants()) do
+        if d:IsA("Script") or d:IsA("LocalScript") then d:Destroy() end
+    end
+    for _, p in ipairs(charClone:GetDescendants()) do
+        if p:IsA("BasePart") then
+            p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = false, false, false, false
+        end
+    end
+    local hum = charClone:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.PlatformStand = true
+        hum:ChangeState(Enum.HumanoidStateType.Physics)
+    end
+    charClone.Parent = world
+
+    -- Motor maps
+    local liveMotors, cloneMotors = {}, {}
+    for _, m in ipairs(liveChar:GetDescendants()) do
+        if m:IsA("Motor6D") then liveMotors[m.Name] = m end
+    end
+    for _, m in ipairs(charClone:GetDescendants()) do
+        if m:IsA("Motor6D") then cloneMotors[m.Name] = m end
+    end
+
+    -- Camera
+    local vpCam = Instance.new("Camera")
+    vpCam.Parent = vp
+    vp.CurrentCamera = vpCam
+
+    -- Duck sounds
+    local originalVolumes = {}
+    local function duckAll()
+        local tweenInfo = TweenInfo.new(fadeTime, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        for _, root in ipairs({workspace, playerGui}) do
+            for _, s in ipairs(root:GetDescendants()) do
+                if s:IsA("Sound") and not s:GetAttribute("NoDuck") and not isExcluded(s) then
+                    if s.IsPlaying and s.Volume > 0 then
+                        originalVolumes[s] = s.Volume
+                        TS:Create(s, tweenInfo, { Volume = 0 }):Play()
+                    end
+                end
+            end
+        end
+    end
+    local function unduckAll()
+        local tweenInfo = TweenInfo.new(fadeTime, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+        for s, v in pairs(originalVolumes) do
+            if s and s.Parent and s.IsPlaying then
+                TS:Create(s, tweenInfo, { Volume = v }):Play()
+            end
+        end
+    end
+
+    -- Save & restore reverb
+    local savedReverb = SS.AmbientReverb
+    local reverbWasSet = false
+    local function restoreReverb()
+        if reverbWasSet and SS.AmbientReverb == reverbType then
+            SS.AmbientReverb = savedReverb
+        end
+    end
+
+    -- Impostors
+    local impostors = {}
+    local function ensureImpostor(model)
+        local p = Instance.new("Part")
+        p.Shape = Enum.PartType.Ball
+        p.Size = Vector3.new(1, 1, 1)
+        p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
+        p.Material = Enum.Material.Neon
+        p.Color = Color3.fromRGB(30, 120, 255)
+        p.Parent = world
+        impostors[model] = p
+        return p
+    end
+    for _, d in ipairs(workspace:GetDescendants()) do
+        if d:IsA("Model") and d ~= liveChar and d:FindFirstChildOfClass("Humanoid") then
+            ensureImpostor(d)
+        end
+    end
+
+    -- Cleanup
+    local live, impostorAlive = true, true
+    local function cleanupAll()
+        live, impostorAlive = false, false
+        unduckAll()
+        restoreReverb()
+        gui:Destroy()
+    end
+
+    -- Render updates
+    local renderConn
+    renderConn = RunS.RenderStepped:Connect(function()
+        if not live then return end
+        local cam = workspace.CurrentCamera
+        vpCam.FieldOfView = cam.FieldOfView
+        vpCam.CFrame = cam.CFrame
+
+        local pivot = liveChar:GetPivot()
+        charClone:PivotTo(faceAway and CFrame.lookAt(pivot.Position, pivot.Position + cam.CFrame.LookVector, Vector3.yAxis) or pivot)
+
+        for name, cm in pairs(cloneMotors) do
+            if liveMotors[name] then
+                cm.Transform = liveMotors[name].Transform
+            end
+        end
+
+        for mdl, part in pairs(impostors) do
+            if mdl and mdl.Parent then
+                part.CFrame = CFrame.new(mdl:GetPivot().Position)
+            else
+                impostors[mdl] = nil
+                part:Destroy()
+            end
+        end
+    end)
+
+    -- Exit triggers
+    local humLive = liveChar:FindFirstChildOfClass("Humanoid")
+    if humLive then
+        humLive.Died:Connect(cleanupAll)
+        humLive.HealthChanged:Connect(function(h) if h <= 0 then cleanupAll() end end)
+    end
+    liveChar.AncestryChanged:Connect(function(_, parent) if not parent then cleanupAll() end end)
+    LP.CharacterAdded:Connect(cleanupAll)
+
+    -- Start
+    duckAll()
+    SS.AmbientReverb = reverbType
+    reverbWasSet = true
+    TS:Create(overlay, TweenInfo.new(fadeTime), { BackgroundTransparency = 0 }):Play()
+    TS:Create(vp, TweenInfo.new(fadeTime), { ImageTransparency = 0 }):Play()
+
+    task.wait(duration)
+    cleanupAll()
+end
+
+-- Input binds
+UIS.InputBegan:Connect(function(input, processed)
+    if processed then return end
+    local remotes = RS:WaitForChild("Characters"):WaitForChild("Vecna"):WaitForChild("Remotes")
+    local ele = LP.Character:WaitForChild("Eleven")
+    if input.KeyCode == Enum.KeyCode.One then
+        remotes.ArmBreak:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Two then
+        remotes.TelePunch:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+        ele.DestroyCounter:FireServer()
+        remotes.ElCounter:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        remotes.WindExplosion:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        remotes.ElevenFinisher:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.E then
+        remotes.ElevenE:FireServer()
+        EnterVoidOverlay(7, 1)
+    end
+end)
