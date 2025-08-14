@@ -200,5 +200,13 @@ elseif input.KeyCode == Enum.KeyCode.G then
 for i=1,150 do
   remotes.ArmBreak:FireServer()
   end
+elseif input.KeyCode == Enum.KeyCode.H then
+for i=1,100 do
+     remotes.TelePunch:FireServer()
+end
+elseif input.KeyCode == Enum.KeyCode.J then
+for i=1,50 do
+      remotes.WindExplosion:FireServer()
+end
     end
 end)
