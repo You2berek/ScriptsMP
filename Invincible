@@ -10,7 +10,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
 local Repl = game:GetService("ReplicatedStorage")
 local function Counter()
 char.Invincible.DestroyCounter:FireServer()
-Repl.Characters.Invincible.Remotes.Counter:FireServer()
+Repl.Characters.Invincible.Remotes.Counters:FireServer()
 
 end
 
