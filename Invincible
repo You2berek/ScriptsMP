@@ -9,10 +9,8 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
 
 local Repl = game:GetService("ReplicatedStorage")
 local function Counter()
-local CounterWork = Instance.new("BoolValue")
-CounterWork.Parent = char
-CounterWork.Name = "CounterSucces"
-game.Debris:AddItem(CounterWork, .05)
+char.Invincible.DestroyCounter:FireServer()
+Repl.Characters.Invincible.Remotes.Counter:FireServer()
 
 end
 
