@@ -1,0 +1,31 @@
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   if not game.Players.LocalPlayer.Character:FindFirstChild("Brian") then return end
+local animator = game.Players.LocalPlayer.Character.Humanoid.Animator
+local anims = game.Players.LocalPlayer.Character.Brian.Animations
+
+local move1anim = animator:LoadAnimation(anims.MoveOne)
+local move2anim = animator:LoadAnimation(anims.MoveTwo)
+
+    if input.KeyCode == Enum.KeyCode.One then
+move1anim:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Brian"):WaitForChild("Remotes"):WaitForChild("MoveOne"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.Two then
+move2anim:Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Brian"):WaitForChild("Remotes"):WaitForChild("MoveTwo"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.Three then
+game.Players.LocalPlayer.Character.Brian.DestroyCounter:FireServer()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Brian"):WaitForChild("Remotes"):WaitForChild("Counter"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.Four then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Brian"):WaitForChild("Remotes"):WaitForChild("MoveFour"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.Five then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Brian"):WaitForChild("Remotes"):WaitForChild("Finisher"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.F then
+
+elseif input.KeyCode == Enum.KeyCode.E then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Brian"):WaitForChild("Remotes"):WaitForChild("EMoveRemote"):FireServer()
+
+   end
+end)
