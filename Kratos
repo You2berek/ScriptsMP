@@ -1,0 +1,340 @@
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+if not char:FindFirstChild("Kratos") then return end
+local Kratos = char.Kratos
+local Animations = Kratos.Animations
+local Animator = char.Humanoid.Animator
+
+local ChaosBladesAnim = Animator:LoadAnimation(Animations.ChaosDash)
+local CounterAnim = Animator:LoadAnimation(Animations.ShieldAnim)
+
+local BoulderGrab = Animator:LoadAnimation(Animations.BoulderGrab)
+local BoulderRun = Animator:LoadAnimation(Animations.BoulderSlam)
+local BoulderHit = Animator:LoadAnimation(Animations.BoulderHit)
+local Rage = Animator:LoadAnimation(Animations.SpartanRage)
+
+local LungeAnim = Animator:LoadAnimation(Animations.Stomp)
+
+local function dash(arg)
+local bodypos = Instance.new("BodyPosition")
+bodypos.MaxForce = Vector3.new(10000000, 10000000, 10000000)
+bodypos.P = 50000
+bodypos.D = 3000
+bodypos.Position = (arg.CFrame * CFrame.new(0, 0, -15)).Position
+bodypos.Parent = arg
+game.Debris:AddItem(bodypos, .7)
+end
+
+local function longDash(arg)
+local bodypos = Instance.new("BodyPosition")
+bodypos.MaxForce = Vector3.new(10000000, 10000000, 10000000)
+bodypos.P = 100000
+bodypos.D = 3000
+bodypos.Position = (arg.CFrame * CFrame.new(0, 0, -30)).Position
+bodypos.Parent = arg
+game.Debris:AddItem(bodypos, .5)
+end
+
+local function ChaosBlades()
+Kratos.BladeOn:FireServer()
+ChaosBladesAnim:Play()
+ChaosBladesAnim.KeyframeReached:Connect(function(keyframeName)
+if keyframeName == "Start" then
+Kratos.ScreamBlades:FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 50}):Play()
+task.wait(.2)
+for i=1,5 do
+game.ReplicatedStorage.Characters.Kratos.Remotes.BladeHit:FireServer(plr)
+end
+elseif keyframeName == "Dash" then
+longDash(char.HumanoidRootPart)
+Kratos.BladeEffects:FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, true, 0), {FieldOfView = 45}):Play()
+elseif keyframeName == "Stop" then
+Kratos.BladeOff:FireServer()
+Kratos.BladeEffectsOff:FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+end
+end)
+end
+
+local function ChaosColdAxe()
+Kratos.AxeOn:FireServer()
+ChaosBladesAnim:Play()
+ChaosBladesAnim.KeyframeReached:Connect(function(keyframeName)
+if keyframeName == "Start" then
+Kratos.ScreamBlades:FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 50}):Play()
+task.wait(.2)
+for i=1,5 do
+game.ReplicatedStorage.Characters.Kratos.Remotes.BladeHit:FireServer(plr)
+end
+elseif keyframeName == "Dash" then
+longDash(char.HumanoidRootPart)
+Kratos.AxeEffectsOn:FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, true, 0), {FieldOfView = 45}):Play()
+elseif keyframeName == "Stop" then
+Kratos.AxeOff:FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+end
+end)
+end
+
+local function Counter()
+Kratos.DestroyCounter:FireServer()
+game.ReplicatedStorage.Characters.Kratos.Remotes.ShieldCounter:FireServer()
+CounterAnim:Play()
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+local tableofHits = {}
+Hitbox.Touched:Connect(function(plr)
+local Parent1 = plr.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+if not table.find(tableofHits, Humanoid) then
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+table.insert(tableofHits, Humanoid)
+coroutine.wrap(function()
+task.wait(2)
+for i,v in pairs(tableofHits) do
+if v == Humanoid then
+table.remove(tableofHits, i)
+end
+end
+end)()
+end
+end
+end)
+game.Debris:AddItem(Hitbox, .5)
+end
+
+local function BoulderSlam()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 50}):Play()
+BoulderGrab:Play()
+task.wait(.1)
+game.ReplicatedStorage.Characters.Kratos.Remotes.BoulderColors:FireServer()
+task.wait(.1)
+BoulderRun:Play()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 85}):Play()
+local BodyVelocity = Instance.new("BodyVelocity")
+BodyVelocity.Parent = char.HumanoidRootPart
+BodyVelocity.P = 1250
+BodyVelocity.MaxForce = Vector3.new(1000000,0,1000000)
+BodyVelocity.Velocity = char.HumanoidRootPart.CFrame.lookVector * 55
+game.Debris:AddItem(BodyVelocity, 1.5)
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 1.5)
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+BoulderRun:Stop()
+BoulderHit:Play()
+BodyVelocity:Destroy()
+Hitbox:Destroy()
+dash(char.HumanoidRootPart)
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderBreak"):FireServer()
+for i=1,5 do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderSlamRemote"):FireServer()
+end
+end
+end)
+local runDuration = 1.5
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVelocity then
+        wait(0.1)
+        BodyVelocity.Velocity = char.HumanoidRootPart.CFrame.LookVector * 55
+    end
+end
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderBreak"):FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+end
+
+
+local function BoulderSmack()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 50}):Play()
+BoulderGrab:Play()
+task.wait(.1)
+game.ReplicatedStorage.Characters.Kratos.Remotes.BoulderColors:FireServer()
+task.wait(.1)
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 85}):Play()
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .4)
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+BoulderHit:Play()
+Hitbox:Destroy()
+dash(char.HumanoidRootPart)
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderBreak"):FireServer()
+for i=1,10 do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderSlamRemote"):FireServer()
+end
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+end
+end)
+task.wait(.2)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderBreak"):FireServer()
+end
+
+local function Lunge()
+LungeAnim:Play()
+game.ReplicatedStorage.Characters.Gigachad.Remotes.Lunge:FireServer()
+end
+
+local function SpartanRage()
+    local TweenService = game:GetService("TweenService")
+    local Players = game:GetService("Players")
+    local localPlayer = Players.LocalPlayer
+    local character = localPlayer.Character
+    
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+
+    -- Fire the rage remote
+    Rage:Play()
+    Kratos.Rage:FireServer()
+
+    -- Lighting effects
+    local lightingCorrection = game.Lighting:FindFirstChild("KratosCorrection")
+    if lightingCorrection then
+        local tintTweenInfo = TweenInfo.new(0.3)
+        TweenService:Create(lightingCorrection, tintTweenInfo, {
+            TintColor = lightingCorrection.KratosColor.TintColor
+        }):Play()
+        
+        TweenService:Create(lightingCorrection, tintTweenInfo, {
+            Contrast = lightingCorrection.KratosColor.Contrast
+        }):Play()
+    end
+
+    -- Image transparency
+    local characterSpecialImage = localPlayer.PlayerGui.CharacterSpecial.DarthVader.Image
+    TweenService:Create(characterSpecialImage, TweenInfo.new(0.3), {
+        ImageTransparency = 0
+    }):Play()
+
+    -- FOV change
+    local cameraTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+    TweenService:Create(game.Workspace.CurrentCamera, cameraTweenInfo, {
+        FieldOfView = 90
+    }):Play()
+
+    -- Hitbox creation
+    local hitboxClone = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+    hitboxClone.Parent = character
+    
+    local weld = Instance.new("Weld", hitboxClone)
+    weld.Part0 = hitboxClone
+    weld.Part1 = character.HumanoidRootPart
+    weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+    
+    game.Debris:AddItem(hitboxClone, 0.2)
+    
+    hitboxClone.Touched:Connect(function(touchedPart)
+        if touchedPart and touchedPart.Parent then
+            local touchedHumanoid = touchedPart.Parent:FindFirstChild("Humanoid")
+            if touchedHumanoid and touchedHumanoid.Health > 0 then
+                hitboxClone:Destroy()
+                game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(touchedPart.Parent)
+            end
+        end
+    end)
+
+
+    -- Wait for rage duration
+    local rageDuration = 12
+    while rageDuration > 0 do
+        task.wait(0.1)
+        rageDuration = rageDuration - 1
+    end
+
+
+    -- Reset lighting effects
+    if lightingCorrection then
+        local resetTweenInfo = TweenInfo.new(0.3)
+        TweenService:Create(lightingCorrection, resetTweenInfo, {
+            TintColor = lightingCorrection.Base.TintColor
+        }):Play()
+        
+        TweenService:Create(lightingCorrection, resetTweenInfo, {
+            Contrast = lightingCorrection.Base.Contrast
+        }):Play()
+    end
+
+    -- Reset image transparency
+    TweenService:Create(characterSpecialImage, TweenInfo.new(0.3), {
+        ImageTransparency = 1
+    }):Play()
+
+    -- Reset FOV
+    local resetCameraTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+    TweenService:Create(game.Workspace.CurrentCamera, resetCameraTweenInfo, {
+        FieldOfView = 70
+    }):Play()
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+
+
+elseif input.KeyCode == Enum.KeyCode.Two then
+task.spawn(function()
+ChaosBlades()
+end)
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(function()
+Counter()
+end)
+elseif input.KeyCode == Enum.KeyCode.Four then
+task.spawn(function()
+BoulderSlam()
+end)
+elseif input.KeyCode == Enum.KeyCode.Five then
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("Finisher"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+task.spawn(function()
+SpartanRage()
+end)
+elseif input.KeyCode == Enum.KeyCode.G then
+task.spawn(function()
+ChaosColdAxe()
+end)
+elseif input.KeyCode == Enum.KeyCode.H then
+task.spawn(function()
+BoulderSmack()
+end)
+elseif input.KeyCode == Enum.KeyCode.J then
+task.spawn(function()
+Lunge()
+end)
+   end
+end)
