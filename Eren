@@ -61,5 +61,9 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
 
     elseif input.KeyCode == Enum.KeyCode.E then
         erenRemotes:WaitForChild("MoveE"):FireServer()
+elseif input.KeyCode == Enum.KeyCode.Z then
+for i=1,200 do
+game:GetService("ReplicatedStorage").Characters.Eren.Remotes.Rumbling:FireServer()
+end
     end
 end)
