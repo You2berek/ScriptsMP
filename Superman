@@ -1,0 +1,120 @@
+function DashForward(arg1)
+	local v_bodyposition = Instance.new("BodyPosition")
+	v_bodyposition.MaxForce = Vector3.new(1000000, 0, 1000000)
+	v_bodyposition.P = 100000
+	v_bodyposition.D = 3000
+	v_bodyposition.Position = (arg1.CFrame * CFrame.new(0, 0, -15)).Position
+	v_bodyposition.Parent = arg1
+	game.Debris:AddItem(v_bodyposition, 0.25)
+end
+function RollForwardDash(arg1)
+	local v_bodyposition = Instance.new("BodyPosition")
+	v_bodyposition.MaxForce = Vector3.new(1000000, 0, 1000000)
+	v_bodyposition.P = 100000
+	v_bodyposition.D = 3000
+	v_bodyposition.Position = (arg1.CFrame * CFrame.new(0, 0, -30)).Position
+	v_bodyposition.Parent = arg1
+	game.Debris:AddItem(v_bodyposition, 0.5)
+end
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+if not char:FindFirstChild("SuperMan") then return end
+local supe = char:FindFirstChild("SuperMan")
+local animations = supe.Animations
+local animator = char.Humanoid.Animator
+local flightSpeed = 100
+local flightSpeedP = 170
+local CombatHitbox2 = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox2
+
+local flightAnim = animator:LoadAnimation(animations.Homecrusher)
+local grabAnim = animator:LoadAnimation(animations.Grab)
+
+local function Counter(iterator)
+supe.DestroyCounter:FireServer()
+for i=1,iterator do
+game.ReplicatedStorage.Characters.SuperMan.Remotes.Counter:FireServer()
+end
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   
+
+
+
+    if input.KeyCode == Enum.KeyCode.One then
+    grabAnim:Play()
+    DashForward(char.HumanoidRootPart)
+game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveOne:FireServer()
+elseif input.KeyCode == Enum.KeyCode.Two then
+for i=1,4 do
+game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveTwo:FireServer()
+end
+elseif input.KeyCode == Enum.KeyCode.Three then
+task.spawn(function()
+Counter(2)
+end)
+elseif input.KeyCode == Enum.KeyCode.Four then
+flightAnim:Play()
+game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveFour:FireServer()
+local vel = Instance.new("BodyVelocity")
+vel.Parent = char.HumanoidRootPart
+vel.P = 3000
+vel.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+vel.Velocity = char.HumanoidRootPart.CFrame.lookVector * flightSpeed
+game.Debris:AddItem(vel, 3)
+local Hitbox = CombatHitbox2:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = char.HumanoidRootPart
+Weld.Part1 = Hitbox
+Weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(Hitbox, 3)
+local RecentlyHit = {}
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+if not table.find(RecentlyHit, Humanoid) then
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer()
+table.insert(RecentlyHit, Humanoid)
+coroutine.wrap(function()
+for i,v in pairs(RecentlyHit) do
+if v == Humanoid then
+task.wait(1)
+table.remove(RecentlyHit, i)
+end
+end
+end)()
+end
+end
+end)
+coroutine.wrap(function()
+task.wait(1.5)
+flightSpeed = flightSpeedP
+end)()
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if vel then
+        wait(0.1)
+        vel.Velocity = char.HumanoidRootPart.CFrame.LookVector * flightSpeed
+    end
+end
+elseif input.KeyCode == Enum.KeyCode.Five then
+game.ReplicatedStorage.Characters.SuperMan.Remotes.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveE:FireServer()
+elseif input.KeyCode == Enum.KeyCode.G then
+task.spawn(function()
+Counter(35)
+end)
+elseif input.KeyCode == Enum.KeyCode.H then
+for i=1,35 do
+game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveTwo:FireServer()
+end
+   end
+end)
