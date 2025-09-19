@@ -1,4 +1,9 @@
-function DashForward(arg1)
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+   function DashForward(arg1)
 	local v_bodyposition = Instance.new("BodyPosition")
 	v_bodyposition.MaxForce = Vector3.new(1000000, 0, 1000000)
 	v_bodyposition.P = 100000
@@ -35,12 +40,6 @@ for i=1,iterator do
 game.ReplicatedStorage.Characters.SuperMan.Remotes.Counter:FireServer()
 end
 end
-
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
-    if gameProcessedEvent then
-        return 
-    end
-   
 
 
 
@@ -110,11 +109,59 @@ elseif input.KeyCode == Enum.KeyCode.E then
 game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveE:FireServer()
 elseif input.KeyCode == Enum.KeyCode.G then
 task.spawn(function()
-Counter(35)
+Counter(10)
 end)
 elseif input.KeyCode == Enum.KeyCode.H then
-for i=1,35 do
+for i=1,10 do
 game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveTwo:FireServer()
+end
+elseif input.KeyCode == Enum.KeyCode.J then
+flightAnim:Play()
+game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveFour:FireServer()
+local vel = Instance.new("BodyVelocity")
+vel.Parent = char.HumanoidRootPart
+vel.P = 3000
+vel.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+vel.Velocity = char.HumanoidRootPart.CFrame.lookVector * flightSpeed+80
+game.Debris:AddItem(vel, 3)
+local Hitbox = CombatHitbox2:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = char.HumanoidRootPart
+Weld.Part1 = Hitbox
+Weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(Hitbox, 3)
+local RecentlyHit = {}
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+if not table.find(RecentlyHit, Humanoid) then
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer()
+table.insert(RecentlyHit, Humanoid)
+coroutine.wrap(function()
+for i,v in pairs(RecentlyHit) do
+if v == Humanoid then
+task.wait(1)
+table.remove(RecentlyHit, i)
+end
+end
+end)()
+end
+end
+end)
+coroutine.wrap(function()
+task.wait(1.5)
+flightSpeed = flightSpeedP+80
+end)()
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if vel then
+        wait(0.1)
+        vel.Velocity = char.HumanoidRootPart.CFrame.LookVector * flightSpeed+80
+    end
 end
    end
 end)
