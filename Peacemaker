@@ -57,7 +57,7 @@ end
 end
 
     if input.KeyCode == Enum.KeyCode.One then
-	for i=1,5 do
+	for i=1,2 do
 Rems.ShieldBash:FireServer(plr)
 end
 elseif input.KeyCode == Enum.KeyCode.Two then
@@ -138,5 +138,9 @@ elseif input.KeyCode == Enum.KeyCode.G then
 task.spawn(function()
 Counter(5)
 end)
+elseif input.KeyCode == Enum.KeyCode.H then
+	for i=1,6 do
+Rems.ShieldBash:FireServer(plr)
+end
    end
 end)
