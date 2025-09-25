@@ -7,6 +7,7 @@ local plr = plrs.LocalPlayer
 local char = plr.Character
 local Humanoid = char:WaitForChild("Humanoid")
 local Animator = Humanoid:WaitForChild("Animator")
+if not char:FindFirstChild("Peacemaker") then return end
 local PeaceS = char:WaitForChild("Peacemaker")
 local Anims = PeaceS:WaitForChild("Animations")
 local Repl = game:GetService("ReplicatedStorage")
@@ -34,6 +35,15 @@ local MoveFourA = Animator:LoadAnimation(Anims.HumanTorpedo)
 local EaglyA = Animator:LoadAnimation(Anims.JumpOver)
 local GuardA = Animator:LoadAnimation(Anims.Blocking)
 
+   function DashForward(arg1)
+	local v_bodyposition = Instance.new("BodyPosition")
+	v_bodyposition.MaxForce = Vector3.new(1000000, 0, 1000000)
+	v_bodyposition.P = 100000
+	v_bodyposition.D = 3000
+	v_bodyposition.Position = (arg1.CFrame * CFrame.new(0, 0, -15)).Position
+	v_bodyposition.Parent = arg1
+	game.Debris:AddItem(v_bodyposition, 0.25)
+end
 
 function BackDash(Root)
     local torpedoPos = Instance.new("BodyPosition")
@@ -142,5 +152,44 @@ elseif input.KeyCode == Enum.KeyCode.H then
 	for i=1,6 do
 Rems.ShieldBash:FireServer(plr)
 end
+elseif input.KeyCode == Enum.KeyCode.Z then
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = char.HumanoidRootPart
+Weld.Part1 = Hitbox
+Weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(Hitbox, 3)
+local RecentlyHit = {}
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+if not table.find(RecentlyHit, Humanoid) then
+PeaceS.DestroyCounter:FireServer()
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2:FireServer(Parent1)
+table.insert(RecentlyHit, Humanoid)
+coroutine.wrap(function()
+for i,v in pairs(RecentlyHit) do
+if v == Humanoid then
+task.wait(.5)
+table.remove(RecentlyHit, i)
+end
+end
+end)()
+end
+end
+end)
+PeaceS.DestroyCounter:FireServer()
+CounterA:Play()
+BackDash(char.HumanoidRootPart)
+game.ReplicatedStorage.Characters.Demogorgon.Remotes.MoveFour:FireServer()
+game.ReplicatedStorage.Characters.Peacemaker.Remotes.HumanTorpedo:FireServer()
+task.wait(1)
+game.ReplicatedStorage.Characters.Homelander.Remotes.Slamdown:FireServer()
+task.wait(.8)
+DashForward(char.HumanoidRootPart)
+game.ReplicatedStorage.Characters.DareDevil.Remotes.Landing:FireServer()
    end
 end)
