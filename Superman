@@ -29,6 +29,8 @@ local animations = supe.Animations
 local animator = char.Humanoid.Animator
 local flightSpeed = 100
 local flightSpeedP = 170
+local flightSpeed2 = 300
+local flightSpeedP2 = 400
 local CombatHitbox2 = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox2
 
 local flightAnim = animator:LoadAnimation(animations.Homecrusher)
@@ -61,7 +63,7 @@ game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveFour:FireServer()
 local vel = Instance.new("BodyVelocity")
 vel.Parent = char.HumanoidRootPart
 vel.P = 3000
-vel.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+vel.MaxForce = Vector3.new(1000000000, 1000000000, 1000000000)
 vel.Velocity = char.HumanoidRootPart.CFrame.lookVector * flightSpeed
 game.Debris:AddItem(vel, 3)
 local Hitbox = CombatHitbox2:Clone()
@@ -77,7 +79,8 @@ local Parent1 = part.Parent
 local Humanoid = Parent1:FindFirstChild("Humanoid")
 if Humanoid and Humanoid.Health ~= 0 then
 if not table.find(RecentlyHit, Humanoid) then
-game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer()
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2:FireServer(Parent1)
 table.insert(RecentlyHit, Humanoid)
 coroutine.wrap(function()
 for i,v in pairs(RecentlyHit) do
@@ -103,6 +106,7 @@ while tick() - startTime < runDuration do
         vel.Velocity = char.HumanoidRootPart.CFrame.LookVector * flightSpeed
     end
 end
+flightSpeed = 100
 elseif input.KeyCode == Enum.KeyCode.Five then
 game.ReplicatedStorage.Characters.SuperMan.Remotes.Finisher:FireServer()
 elseif input.KeyCode == Enum.KeyCode.E then
@@ -115,14 +119,14 @@ elseif input.KeyCode == Enum.KeyCode.H then
 for i=1,10 do
 game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveTwo:FireServer()
 end
-elseif input.KeyCode == Enum.KeyCode.J then
+elseif input.KeyCode == Enum.KeyCode.Z then
 flightAnim:Play()
 game.ReplicatedStorage.Characters.SuperMan.Remotes.MoveFour:FireServer()
 local vel = Instance.new("BodyVelocity")
 vel.Parent = char.HumanoidRootPart
 vel.P = 3000
-vel.MaxForce = Vector3.new(1000000, 1000000, 1000000)
-vel.Velocity = char.HumanoidRootPart.CFrame.lookVector * flightSpeed+80
+vel.MaxForce = Vector3.new(1000000000, 1000000000, 1000000000)
+vel.Velocity = char.HumanoidRootPart.CFrame.lookVector * flightSpeed2
 game.Debris:AddItem(vel, 3)
 local Hitbox = CombatHitbox2:Clone()
 Hitbox.Parent = char
@@ -137,7 +141,8 @@ local Parent1 = part.Parent
 local Humanoid = Parent1:FindFirstChild("Humanoid")
 if Humanoid and Humanoid.Health ~= 0 then
 if not table.find(RecentlyHit, Humanoid) then
-game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer()
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2:FireServer(Parent1)
 table.insert(RecentlyHit, Humanoid)
 coroutine.wrap(function()
 for i,v in pairs(RecentlyHit) do
@@ -152,7 +157,7 @@ end
 end)
 coroutine.wrap(function()
 task.wait(1.5)
-flightSpeed = flightSpeedP+80
+flightSpeed2 = flightSpeedP2
 end)()
 local runDuration = 3
 local startTime = tick()
@@ -160,8 +165,9 @@ local startTime = tick()
 while tick() - startTime < runDuration do
     if vel then
         wait(0.1)
-        vel.Velocity = char.HumanoidRootPart.CFrame.LookVector * flightSpeed+80
+        vel.Velocity = char.HumanoidRootPart.CFrame.LookVector * flightSpeed2
     end
 end
+flightSpeed2 = 300
    end
 end)
