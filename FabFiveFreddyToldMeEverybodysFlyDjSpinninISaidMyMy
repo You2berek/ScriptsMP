@@ -1,321 +1,87 @@
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
-    if gameProcessedEvent then
-        return 
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("ReplicatedStorage")
+UIS.InputBegan:Connect(function(input, gp)
+	if gp then return end
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+  if not char:FindFirstChild("SoldierBoy") then return end
+local SB = char:FindFirstChild("SoldierBoy")
+local remotes = RS.Characters.SoldierBoy.Remotes
+local animator = char.Humanoid.Animator
+local anims = SB.Animations
+local CombatHitbox2 = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox2
+
+local Move1Run = animator:LoadAnimation(anims.MoveOneAnim)
+local ChargeAnim = animator:LoadAnimation(anims.SoldierBoyCharge)
+local RadBeam = animator:LoadAnimation(anims.Outburst)
+local Move2Anim = animator:LoadAnimation(anims.MoveTwo)
+
+local function MoveOne(mult)
+  for i=1,mult do
+    remotes.MoveOne:FireServer()
+  end
+    Move1Run:Play()
+  local bv = Instance.new("BodyVelocity")
+    bv.Parent = char.HumanoidRootPart
+    bv.P = 3000
+    bv.MaxForce = Vector3.new(1000000, 0, 1000000)
+    bv.Velocity = char.HumanoidRootPart.CFrame.lookVector * 40
+    game.Debris:AddItem(bv, 1)
+  local hb = CombatHitbox2:Clone()
+    hb.Parent = char
+  local wd = Instance.new("Weld", hb)
+    wd.Part0 = char.HumanoidRootPart
+    wd.Part1 = hb
+    wd.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+    game.Debris:AddItem(hb, 1)
+    hb.Touched:Connect(function(part)
+  local Parent = part.Parent
+  local Humanoid = Parent:FindFirstChild("Humanoid")
+    if Humanoid and Humanoid.Health ~= 0 then
+      hb:Destroy()
+      bv:Destroy()
+      Move1Run:Stop()
     end
-local plrs = game:GetService("Players")
-local plr = plrs.LocalPlayer
-local char = plr.Character
-local Humanoid = char:WaitForChild("Humanoid")
-local Animator = Humanoid:WaitForChild("Animator")
-local SBS = char:WaitForChild("SoldierBoy")
-local Anims = SBS:WaitForChild("Animations")
-local Repl = game:GetService("ReplicatedStorage")
-local Chars = Repl:WaitForChild("Characters")
-local Rems = Chars:WaitForChild("SoldierBoy"):WaitForChild("Remotes")
-local CombatHitbox = Chars.Combat.Fx.CombatHitbox
-local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
-local Mouse = plr:GetMouse()
-local MouseHit = Mouse.Hit.Position
-local TweenService = game:GetService("TweenService")
-   local godModeEnabled = false
-
-local CutsA = Animator:LoadAnimation(Anims.Nuke2)
-local StylishBust = Animator:LoadAnimation(Chars.Moonknight.AnimationsExtra.Death)
-local Charge = Animator:LoadAnimation(Anims.SoldierBoyCharge)
-local Boom = Animator:LoadAnimation(game:GetService("ReplicatedStorage").SelectACharacter.ReverseFlash.ReverseFlash.Animations.Explode)
-
-
-    if input.KeyCode == Enum.KeyCode.G then
-
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://10541019171"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-
-
-animTrack:Play()
-game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Radiation2:FireServer()
-elseif input.KeyCode == Enum.KeyCode.K then
-
-godModeEnabled = true
-    coroutine.wrap(function()
-            while godModeEnabled do
-                SBS.DestroyCounter:FireServer(plr)
-                wait(.2)
-            end
-        end)()
-char.CameraScript.Disabled = true
-char.CamForce.Disabled = false
-char.CustomShiftlock.Disabled = true
-SBS.Steam:FireServer()
-SBS.Warn:FireServer()
-CutsA:Play()
-SBS.HeartBeat:Play()
-TweenService:Create(game.Lighting, TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Ambient = Color3.fromRGB(250, 100, 50)}):Play()
-TweenService:Create(game.Lighting.ColorCorrection, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {Brightness = -0.5}):Play()
-TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {ImageTransparency = 0}):Play()
-TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {ImageColor3 = Color3.fromRGB(250, 100, 50)}):Play()
-char.BeamMain.Attachment.Wind1.Enabled = true
-char.BeamMain.Attachment.p1.Enabled = true
-char.BeamMain.Attachment.p2.Enabled = true
-char.BeamMain.Attachment.p3.Enabled = true
-wait(2)
-for i=1,5 do
-game:GetService("ReplicatedStorage").Characters.Thanos.Remotes.PowerDetonation:FireServer(game.Players.LocalPlayer)
+  end)
 end
-wait(2)
-local Wind2 = char.BeamMain.Attachment.Wind1:Clone()
-Wind2.Name = "Wind2"
-Wind2.Parent = char.BeamMain.Attachment
-Wind2.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
-game.Debris:AddItem(Wind2, 4)
-local d1 = char.BeamMain.Attachment.p1:Clone()
-d1.Name = "d1"
-d1.Parent = char.BeamMain.Attachment
-d1.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
-game.Debris:AddItem(d1, 4)
-local d2 = char.BeamMain.Attachment.p2:Clone()
-d2.Name = "d2"
-d2.Parent = char.BeamMain.Attachment
-d2.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
-game.Debris:AddItem(d2, 4)
-local d3 = char.BeamMain.Attachment.p3:Clone()
-d3.Name = "d3"
-d3.Parent = char.BeamMain.Attachment
-d3.Color = ColorSequence.new(Color3.fromRGB(173, 216, 230), Color3.fromRGB(135, 206, 250))
-game.Debris:AddItem(d3, 4)
-char.BeamMain.Attachment.Wind1.Enabled = false
-char.BeamMain.Attachment.p1.Enabled = false
-char.BeamMain.Attachment.p2.Enabled = false
-char.BeamMain.Attachment.p3.Enabled = false
-char.BeamMain.Attachment.Wind2.Enabled = true
-char.BeamMain.Attachment.d1.Enabled = true
-char.BeamMain.Attachment.d2.Enabled = true
-char.BeamMain.Attachment.d3.Enabled = true
-TweenService:Create(game.Lighting, TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Ambient = Color3.fromRGB(0, 100, 255)}):Play()
-TweenService:Create(game.Lighting.ColorCorrection, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {Brightness = 0}):Play()
-TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {ImageColor3 = Color3.fromRGB(0, 100, 255)}):Play()
-for i=1,5 do
-game:GetService("ReplicatedStorage").Characters.Thanos.Remotes.Blackhole:FireServer(game.Players.LocalPlayer)
+
+local function Counter()
+  SB.DestroyCounter:FireServer()
+  for i = 1, 3 do
+    remotes.MoveThree:FireServer()	
+  end
 end
-CutsA.Ended:Wait()
-char.BeamMain.Attachment.Wind2.Enabled = false
-char.BeamMain.Attachment.d1.Enabled = false
-char.BeamMain.Attachment.d2.Enabled = false
-char.BeamMain.Attachment.d3.Enabled = false
-TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Linear), {ImageTransparency = 1}):Play()
-TweenService:Create(plr.PlayerGui.CharacterSpecial.DarthVader.Image, TweenInfo.new(1, Enum.EasingStyle.Linear), {ImageColor3 = Color3.fromRGB(0, 0, 0)}):Play()
-TweenService:Create(game.Lighting, TweenInfo.new(1, Enum.EasingStyle.Linear), {Ambient = Color3.fromRGB(0, 0, 0)}):Play()
-char.CamForce.Disabled = true
-char.CameraScript.Disabled = false
-char.CustomShiftlock.Disabled = false
-godModeEnabled = false
-elseif input.KeyCode == Enum.KeyCode.Z then
-Charge:Play()
-godModeEnabled = true
-    coroutine.wrap(function()
-            while godModeEnabled do
-                SBS.DestroyCounter:FireServer(plr)
-                wait(.2)
-            end
-        end)()
-SBS.Steam:FireServer(plr)
-Charge.Ended:Wait()
-StylishBust:Play()
-wait(1)
-Rems.Radiation2:FireServer(plr)
-wait(2.21)
-StylishBust:Stop()
-Boom:Play()
-wait(.1)
-godModeEnabled = false
-elseif input.KeyCode == Enum.KeyCode.One then
-local Character_upvr = game.Players.LocalPlayer.Character
-local CombatHitbox_upvr = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
-local BodyVelocity_upvr = Instance.new("BodyVelocity")
-local ComboEndRemote_upvr = game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote
-                   	local anim = Instance.new("Animation")
-local animH = Instance.new("Animation")
-anim.AnimationId = "rbxassetid://11955034802"
-animH.AnimationId = "rbxassetid://13185400825"
-local plr = game.Players.LocalPlayer
 
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-local animTrackH = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(animH)
-        BodyVelocity_upvr.Parent = Character_upvr.HumanoidRootPart
-        BodyVelocity_upvr.P = 1250
-        BodyVelocity_upvr.MaxForce = Vector3.new(1000000, 0, 1000000)
-        BodyVelocity_upvr.Velocity = Character_upvr.HumanoidRootPart.CFrame.lookVector * 35
-        game.Debris:AddItem(BodyVelocity_upvr, 1.5)
-		local clone_upvr_2 = CombatHitbox_upvr:Clone()
-        clone_upvr_2.Parent = Character_upvr
-        local Weld_5 = Instance.new("Weld", clone_upvr_2)
-        Weld_5.Part0 = clone_upvr_2
-        Weld_5.Part1 = Character_upvr.HumanoidRootPart
-        Weld_5.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
-        game.Debris:AddItem(clone_upvr_2, 1.5)
-		animTrack:Play()
-		 clone_upvr_2.Touched:Connect(function(arg1) -- Line 321
-            --[[ Upvalues[8]:
-                [1]: Character_upvr (copied, readonly)
-                [2]: clone_upvr_2 (readonly)
-                [3]: ComboEndRemote_upvr (copied, readonly)
-                [4]: any_LoadAnimation_result1_upvr_12 (copied, readonly)
-                [5]: LocalPlayer_upvr (copied, readonly)
-                [6]: any_LoadAnimation_result1_upvr_4 (copied, readonly)
-                [7]: BodyVelocity_upvr (readonly)
-                [8]: var8_upvw (copied, read and write)
-            ]]
-			local Character_upvr = game.Players.LocalPlayer.Character
-            local Parent_2 = arg1.Parent
-            local Parent = arg1.Parent
-            local Humanoid = Parent_2:FindFirstChild("Humanoid")
-            if Humanoid and Humanoid.Health ~= 0 and (Parent:FindFirstChild("Values").TeamColor.Value ~= Character_upvr:FindFirstChild("Values").TeamColor.Value or Parent:FindFirstChild("Values").TeamColor.Value == game.ReplicatedStorage.FFAColor.Value and Character_upvr:FindFirstChild("Values").TeamColor.Value == game.ReplicatedStorage.FFAColor.Value) then
-                if Parent_2 ~= Character_upvr then
-
-animTrack:Stop()
-animTrackH:Play()
-				    clone_upvr_2:Destroy()
-                    ComboEndRemote_upvr:FireServer(Parent_2)
-                
-                    Character_upvr:FindFirstChild("SoldierBoy").Warn:FireServer(LocalPlayer_upvr)
-                 
-                    BodyVelocity_upvr:Destroy()
-                    Dash(Character_upvr.HumanoidRootPart)
-                    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-                        FieldOfView = 70;
-                    }):Play()
-            
-                end
-            end
-        end)
-        while 0 < 15 do
-            if BodyVelocity_upvr then
-                wait(0.1)
-                BodyVelocity_upvr.Velocity = Character_upvr.HumanoidRootPart.CFrame.lookVector * 35
-            end
+	if input.KeyCode == Enum.KeyCode.One then
+      MoveOne(2)
+	elseif input.KeyCode == Enum.KeyCode.Two then
+	    Move2Anim:Play()
+		for i = 1, 3 do
+			remotes.MoveTwo:FireServer()
+		end
+	elseif input.KeyCode == Enum.KeyCode.Three then
+	  Counter()
+	elseif input.KeyCode == Enum.KeyCode.Five then
+		remotes.Finisher:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.E then
+        ChargeAnim:Play()
+        SB.Steam:FireServer()
+	elseif input.KeyCode == Enum.KeyCode.G then
+      MoveOne(10)
+	elseif input.KeyCode == Enum.KeyCode.H then
+	    Move2Anim:Play()
+		for i = 1, 15 do
+			remotes.MoveTwo:FireServer()
+		end
+	elseif input.KeyCode == Enum.KeyCode.J then
+      RadBeam:Play()
+        for i=1,3 do
+          remotes.Radiation:FireServer()
         end
-elseif input.KeyCode == Enum.KeyCode.Two then
-local SniperShot_upvr = game.ReplicatedStorage.Characters.Vigilante.Remotes.SniperShot
-local plr = game:GetService("Players").LocalPlayer
-local char = plr.Character
-
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://9641653929"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            FieldOfView = 60;
-        }):Play()
-char:FindFirstChild("SoldierBoy").Slap:FireServer(plr)
-wait(.45)
-animTrack:Play()
-SniperShot_upvr:FireServer(plr)
-    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            FieldOfView = 80;
-        }):Play()
-		wait(.2)
-		    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            FieldOfView = 70;
-        }):Play()	
-
-elseif input.KeyCode == Enum.KeyCode.Five then
-game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Finisher:FireServer()
-elseif input.KeyCode == Enum.KeyCode.Three then
-game.ReplicatedStorage.Characters.Moonknight.Remotes.SmackDown:FireServer(LocalPlayer_upvr)
-elseif input.KeyCode == Enum.KeyCode.J then
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://10541019171"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-
-
-animTrack:Play()
-game.ReplicatedStorage.Characters.SoldierBoy.Remotes.Radiation:FireServer()
-elseif input.KeyCode == Enum.KeyCode.H then
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://10540486043"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-
-
-animTrack:Play()
-game.ReplicatedStorage.Characters.SoldierBoy.Remotes.ShieldPunish:FireServer()
-elseif input.KeyCode == Enum.KeyCode.F then
-
-elseif input.KeyCode == Enum.KeyCode.E then
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://10546385452"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-
-
-animTrack:Play()
-game.Players.LocalPlayer.Character.SoldierBoy.Steam:FireServer()
-elseif input.KeyCode == Enum.KeyCode.K then
-local SniperShot_upvr = game.ReplicatedStorage.Characters.Vigilante.Remotes.SniperShot
-local plr = game:GetService("Players").LocalPlayer
-local char = plr.Character
-
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://9641653929"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            FieldOfView = 60;
-        }):Play()
-wait(.45)
-animTrack:Play()
-SniperShot_upvr:FireServer(plr)
-    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            FieldOfView = 80;
-        }):Play()
-		wait(.2)
-		    game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-            FieldOfView = 70;
-        }):Play()
-   end
+	elseif input.KeyCode == Enum.KeyCode.K then
+		RadBeam:Play()
+        for i=1,5 do
+          remotes.Radiation2:FireServer()
+        end
+	end
 end)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
