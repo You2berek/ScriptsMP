@@ -4,6 +4,9 @@ if not char:FindFirstChild("Kratos") then return end
 local Kratos = char.Kratos
 local Animations = Kratos.Animations
 local Animator = char.Humanoid.Animator
+local BladesOn = false
+local AxeOn = false
+local Dashing = false
 
 local ChaosBladesAnim = Animator:LoadAnimation(Animations.ChaosDash)
 local IcyChaosBladesAnim = Animator:LoadAnimation(Animations.ChaosDash)
@@ -13,8 +16,29 @@ local BoulderGrab = Animator:LoadAnimation(Animations.BoulderGrab)
 local BoulderRun = Animator:LoadAnimation(Animations.BoulderSlam)
 local BoulderHit = Animator:LoadAnimation(Animations.BoulderHit)
 local Rage = Animator:LoadAnimation(Animations.SpartanRage)
-
 local LungeAnim = Animator:LoadAnimation(Animations.Stomp)
+local AxeSlash1 = Animator:LoadAnimation(Animations.AxeSlam)
+local AxeSlash2 = Animator:LoadAnimation(Animations.SlashDown)
+local AxeSlash3 = Animator:LoadAnimation(Animations.SideSlash)
+
+local Combo1 = Animator:LoadAnimation(Animations.Combo1)
+local Combo2 = Animator:LoadAnimation(Animations.Combo2)
+local Combo3 = Animator:LoadAnimation(Animations.Combo3)
+local Combo4 = Animator:LoadAnimation(Animations.Combo4)
+if not Animations:FindFirstChild("RollAnim") then
+local RollAnim = Instance.new("Animation")
+RollAnim.Parent = Animations
+RollAnim.Name = "RollAnim"
+RollAnim.AnimationId = "rbxassetid://81725274539316"
+end
+if not Animations:FindFirstChild("DashAnim") then
+local RollAnim = Instance.new("Animation")
+RollAnim.Parent = Animations
+RollAnim.Name = "DashAnim"
+RollAnim.AnimationId = "rbxassetid://10861387407"
+end
+local RollAnimation = Animator:LoadAnimation(Animations.RollAnim)
+local DashAnimation = Animator:LoadAnimation(Animations.DashAnim)
 
 local function dash(arg)
 local bodypos = Instance.new("BodyPosition")
@@ -22,6 +46,17 @@ bodypos.MaxForce = Vector3.new(10000000, 10000000, 10000000)
 bodypos.P = 50000
 bodypos.D = 3000
 bodypos.Position = (arg.CFrame * CFrame.new(0, 0, -15)).Position
+bodypos.Parent = arg
+game.Debris:AddItem(bodypos, .7)
+end
+
+
+local function betterdash(arg)
+local bodypos = Instance.new("BodyPosition")
+bodypos.MaxForce = Vector3.new(10000000, 10000000, 10000000)
+bodypos.P = 50000
+bodypos.D = 3000
+bodypos.Position = (arg.CFrame * CFrame.new(0, 0, -22.5)).Position
 bodypos.Parent = arg
 game.Debris:AddItem(bodypos, .7)
 end
@@ -49,7 +84,9 @@ longDash(char.HumanoidRootPart)
 Kratos.BladeEffects:FireServer()
 game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, true, 0), {FieldOfView = 45}):Play()
 elseif keyframeName == "Stop" then
-Kratos.BladeOff:FireServer()
+ if not BladesOn then
+        Kratos.BladeOff:FireServer()
+        end
 Kratos.BladeEffectsOff:FireServer()
 game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
 end
@@ -57,7 +94,6 @@ end)
 
 IcyChaosBladesAnim.KeyframeReached:Connect(function(keyframeName)
 if keyframeName == "Start" then
-Kratos.ScreamBlades:FireServer()
 game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 50}):Play()
 task.wait(.2)
 for i=1,5 do
@@ -68,7 +104,11 @@ longDash(char.HumanoidRootPart)
 Kratos.AxeEffectsOn:FireServer()
 game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, 0, true, 0), {FieldOfView = 45}):Play()
 elseif keyframeName == "Stop" then
+if not AxeOn then
 Kratos.AxeOff:FireServer()
+task.wait(0.01)
+Kratos.AxeOn:FireServer()
+end
 game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.3, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
 end
 end)
@@ -298,6 +338,225 @@ local function SpartanRage()
     }):Play()
 end
 
+local slashes = {
+    {Anim = AxeSlash1, Time = 0.8},
+    {Anim = AxeSlash2, Time = 0.7},
+    {Anim = AxeSlash3, Time = 0.58},
+}
+
+local function LeviathanSlash()
+    local rand = math.random(1, #slashes)
+    local chosen = slashes[rand]
+
+    chosen.Anim:Play()
+    Kratos.AxeOn:FireServer()
+    task.wait(0.1)
+    Kratos.AxeEffectsOn:FireServer()
+
+    task.spawn(function()
+        task.wait(chosen.Time)
+   if not AxeOn then
+Kratos.AxeOff:FireServer()
+end
+    end)
+    task.wait(.2)
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .4)
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+dash(char.HumanoidRootPart)
+Hitbox:Destroy()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+for i=1,4 do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderSlamRemote"):FireServer()
+end
+for i=1,2
+ do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+end
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").DarthVader.Remotes.Bash2:FireServer(Parent1)
+end
+end)
+
+end
+
+local function DoHitbox(ending)
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .4)
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+Hitbox:Destroy()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+if ending == false then
+for i=1,2 do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").Combat.Remotes.Combo:FireServer(Parent1)
+end
+else
+for i=1,1 do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+end
+end
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").DarthVader.Remotes.Bash2:FireServer(Parent1)
+end
+end)
+end
+
+local function DoHitboxLmb()
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .2)
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+Hitbox:Destroy()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").Combat.Remotes.Combo:FireServer(Parent1)
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").DarthVader.Remotes.Bash2:FireServer(Parent1)
+end
+end)
+end
+
+local function ChaosGashes()
+Kratos.BladeOn:FireServer()
+task.wait(.1)
+Kratos.BladeEffects:FireServer()
+DoHitbox(false)
+Combo1:Play()
+task.wait(Combo1.Length)
+DoHitbox(false)
+Combo2:Play()
+task.wait(Combo2.Length)
+DoHitbox(false)
+Combo3:Play()
+Kratos.ScreamBlades:FireServer()
+task.wait(Combo3.Length)
+DoHitbox(true)
+Combo4:Play()
+Kratos.BladeEffectsOff:FireServer()
+task.wait(Combo4.Length)
+ if not BladesOn then
+        Kratos.BladeOff:FireServer()
+        end
+end
+
+local function ChaosSlash()
+    local rand = math.random(1, #slashes)
+    local chosen = slashes[rand]
+
+    chosen.Anim:Play()
+    Kratos.BladeOn:FireServer()
+    task.wait(0.1)
+    Kratos.BladeEffects:FireServer()
+
+    task.spawn(function()
+        task.wait(chosen.Time)
+        Kratos.BladeEffectsOff:FireServer()
+        if not BladesOn then
+        Kratos.BladeOff:FireServer()
+        end
+    end)
+    task.wait(.2)
+local Hitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, .4)
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+Hitbox:Destroy()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+for i=1,4 do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderSlamRemote"):FireServer()
+end
+for i=1,2
+ do
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+end
+game:GetService("ReplicatedStorage"):WaitForChild("Characters").DarthVader.Remotes.Bash2:FireServer(Parent1)
+end
+end)
+
+end
+local DebounceLmb = false
+local function ToggleBlades()
+if DebounceLmb then return end
+if BladesOn == false then
+BladesOn = true
+Kratos.BladeOn:FireServer()
+else
+BladesOn = false
+Kratos.BladeOff:FireServer()
+end
+end
+local function toggleAxe()
+if DebounceLmb then return end
+if AxeOn == false then
+AxeOn = true
+Kratos.AxeOn:FireServer()
+else
+AxeOn = false
+Kratos.AxeOff:FireServer()
+end
+end
+
+local function chaosCombo()
+Kratos.BladeOn:FireServer()
+AxeSlash2:Play()
+DoHitbox(true)
+task.wait(AxeSlash2.Length)
+Kratos.BladeEffects:FireServer()
+RollAnimation:Play()
+Kratos.ScreamBlades:FireServer()
+Kratos.DestroyCounter:FireServer()
+task.spawn(function()
+longDash(char.HumanoidRootPart)
+end)
+task.wait(.5)
+DoHitboxLmb()
+Kratos.BladeEffectsOff:FireServer()
+task.wait(.1)
+ChaosBlades()
+end
+local function KratosDash()
+if Dashing == true then return end
+Dashing = true
+game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("Kratos"):WaitForChild("Remotes"):WaitForChild("BoulderSlamRemote"):FireServer()
+Kratos.BladeEffects:FireServer()
+Kratos.DestroyCounter:FireServer()
+DashAnimation:Play()
+betterdash(char.HumanoidRootPart)
+task.spawn(function()
+task.wait(DashAnimation.Length)
+Kratos.BladeEffectsOff:FireServer()
+DoHitboxLmb()
+Dashing = false
+end)
+end
+
+
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then
         return 
@@ -339,5 +598,69 @@ elseif input.KeyCode == Enum.KeyCode.J then
 task.spawn(function()
 Lunge()
 end)
-   end
+elseif input.KeyCode == Enum.KeyCode.Z then
+task.spawn(function()
+LeviathanSlash()
+end)
+elseif input.KeyCode == Enum.KeyCode.X then
+task.spawn(function()
+ChaosSlash()
+end)
+elseif input.KeyCode == Enum.KeyCode.C then
+task.spawn(function()
+ChaosGashes()
+end)
+elseif input.KeyCode == Enum.KeyCode.V then
+task.spawn(function()
+ToggleBlades()
+end)
+elseif input.KeyCode == Enum.KeyCode.B then
+task.spawn(function()
+toggleAxe()
+end)
+elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if AxeOn or BladesOn then
+        if char:FindFirstChild("CantAttack") or char:FindFirstChild("Blocking") or DebounceLmb then return end
+        DebounceLmb = true
+        if BladesOn == true then
+            Kratos.BladeEffects:FireServer()
+        end
+        task.spawn(function()
+            DoHitboxLmb()
+        end)
+        task.delay(.2,function()
+            if BladesOn == true then
+                Kratos.BladeEffectsOff:FireServer()
+            end
+        end)
+        task.delay(.25,function()
+            DebounceLmb = false
+        end)
+    end
+elseif input.KeyCode == Enum.KeyCode.T then
+task.spawn(function()
+chaosCombo()
+end)
+elseif input.KeyCode == Enum.KeyCode.R then
+task.spawn(function()
+KratosDash()
+end)
+end
+end)
+
+local BladeOff = Kratos:WaitForChild("BladeOff")
+
+local oldNamecall
+oldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+    local method = getnamecallmethod()
+
+    -- block BladeOff if BladesOn is true
+    if not checkcaller()
+       and self == BladeOff
+       and (method == "FireServer" or method == "InvokeServer")
+       and BladesOn then
+        return -- block remote
+    end
+
+    return oldNamecall(self, ...)
 end)
