@@ -1,0 +1,46 @@
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local CombatHitbox2 = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
+local blinkRushRemote = ReplicatedStorage.Characters["SCP-173"].Remotes.BlinkRush
+
+UserInputService.InputBegan:Connect(function(input, gp)
+	if gp then return end
+
+	local player = Players.LocalPlayer
+	local char = player.Character or player.CharacterAdded:Wait()
+	local scp173 = char:WaitForChild("SCP-173")
+
+	if input.KeyCode == Enum.KeyCode.R then
+		for i = 1, 11 do
+		blinkRushRemote:FireServer()
+		end
+
+	elseif input.KeyCode == Enum.KeyCode.T then
+		scp173.ScreamRemote:FireServer()
+
+	elseif input.KeyCode == Enum.KeyCode.G then
+		scp173.Move:FireServer()
+
+	elseif input.KeyCode == Enum.KeyCode.H then
+		scp173.Move2:FireServer()
+    elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
+local Hitbox = CombatHitbox2:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = char.HumanoidRootPart
+Weld.Part1 = Hitbox
+Weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(Hitbox, .2)
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+for i=1,4 do
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2:FireServer(Parent1)
+end
+end
+end)
+	end
+end)
