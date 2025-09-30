@@ -1,0 +1,131 @@
+local kill = false
+
+	task.spawn(function()
+	while true do
+	if _G.killAllNCD == true and _G.killAllNCD ~= nil then
+    kill = true
+	break
+	end
+	task.wait(1)
+	end
+	
+	end)
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+	if kill == true then return end
+  local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:FindFirstChild("Humanoid")
+local Animator = Humanoid:FindFirstChild("Animator")
+if not char:FindFirstChild("Luffy") then return end
+local  scriptVar = char:FindFirstChild("Luffy")
+local Anims = scriptVar:FindFirstChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:FindFirstChild("Characters")
+local Rems = Chars:FindFirstChild("Luffy"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local CombatHitbox2 = Chars.Combat.Fx.CombatHitbox2
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local TweenService = game:GetService("TweenService")
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+
+local StretchGrabA = Animator:LoadAnimation(Anims.LuffyGrab)
+local GatlingA = Animator:LoadAnimation(Anims.Gatling)
+local PistolA = Animator:LoadAnimation(Anims.Pistol)
+local BellA = Animator:LoadAnimation(Anims.HeadCounter)
+local AxeSpinA = Animator:LoadAnimation(Anims.AxeSpin)
+
+local function Move4(alt)
+if alt == false then
+StretchGrabA:Play()
+Rems.GrabStretch:FireServer()
+else
+Rems.GrabStretch:FireServer()
+AxeSpinA:Play()
+end
+end
+
+local function Move2(multi)
+GatlingA:Play()
+for i=1,multi do
+Rems.Gatling:FireServer()
+end
+end
+
+local function Move1(multi)
+PistolA:Play()
+for i=1,multi do
+Rems.Pistol:FireServer()
+end
+end
+
+local function Counter(multi)
+scriptVar.DestroyCounter:FireServer()
+BellA:Play()
+for i=1,multi do
+scriptVar.DestroyCounter:FireServer()
+Rems.Bell:FireServer()
+end
+end
+
+local function MoveE(hb)
+Rems.Balloon:FireServer()
+if hb then
+local Hitbox = CombatHitbox2:Clone()
+Hitbox.Parent = char
+Hitbox.Size = Hitbox.Size * 3
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = char.HumanoidRootPart
+Weld.Part1 = Hitbox
+Weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(Hitbox, 6)
+local RecentlyHit = {}
+Hitbox.Touched:Connect(function(part)
+local Parent1 = part.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 then
+if not table.find(RecentlyHit, Humanoid) then
+game.ReplicatedStorage.Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2:FireServer(Parent1)
+table.insert(RecentlyHit, Humanoid)
+coroutine.wrap(function()
+for i,v in pairs(RecentlyHit) do
+if v == Humanoid then
+task.wait(1)
+table.remove(RecentlyHit, i)
+end
+end
+end)()
+end
+end
+end)
+end
+end
+
+    if input.KeyCode == Enum.KeyCode.One then
+Move1(3)
+elseif input.KeyCode == Enum.KeyCode.Two then
+Move2(1)
+elseif input.KeyCode == Enum.KeyCode.Three then
+Counter(3)
+elseif input.KeyCode == Enum.KeyCode.Four then
+Move4(false)
+elseif input.KeyCode == Enum.KeyCode.Five then
+Rems.Finisher:FireServer()
+elseif input.KeyCode == Enum.KeyCode.E then
+MoveE(false)
+elseif input.KeyCode == Enum.KeyCode.G then
+Move1(20)
+elseif input.KeyCode == Enum.KeyCode.H then
+Move4(true)
+elseif input.KeyCode == Enum.KeyCode.X then
+Counter(20)
+elseif input.KeyCode == Enum.KeyCode.C then
+MoveE(true)
+   end
+end)
+
