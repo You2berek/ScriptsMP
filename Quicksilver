@@ -8,7 +8,7 @@ local plr = plrs.LocalPlayer
 local char = plr.Character or plr.CharacterAdded:Wait()
 local Humanoid = char:WaitForChild("Humanoid")
 local Animator = Humanoid:WaitForChild("Animator")
-local QuickS = char:WaitForChild("Quicksilver")
+local QuickS = char:WaitForChild("A-train")
 local Anims = QuickS:WaitForChild("Animations")
 local Repl = game:GetService("ReplicatedStorage")
 local Chars = Repl:WaitForChild("Characters")
@@ -23,13 +23,13 @@ local TweenService = game:GetService("TweenService")
 local Debris = game:GetService("Debris")
 
 local GutA = Animator:LoadAnimation(Anims.BellyPunch)
-local StartRunA = Animator:LoadAnimation(Anims.StartRun)
+local StartRunA = Animator:LoadAnimation(Anims.StartRunQuick)
 local RunA = Animator:LoadAnimation(Anims.SuperSpeed)
 local GuardA = Animator:LoadAnimation(Anims.Blocking)
 
     if input.KeyCode == Enum.KeyCode.One then
 GutA:Play()
-RemsA.BellyPunch:FireServer()
+RemsA.BehindYou:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.Two then
 StartRunA:Play()
 RemsF.FastestMan1:FireServer(plr)
@@ -76,7 +76,12 @@ end
 
 
 elseif input.KeyCode == Enum.KeyCode.Three then
-RemsF.Rush:FireServer(MouseHit)
+QuickS.DestroyCounter:FireServer()
+RemsA.Hammer:FireServer(plr)
+coroutine.wrap(function()
+task.wait(1)
+QuickS.DestroyCounter:FireServer()
+end)()
 elseif input.KeyCode == Enum.KeyCode.Four then
 RemsA.Grab:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.Five then
@@ -85,10 +90,10 @@ elseif input.KeyCode == Enum.KeyCode.F then
 GuardA:Play()
 Chars.Combat.Remotes.Blocking:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.G then
-RemsA.Hammer:FireServer(plr)
+RemsF.Rush:FireServer(MouseHit)
 elseif input.KeyCode == Enum.KeyCode.H then
 GutA:Play()
-RemsA.BehindYou:FireServer(plr)
+RemsA.BellyPunch:FireServer()
 elseif input.KeyCode == Enum.KeyCode.Z then
 StartRunA:Play()
 RemsF.FastestMan1:FireServer(plr)
