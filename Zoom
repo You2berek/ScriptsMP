@@ -1,88 +1,262 @@
+local kill = false
 
+    task.spawn(function()
+    while true do
+    if _G.killAllNCD == true and _G.killAllNCD ~= nil then
+    kill = true
+    break
+    end
+    task.wait(1)
+    end
+    
+    end)
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then
         return 
     end
-   
+    if kill == true then return end
+   local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character
+local Humanoid = char:FindFirstChild("Humanoid")
+local Animator = Humanoid:FindFirstChild("Animator")
+if not char:FindFirstChild("Zoom") then return end
+local  scriptVar = char:FindFirstChild("Zoom")
+local Anims = scriptVar:FindFirstChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:FindFirstChild("Characters")
+local Rems = Chars:FindFirstChild("Zoom"):WaitForChild("Remotes")
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local TweenService = game:GetService("TweenService")
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+function Dash(arg1) 
+    local BodyPosition = Instance.new("BodyPosition")
+    BodyPosition.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+    BodyPosition.P = 50000
+    BodyPosition.D = 3000
+    BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -10)).Position
+    BodyPosition.Parent = arg1
+    game.Debris:AddItem(BodyPosition, 0.7)
+end
+
+local PunchesAnim = Animator:LoadAnimation(Anims.BarragePunches)
+local PunchesAnimBuff = Animator:LoadAnimation(Anims.BarragePunches)
+local Grab = Animator:LoadAnimation(Anims.Grab)
+local TornadoRun = Animator:LoadAnimation(Anims.TornadoRun)
+local StartRunA = Animator:LoadAnimation(Anims.StartRun)
+local RunA =  Animator:LoadAnimation(Anims.SuperSpeed)
+local RunAExe =  Animator:LoadAnimation(Anims.SuperSpeedExe)
+
+PunchesAnim:GetMarkerReachedSignal("Start"):Connect(function()
+scriptVar.Move1:FireServer()
+end)
+PunchesAnim:GetMarkerReachedSignal("Punch"):Connect(function()
+local hb = CombatHitbox:Clone()
+hb.Parent = char
+local wd = Instance.new("Weld", hb)
+wd.Part0 = char.HumanoidRootPart
+wd.Part1 = hb
+wd.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(hb, .2)
+hb.Touched:Connect(function(p)
+local P1 = p.Parent
+local hmn = P1:FindFirstChild("Humanoid")
+if hmn and hmn.Health ~= 0 then
+hb:Destroy()
+scriptVar.Move1Hit:FireServer()
+for i=1,3 do
+game.ReplicatedStorage.Characters.Combat.Remotes.Combo:FireServer(P1)
+end
+end
+end)
+end)
+
+PunchesAnimBuff:GetMarkerReachedSignal("Start"):Connect(function()
+scriptVar.Move1:FireServer()
+end)
+PunchesAnimBuff:GetMarkerReachedSignal("Punch"):Connect(function()
+local hb = CombatHitbox:Clone()
+hb.Parent = char
+local wd = Instance.new("Weld", hb)
+wd.Part0 = char.HumanoidRootPart
+wd.Part1 = hb
+wd.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(hb, .2)
+hb.Touched:Connect(function(p)
+local P1 = p.Parent
+local hmn = P1:FindFirstChild("Humanoid")
+if hmn and hmn.Health ~= 0 then
+hb:Destroy()
+scriptVar.Move1Hit:FireServer()
+for i=1,5 do
+game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2:FireServer(P1)
+game.ReplicatedStorage.Characters.Combat.Remotes.Combo:FireServer(P1)
+end
+end
+end)
+end)
+
+
+local function Move1(buff)
+if buff == false then
+PunchesAnim:Play()
+else
+PunchesAnimBuff:Play()
+end
+end
+
+local function Rush()
+Chars.TheFlashCw.Remotes.Rush:FireServer(MouseHit)
+end
+
+local function Move4()
+Rems.Choke:FireServer()
+Grab:Play()
+end
+
+local function Velocity9()
+for i=1,10 do
+Rems.V9:FireServer()
+end
+end
+
+local function Counter()
+scriptVar.DestroyCounter:FireServer()
+Rems.Counter:FireServer()
+task.spawn(function()
+task.wait(.5)
+scriptVar.DestroyCounter:FireServer()
+task.wait(.5)
+scriptVar.DestroyCounter:FireServer()
+end)
+end
+
+local function Tornado()
+TornadoRun:Play()
+Chars.TheFlashCw.Remotes.Mirrage:FireServer()
+end
+
+local function RunBuff()
+StartRunA:Play()
+Chars.TheFlashCw.Remotes.FastestMan1:FireServer(plr)
+wait(1)
+Chars.TheFlashCw.Remotes.FastestMan:FireServer(plr)
+if not char:FindFirstChild("Exe") then
+RunA:Play()
+else
+RunAExe:Play()
+end
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 5500
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 235
+game.Debris:AddItem(BodyVel, 3)
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 3)
+Hitbox.Touched:Connect(function(Dark)
+local Parent1 = Dark.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+   if Parent1 ~= char then
+      local Val = Chars.Values.SuperSpeedDmgVal:Clone()
+      Val.Parent = Parent1
+      game.Debris:AddItem(Val, .3)
+      for i=1,55 do
+      Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)   
+      end
+      end
+end
+end)
+
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 235
+    end
+end
+end
+
+local function Run()
+StartRunA:Play()
+Chars.TheFlashCw.Remotes.FastestMan1:FireServer(plr)
+wait(1)
+Chars.TheFlashCw.Remotes.FastestMan:FireServer(plr)
+if not char:FindFirstChild("Exe") then
+RunA:Play()
+else
+RunAExe:Play()
+end
+local BodyVel = Instance.new("BodyVelocity")
+BodyVel.Parent = char.HumanoidRootPart
+BodyVel.P = 5500
+BodyVel.MaxForce = Vector3.new(1000000, 0, 1000000)
+BodyVel.Velocity = char.HumanoidRootPart.CFrame.lookVector * 100
+game.Debris:AddItem(BodyVel, 3)
+local Hitbox = CombatHitbox:Clone()
+Hitbox.Parent = char
+local Weld = Instance.new("Weld", Hitbox)
+Weld.Part0 = Hitbox
+Weld.Part1 = char.HumanoidRootPart
+Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(Hitbox, 3)
+Hitbox.Touched:Connect(function(Dark)
+local Parent1 = Dark.Parent
+local Humanoid = Parent1:FindFirstChild("Humanoid")
+if Humanoid and Humanoid.Health ~= 0 and not Parent1:FindFirstChild("SuperSpeedDmgVal") then
+   if Parent1 ~= char then
+      local Val = Chars.Values.SuperSpeedDmgVal:Clone()
+      Val.Parent = Parent1
+      game.Debris:AddItem(Val, .3)
+      for i=1,2 do
+      Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)   
+      end
+      end
+end
+end)
+
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if BodyVel then
+        wait(0.1)
+        BodyVel.Velocity = char.HumanoidRootPart.CFrame.LookVector * 100
+    end
+end
+end
 
 
 
     if input.KeyCode == Enum.KeyCode.One then
-
-local plr = game:GetService("Players").LocalPlayer
-local char = plr.Character
-local ToClone = game:GetService("ReplicatedStorage"):FindFirstChild("Characters").Combat.Fx.CombatHitbox
-local CombatHitbox = ToClone:Clone()
-local MoveAnim = Instance.new("Animation")
-MoveAnim.AnimationId = "rbxassetid://14077746975"
-local animPlayer = char:FindFirstChild("Humanoid"):WaitForChild("Animator"):LoadAnimation(MoveAnim)
-CombatHitbox.Parent = char 
-local Weld = Instance.new("Weld", CombatHitbox)
-Weld.Part0 = CombatHitbox
-Weld.Part1 = char.HumanoidRootPart
-Weld.C0 = CFrame.new(0,0,3.5) * CFrame.Angles(0,0,0)
-char:FindFirstChild("Zoom").Move1:FireServer(plr)
-game.Debris:AddItem(CombatHitbox, 0.2)
-animPlayer:Play()
-CombatHitbox.Touched:Connect(function(who)
-
-local whoParent1 = who.Parent
-local whoParent2 = who.Parent 
-local Humanoid = whoParent1:FindFirstChild("Humanoid")
-if Humanoid and Humanoid.Health ~= 0 and (whoParent2:FindFirstChild("Values").TeamColor.Value ~= char:FindFirstChild("Values").TeamColor.Value or whoParent2:FindFirstChild("Values").TeamColor.Value == game:GetService("ReplicatedStorage").FFAColor.Value and char:FindFirstChild("Values").TeamColor.Value == game:GetService("ReplicatedStorage").FFAColor.Value) then
- if whoParent1 ~= char then
- local plr = game:GetService("Players").LocalPlayer
-local char = plr.Character
-	 CombatHitbox:Destroy()
-	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
-	 game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
-	 wait(.4)
-	 	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
-	  game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
-	  wait(.3)
-	  	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
-	   game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
-	   wait(.4)
-	   	 char:FindFirstChild("Zoom").Move1Hit:FireServer(whoParent1)
-	   	   game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Combo:FireServer(whoParent1)
- end
- end
-end)
+Move1(false)
 elseif input.KeyCode == Enum.KeyCode.Two then
-
+Run()
 elseif input.KeyCode == Enum.KeyCode.Three then
-local plr = game.Players.LocalPlayer
-game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.Counter:FireServer(plr)
+Counter()
 elseif input.KeyCode == Enum.KeyCode.Four then
-	local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://9641648166"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-animTrack:Play()
-game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.Choke:FireServer(plr)
-
+Move4()
 elseif input.KeyCode == Enum.KeyCode.Five then
-local plr = game.Players.LocalPlayer
-game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.Finisher:FireServer(plr)
-elseif input.KeyCode == Enum.KeyCode.F then
-local plr = game.Players.LocalPlayer
-	local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://9760917435"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-animTrack:Play()
-game:GetService("ReplicatedStorage").Characters.Combat.Remotes.Blocking:FireServer(plr)
+Rems.Finisher:FireServer()
 elseif input.KeyCode == Enum.KeyCode.E then
-local plr = game.Players.LocalPlayer
-game:GetService("ReplicatedStorage").Characters.Zoom.Remotes.V9:FireServer(plr)
+Velocity9()
+elseif input.KeyCode == Enum.KeyCode.R then
+Move1(true)
+elseif input.KeyCode == Enum.KeyCode.T then
+Rush()
+elseif input.KeyCode == Enum.KeyCode.G then
+RunBuff()
+elseif input.KeyCode == Enum.KeyCode.H then
+Tornado()
    end
 end)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/You2berek/ScriptsMP/refs/heads/main/LicenceApproval"))()
