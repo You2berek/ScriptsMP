@@ -373,6 +373,7 @@ do
       Tabs.Etcetera:AddButton({ Title = "Remove Ragdoll (SKY SQUID GAME)", Callback = function()
         if workspace.Map:FindFirstChild("Ragdoller") then
 workspace.Map.Ragdoller:Destroy()
+workspace.Map.HitGround:Destroy()
 end
     end})
 
