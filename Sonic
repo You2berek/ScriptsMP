@@ -1,0 +1,572 @@
+local killed = false
+
+local function execute()
+	local name = "Sonic"
+if killed == true then return  end
+local plrs = game:GetService("Players")
+local plr = plrs.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local Humanoid = char:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local scriptVar = char:WaitForChild("SonicMovie")
+local Anims = scriptVar:WaitForChild("Animations")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:WaitForChild("Characters")
+local Rems = Chars:FindFirstChild("Sonic").Remotes
+local CombatHitbox = Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
+local Mouse = plr:GetMouse()
+local MouseHit = Mouse.Hit.Position
+local TweenService = game:GetService("TweenService")
+local Debris = game:GetService("Debris")
+local Transformed = false
+
+local DawgAnim = Animator:LoadAnimation(Anims.Chilidog)
+local Barrage = Animator:LoadAnimation(Anims.BarragePunches)
+local Boom = Animator:LoadAnimation(Anims.Explode)
+local StartSteal = Animator:LoadAnimation(Anims.StartAbsorb)
+local Steal = Animator:LoadAnimation(Anims.HitAbsorb)
+local Roll = Animator:LoadAnimation(Anims.Roll)
+local Flight = Animator:LoadAnimation(Anims.Homecrusher)
+local FlightHit = Animator:LoadAnimation(Anims.HomeCrusherHit)
+local Run = Animator:LoadAnimation(Anims.SuperSpeed)
+local RunStart = Animator:LoadAnimation(Anims.StartRun)
+local Block = Animator:LoadAnimation(Anims.Blocking)
+
+scriptVar.Disabled = true
+
+plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Spin Dash"
+plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Super Speed"
+plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Spin Counter"
+plr.PlayerGui.Moveset.Frame.Hold.FourMove.Text = "Electricity Steal"
+plr.PlayerGui.Moveset.Frame.Hold.FiveMove.Text = "Blitz Finisher"
+plr.PlayerGui.Moveset.Frame.Hold.Emove.Text = "Super Sonic"
+-- Run system setup
+local RunAnim = Instance.new("Animation")
+RunAnim.AnimationId = "rbxassetid://9649290799"
+local RunAnimation = Animator:LoadAnimation(RunAnim)
+local DeadAnim = Instance.new("Animation")
+DeadAnim.AnimationId = "rbxassetid://9760929409"
+local DeadAnimation = Animator:LoadAnimation(DeadAnim)
+
+
+local isRunning = false
+local runWS = 25
+local normalWS = 10
+local normalFOV = 70
+local runFOV = 80
+
+
+-- Combat variables
+local CDVar = false
+local DoEndRemote = false
+local AttackCD = false
+local CurCombo = 1
+local LastClick = 0
+local ComboResetTime = 1.25 
+
+if not workspace:FindFirstChild("SelfDestructScript"..name) and killed == false then
+local SDScript = Instance.new("LocalScript")
+SDScript.Parent = workspace
+SDScript.Name = "SelfDestructScript"..name
+SDScript.Changed:Connect(function()
+if SDScript.Disabled == true then
+killed = true
+SDScript:Destroy()
+end
+end)
+end
+
+
+
+Roll.KeyframeReached:Connect(function(kf)
+	if kf == "Roll" then
+       Rems.RollEffectEven:FireServer()
+	   local bv = Instance.new("BodyVelocity")
+	   bv.Parent = char.HumanoidRootPart
+       bv.P = 3000
+	   bv.MaxForce = Vector3.new(100000, 0, 100000)
+       bv.Velocity = char.HumanoidRootPart.CFrame.lookVector * 155
+	   game.Debris:AddItem(bv, 1)
+	   local hb = CombatHitbox:Clone()
+hb.Parent = char
+local wd = Instance.new("Weld", hb)
+wd.Part0 = char.HumanoidRootPart
+wd.Part1 = hb
+wd.C1 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(hb, 1.1)
+local AntiSpamTable = {}
+hb.Touched:Connect(function(p)
+local P1 = p.Parent
+local Hmnd = P1:FindFirstChild("Humanoid")
+if Hmnd and Hmnd.Health ~= 0 then
+if table.find(AntiSpamTable, Hmnd) then return end
+table.insert(AntiSpamTable, Hmnd)
+for i=1,3 do
+Chars.DarthVader.Remotes.Bash2:FireServer(P1)
+Chars.Combat.Remotes.ComboEndRemote:FireServer(P1)
+Rems.DashHit:FireServer(P1)
+end
+task.spawn(function()
+for i,v in pairs(AntiSpamTable) do	
+if v == Hmnd then
+task.wait(1)
+table.remove(AntiSpamTable, i)
+end
+end
+end)
+
+end
+end)
+
+local runDuration = 1
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if bv then
+        wait(0.1)
+        bv.Velocity = char.HumanoidRootPart.CFrame.LookVector * 155
+    end
+end
+
+    end
+end)
+
+
+local function Move1()
+if not Transformed then
+Roll:Play()
+else
+Barrage:Play()
+scriptVar.RunOn:FireServer()
+for i=1,3 do
+Chars.Gigachad.Remotes.Barrage:FireServer()
+end
+task.spawn(function()
+task.wait(1)
+scriptVar.RunOff:FireServer()
+end)
+end
+end
+
+local function SuperFlight()
+Flight:Play()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 100}):Play()
+   if Transformed == true then
+   scriptVar.SmokeOn:FireServer()
+   else
+   Chars.TheFlashCw.Remotes.FastestMan:FireServer()
+   end
+   local bv = Instance.new("BodyVelocity")
+	   bv.Parent = char.HumanoidRootPart
+       bv.P = 3000
+	   bv.MaxForce = Vector3.new(100000, 100000, 100000)
+       bv.Velocity = char.HumanoidRootPart.CFrame.lookVector * 155
+	   game.Debris:AddItem(bv, 3)
+ local hb = CombatHitbox:Clone()
+hb.Parent = char
+local wd = Instance.new("Weld", hb)
+wd.Part0 = char.HumanoidRootPart
+wd.Part1 = hb
+wd.C1 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(hb, 3)
+local AntiSpamTable = {}
+hb.Touched:Connect(function(p)
+local P1 = p.Parent
+local Hmnd = P1:FindFirstChild("Humanoid")
+if Hmnd and Hmnd.Health ~= 0 then
+if table.find(AntiSpamTable, Hmnd) then return end
+table.insert(AntiSpamTable, Hmnd)
+if Transformed == true then
+bv:Destroy()
+Flight:Stop()
+FlightHit:Play()
+hb:Destroy()
+scriptVar.SmokeOff:FireServer()
+end
+for i=1,3 do
+Chars.DarthVader.Remotes.Bash2:FireServer(P1)
+Chars.Combat.Remotes.ComboEndRemote:FireServer(P1)
+Rems.DashHit:FireServer(P1)
+end
+task.spawn(function()
+for i,v in pairs(AntiSpamTable) do	
+if v == Hmnd then
+task.wait(1)
+table.remove(AntiSpamTable, i)
+end
+end
+end)
+
+end
+end)
+
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if bv then
+        wait(0.1)
+       bv.Velocity = char.HumanoidRootPart.CFrame.LookVector * 155
+    end
+end
+scriptVar.SmokeOff:FireServer()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+end
+
+local function Move2()
+if not Transformed then
+Chars.TheFlashCw.Remotes.FastestMan1:FireServer()
+RunStart:Play()
+task.wait(1)
+Run:Play()
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {FieldOfView = 100}):Play()
+   Chars.TheFlashCw.Remotes.FastestMan:FireServer()
+   local bv = Instance.new("BodyVelocity")
+	   bv.Parent = char.HumanoidRootPart
+       bv.P = 3000
+	   bv.MaxForce = Vector3.new(100000, 100000, 100000)
+       bv.Velocity = char.HumanoidRootPart.CFrame.lookVector * 100
+	   game.Debris:AddItem(bv, 3)
+ local hb = CombatHitbox:Clone()
+hb.Parent = char
+local wd = Instance.new("Weld", hb)
+wd.Part0 = char.HumanoidRootPart
+wd.Part1 = hb
+wd.C1 = CFrame.new(0, 0, 0) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(hb, 3)
+local AntiSpamTable = {}
+hb.Touched:Connect(function(p)
+local P1 = p.Parent
+local Hmnd = P1:FindFirstChild("Humanoid")
+if Hmnd and Hmnd.Health ~= 0 then
+if table.find(AntiSpamTable, Hmnd) then return end
+table.insert(AntiSpamTable, Hmnd)
+for i=1,3 do
+Rems.DashHit:FireServer(P1)
+Chars.Combat.Remotes.ComboEndRemote:FireServer(P1)
+end
+task.spawn(function()
+for i,v in pairs(AntiSpamTable) do	
+if v == Hmnd then
+task.wait(1)
+table.remove(AntiSpamTable, i)
+end
+end
+end)
+
+end
+end)
+
+local runDuration = 3
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if bv then
+        wait(0.1)
+       bv.Velocity = char.HumanoidRootPart.CFrame.LookVector * 100
+    end
+end
+game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {FieldOfView = 70}):Play()
+else
+SuperFlight()
+end
+end
+
+local function Counter()
+if not Transformed then
+scriptVar.DestroyCounter:FireServer()
+Rems.Counter:FireServer()
+else
+scriptVar.DestroyCounter:FireServer()
+Rems.Counter:FireServer()
+end
+end
+
+local function SonicBoom()
+Boom:Play()
+Rems.SonicBoom:FireServer()
+end
+
+local function Move4()
+if not Transformed then
+StartSteal:Play()
+local hb = CombatHitbox:Clone()
+hb.Size = Vector3.new(3.5, 3.5, 20)
+hb.Parent = char
+local wd = Instance.new("Weld", hb)
+wd.Part0 = char.HumanoidRootPart
+wd.Part1 = hb
+wd.C1 = CFrame.new(0, 0, 11) * CFrame.Angles(0, 0, 0)
+game.Debris:AddItem(hb, .2)
+hb.Touched:Connect(function(p)
+local P1 = p.Parent
+local Hmnd = P1:FindFirstChild("Humanoid")
+if Hmnd and Hmnd.Health ~= 0 then
+Steal:Play()
+hb:Destroy()
+for i=1,3 do
+Rems.PowerSteal:FireServer(char, P1)
+end
+end
+end)
+else
+SonicBoom()
+end
+end
+
+local function Chilidog()
+DawgAnim:Play()
+scriptVar.Chilidog:FireServer()
+end
+
+local function Move5()
+if not Transformed then
+Rems.Finisher:FireServer()
+else
+Rems.Finisher:FireServer()
+end
+end
+
+local function Transform()
+if Transformed == false then
+Rems.Transform:FireServer()
+Transformed = true
+plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Kick Barrage"
+plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Blitz Flight"
+plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Too Slow Counter"
+plr.PlayerGui.Moveset.Frame.Hold.FourMove.Text = "Sonic Explosion"
+plr.PlayerGui.Moveset.Frame.Hold.Emove.Text = "Super Sonic [ACTIVE]"
+elseif Transformed == true then
+Rems.DeTransform:FireServer()
+Transformed = false
+plr.PlayerGui.Moveset.Frame.Hold.OneMove.Text = "Spin Dash"
+plr.PlayerGui.Moveset.Frame.Hold.TwoMove.Text = "Super Speed"
+plr.PlayerGui.Moveset.Frame.Hold.ThreeMove.Text = "Spin Counter"
+plr.PlayerGui.Moveset.Frame.Hold.FourMove.Text = "Electricity Steal"
+plr.PlayerGui.Moveset.Frame.Hold.FiveMove.Text = "Blitz Finisher"
+plr.PlayerGui.Moveset.Frame.Hold.Emove.Text = "Super Sonic"
+end
+end
+
+local function FinalRush()
+if _G.FinalRushBlock == true then return end
+game.ReplicatedStorage.Characters.TheFlashCw.Remotes.Final:FireServer()
+_G.FinalRushBlock = true
+task.spawn(function()
+	task.wait(12)
+    _G.FinalRushBlock = false
+end)
+end
+
+function DodgeFunction(Root)
+ local BodyPos = Instance.new("BodyPosition")
+ BodyPos.MaxForce = Vector3.new(1000000, 0, 1000000)
+ BodyPos.P = 100000
+ BodyPos.D = 3000
+ BodyPos.Position = (Root.CFrame * CFrame.new(0, 0, 15)).Position
+ BodyPos.Parent = Root
+ game.Debris:AddItem(BodyPos, .5)
+end
+
+function SideDodgeFunction(Root)
+ local BodyPos = Instance.new("BodyPosition")
+ BodyPos.MaxForce = Vector3.new(1000000, 0, 1000000)
+ BodyPos.P = 100000
+ BodyPos.D = 3000
+ BodyPos.Position = (Root.CFrame * CFrame.new(15, 0, 0)).Position
+ BodyPos.Parent = Root
+ game.Debris:AddItem(BodyPos, .7)
+end
+
+function Dash(Root)
+ local BodyPos = Instance.new("BodyPosition")
+ BodyPos.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+ BodyPos.P = 50000
+ BodyPos.D = 3000
+ BodyPos.Position = (Root.CFrame * CFrame.new(0, 0, -30)).Position
+ BodyPos.Parent = Root
+ game.Debris:AddItem(BodyPos, .7)
+end
+
+-- Load combo animations
+local Combo1 = Animator:LoadAnimation(Anims.Combo1)
+local Combo2 = Animator:LoadAnimation(Anims.Combo2)
+local Combo3 = Animator:LoadAnimation(Anims.Combo3)
+local Combo4 = Animator:LoadAnimation(Anims.Combo4)
+local Combos = {Combo1, Combo2, Combo3, Combo4}
+
+-- Run input handler (fixed and moved outside InputBegan)
+local function HandleRunInput(actionName, inputState)
+    if AttackCD or char:FindFirstChild("CantAttack") then
+        return
+    end
+    
+    if inputState == Enum.UserInputState.Begin and actionName == "RunBind" then
+        isRunning = true
+        Humanoid.WalkSpeed = runWS
+        
+        -- Smooth camera zoom out
+        local fovTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        TweenService:Create(workspace.CurrentCamera, fovTweenInfo, {
+            FieldOfView = runFOV
+        }):Play()
+        
+    elseif inputState == Enum.UserInputState.End and actionName == "RunBind" then
+        isRunning = false
+        
+        if RunAnimation.IsPlaying then
+            RunAnimation:Stop(0.2)
+        end
+
+        Humanoid.WalkSpeed = normalWS
+
+        -- Smooth camera zoom back
+        local fovTweenInfo = TweenInfo.new(0.45, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+        TweenService:Create(workspace.CurrentCamera, fovTweenInfo, {
+            FieldOfView = normalFOV
+        }):Play()
+    end
+end
+
+-- Movement state handler
+Humanoid.Running:Connect(function(speed)
+    if speed >= 10 and isRunning and not (RunAnimation.IsPlaying or AttackCD or char:FindFirstChild("CantAttack")) then
+        RunAnimation:Play(0.2)
+        Humanoid.WalkSpeed = runWS
+    elseif speed >= 10 and not isRunning and RunAnimation.IsPlaying then
+        RunAnimation:Stop(0.2)
+        Humanoid.WalkSpeed = normalWS
+    elseif speed < 10 and RunAnimation.IsPlaying then
+        RunAnimation:Stop(0.2)
+        Humanoid.WalkSpeed = normalWS
+    end
+end)
+
+Humanoid.Died:Connect(function()
+AttackCD = true
+workspace:FindFirstChild("SelfDestructScript"..name):Destroy()
+ local fovTweenInfo = TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+        TweenService:Create(game.Lighting.DeadColor, fovTweenInfo, {
+            ['TintColor'] = Color3.new(1, 0, 0)
+        }):Play()
+  DeadAnimation:Play()
+plr.PlayerGui.Menu.DeadSound:Play()
+char.HumanoidRootPart.Anchored = true
+scriptVar.Death:FireServer(plr)
+end)
+
+-- Handle jumping while running
+Humanoid.Changed:Connect(function()
+    if Humanoid.Jump and RunAnimation.IsPlaying then
+        RunAnimation:Stop(0.2)
+    end
+end)
+
+-- Bind run controls
+game:GetService("ContextActionService"):BindAction(
+    "RunBind",
+    HandleRunInput,
+    true,
+    Enum.KeyCode.LeftShift,
+    Enum.KeyCode.ButtonL3
+)
+
+-- Combat functions
+local function ResetCombo()
+	CurCombo = 1
+	DoEndRemote = false
+end
+
+local function Combat()
+    if AttackCD then return end
+    if char:FindFirstChild("Cantattack") or char:FindFirstChild("CantAttack") or char:FindFirstChild("Blocking") then return end
+
+    AttackCD = true
+
+    local Hitbox = CombatHitbox:Clone()
+    Hitbox.Parent = char
+    local Weld = Instance.new("Weld")
+    Weld.Part0 = Hitbox
+    Weld.Part1 = char.HumanoidRootPart
+    Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+    Weld.Parent = Hitbox
+
+    Debris:AddItem(Hitbox, 0.2)
+
+    Hitbox.Touched:Connect(function(Player1)
+        local Parent1 = Player1.Parent
+        local Humanoid = Parent1:FindFirstChild("Humanoid")
+        if Humanoid and Humanoid.Health ~= 0 and Parent1 ~= char then
+            Hitbox:Destroy()
+            if DoEndRemote == true then
+			for i=1,2 do
+                Chars.Combat.Remotes.ComboEndRemote:FireServer(Parent1)
+				end
+            else
+			    for i=1,3 do
+                Chars.Combat.Remotes.Combo:FireServer(Parent1)
+				end
+            end
+        end
+    end)
+
+    -- Play Combo Animation
+    local CurrentAnim = Combos[CurCombo]
+    if CurrentAnim then
+        CurrentAnim:Play()
+    end
+
+    -- Handle combo progression
+    if CurCombo < 4 then
+        CurCombo = CurCombo + 1
+    else
+        DoEndRemote = true
+        task.wait(0.65)
+        ResetCombo()
+    end
+
+    LastClick = tick()
+    task.wait(0.25)
+    AttackCD = false
+end
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+if killed == true then return end
+
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if tick() - LastClick > ComboResetTime then
+            ResetCombo()
+        end
+        task.spawn(Combat)
+	elseif input.KeyCode == Enum.KeyCode.One then	
+    Move1()
+    elseif input.KeyCode == Enum.KeyCode.Two then
+	Move2()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+    Counter()
+	elseif input.KeyCode == Enum.KeyCode.Four then
+    Move4()
+	elseif input.KeyCode == Enum.KeyCode.Five then
+    Move5()
+	elseif input.KeyCode == Enum.KeyCode.E then
+    Transform()
+	elseif input.KeyCode == Enum.KeyCode.G then
+    SonicBoom()
+	elseif input.KeyCode == Enum.KeyCode.H then
+    SuperFlight()
+	elseif input.KeyCode == Enum.KeyCode.J then
+    FinalRush()
+	elseif input.KeyCode == Enum.KeyCode.X then
+	Chilidog()
+    elseif input.KeyCode == Enum.KeyCode.F then
+    Block:Play()
+	Chars.Combat.Remotes.Blocking:FireServer()
+    end
+end)
+print("Executed")
+end
+game.Players.LocalPlayer.CharacterAdded:Connect(execute)
