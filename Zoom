@@ -25,6 +25,17 @@ local StartRunA = Animator:LoadAnimation(Anims.StartRun)
 local RunA =  Animator:LoadAnimation(Anims.SuperSpeed)
 local RunAExe =  Animator:LoadAnimation(Anims.SuperSpeedExe)
 
+local function FinalRush()
+if _G.FinalRushBlock == true then return end
+game.ReplicatedStorage.Characters.TheFlashCw.Remotes.Final:FireServer()
+_G.FinalRushBlock = true
+task.spawn(function()
+	task.wait(12)
+    _G.FinalRushBlock = false
+end)
+end
+
+
 -- Punch connection
 local function SetupPunchConnections()
 	PunchesAnim:GetMarkerReachedSignal("Start"):Connect(function()
@@ -244,6 +255,8 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gp)
 		RunBuff()
 	elseif input.KeyCode == Enum.KeyCode.H then
 		Tornado()
+    elseif input.KeyCode == Enum.KeyCOde.J then
+        FinalRush()
 	end
 end)
 
