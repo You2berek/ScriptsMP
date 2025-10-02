@@ -1,27 +1,12 @@
-local kill = false
 
-    task.spawn(function()
-    while true do
-    if _G.killAllNCD == true and _G.killAllNCD ~= nil then
-    kill = true
-    break
-    end
-    task.wait(1)
-    end
-    
-    end)
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
-    if gameProcessedEvent then
-        return 
-    end
-    if kill == true then return end
-   local plrs = game:GetService("Players")
+local plrs = game:GetService("Players")
 local plr = plrs.LocalPlayer
 local char = plr.Character
 local Humanoid = char:FindFirstChild("Humanoid")
 local Animator = Humanoid:FindFirstChild("Animator")
+
 if not char:FindFirstChild("Zoom") then return end
-local  scriptVar = char:FindFirstChild("Zoom")
+local scriptVar = char:FindFirstChild("Zoom")
 local Anims = scriptVar:FindFirstChild("Animations")
 local Repl = game:GetService("ReplicatedStorage")
 local Chars = Repl:FindFirstChild("Characters")
@@ -30,17 +15,8 @@ local CombatHitbox = Chars.Combat.Fx.CombatHitbox
 local HitboxPunch = Chars.Combat.Peacemaker.HitboxPunch
 local TweenService = game:GetService("TweenService")
 local Mouse = plr:GetMouse()
-local MouseHit = Mouse.Hit.Position
-function Dash(arg1) 
-    local BodyPosition = Instance.new("BodyPosition")
-    BodyPosition.MaxForce = Vector3.new(1000000, 1000000, 1000000)
-    BodyPosition.P = 50000
-    BodyPosition.D = 3000
-    BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -10)).Position
-    BodyPosition.Parent = arg1
-    game.Debris:AddItem(BodyPosition, 0.7)
-end
 
+-- Animations
 local PunchesAnim = Animator:LoadAnimation(Anims.BarragePunches)
 local PunchesAnimBuff = Animator:LoadAnimation(Anims.BarragePunches)
 local Grab = Animator:LoadAnimation(Anims.Grab)
@@ -49,97 +25,98 @@ local StartRunA = Animator:LoadAnimation(Anims.StartRun)
 local RunA =  Animator:LoadAnimation(Anims.SuperSpeed)
 local RunAExe =  Animator:LoadAnimation(Anims.SuperSpeedExe)
 
-PunchesAnim:GetMarkerReachedSignal("Start"):Connect(function()
-scriptVar.Move1:FireServer()
-end)
-PunchesAnim:GetMarkerReachedSignal("Punch"):Connect(function()
-local hb = CombatHitbox:Clone()
-hb.Parent = char
-local wd = Instance.new("Weld", hb)
-wd.Part0 = char.HumanoidRootPart
-wd.Part1 = hb
-wd.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
-game.Debris:AddItem(hb, .2)
-hb.Touched:Connect(function(p)
-local P1 = p.Parent
-local hmn = P1:FindFirstChild("Humanoid")
-if hmn and hmn.Health ~= 0 then
-hb:Destroy()
-scriptVar.Move1Hit:FireServer()
-for i=1,3 do
-game.ReplicatedStorage.Characters.Combat.Remotes.Combo:FireServer(P1)
-end
-end
-end)
-end)
+-- Punch connection
+local function SetupPunchConnections()
+	PunchesAnim:GetMarkerReachedSignal("Start"):Connect(function()
+		scriptVar.Move1:FireServer()
+	end)
+	PunchesAnim:GetMarkerReachedSignal("Punch"):Connect(function()
+		local hb = CombatHitbox:Clone()
+		hb.Parent = char
+		local wd = Instance.new("Weld", hb)
+		wd.Part0 = char.HumanoidRootPart
+		wd.Part1 = hb
+		game.Debris:AddItem(hb, .2)
+		hb.Touched:Connect(function(p)
+			local P1 = p.Parent
+			local hmn = P1:FindFirstChild("Humanoid")
+			if hmn and hmn.Health ~= 0 then
+				hb:Destroy()
+				scriptVar.Move1Hit:FireServer()
+				for i=1,3 do
+					Chars.Combat.Remotes.Combo:FireServer(P1)
+				end
+			end
+		end)
+	end)
 
-PunchesAnimBuff:GetMarkerReachedSignal("Start"):Connect(function()
-scriptVar.Move1:FireServer()
-end)
-PunchesAnimBuff:GetMarkerReachedSignal("Punch"):Connect(function()
-local hb = CombatHitbox:Clone()
-hb.Parent = char
-local wd = Instance.new("Weld", hb)
-wd.Part0 = char.HumanoidRootPart
-wd.Part1 = hb
-wd.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
-game.Debris:AddItem(hb, .2)
-hb.Touched:Connect(function(p)
-local P1 = p.Parent
-local hmn = P1:FindFirstChild("Humanoid")
-if hmn and hmn.Health ~= 0 then
-hb:Destroy()
-scriptVar.Move1Hit:FireServer()
-for i=1,5 do
-game.ReplicatedStorage.Characters.DarthVader.Remotes.Bash2:FireServer(P1)
-game.ReplicatedStorage.Characters.Combat.Remotes.Combo:FireServer(P1)
+	PunchesAnimBuff:GetMarkerReachedSignal("Start"):Connect(function()
+		scriptVar.Move1:FireServer()
+	end)
+	PunchesAnimBuff:GetMarkerReachedSignal("Punch"):Connect(function()
+		local hb = CombatHitbox:Clone()
+		hb.Parent = char
+		local wd = Instance.new("Weld", hb)
+		wd.Part0 = char.HumanoidRootPart
+		wd.Part1 = hb
+		game.Debris:AddItem(hb, .2)
+		hb.Touched:Connect(function(p)
+			local P1 = p.Parent
+			local hmn = P1:FindFirstChild("Humanoid")
+			if hmn and hmn.Health ~= 0 then
+				hb:Destroy()
+				scriptVar.Move1Hit:FireServer()
+				for i=1,5 do
+					Chars.DarthVader.Remotes.Bash2:FireServer(P1)
+					Chars.Combat.Remotes.Combo:FireServer(P1)
+				end
+			end
+		end)
+	end)
 end
-end
-end)
-end)
 
-
+-- Functions (pulled out)
 local function Move1(buff)
-if buff == false then
-PunchesAnim:Play()
-else
-PunchesAnimBuff:Play()
-end
+	if buff then
+		PunchesAnimBuff:Play()
+	else
+		PunchesAnim:Play()
+	end
 end
 
 local function Rush()
-Chars.TheFlashCw.Remotes.Rush:FireServer(MouseHit)
+	Chars.TheFlashCw.Remotes.Rush:FireServer(Mouse.Hit.Position)
 end
 
 local function Move4()
-Rems.Choke:FireServer()
-Grab:Play()
+	Rems.Choke:FireServer()
+	Grab:Play()
 end
 
 local function Velocity9()
-for i=1,10 do
-Rems.V9:FireServer()
-end
+	for i=1,10 do
+		Rems.V9:FireServer()
+	end
 end
 
 local function Counter()
-scriptVar.DestroyCounter:FireServer()
-Rems.Counter:FireServer()
-task.spawn(function()
-task.wait(.5)
-scriptVar.DestroyCounter:FireServer()
-task.wait(.5)
-scriptVar.DestroyCounter:FireServer()
-end)
+	scriptVar.DestroyCounter:FireServer()
+	Rems.Counter:FireServer()
+	task.spawn(function()
+		task.wait(.5)
+		scriptVar.DestroyCounter:FireServer()
+		task.wait(.5)
+		scriptVar.DestroyCounter:FireServer()
+	end)
 end
 
 local function Tornado()
-TornadoRun:Play()
-Chars.TheFlashCw.Remotes.Mirrage:FireServer()
+	TornadoRun:Play()
+	Chars.TheFlashCw.Remotes.Mirrage:FireServer()
 end
 
 local function RunBuff()
-StartRunA:Play()
+	StartRunA:Play()
 Chars.TheFlashCw.Remotes.FastestMan1:FireServer(plr)
 wait(1)
 Chars.TheFlashCw.Remotes.FastestMan:FireServer(plr)
@@ -236,31 +213,37 @@ while tick() - startTime < runDuration do
 end
 end
 
+-- Setup animations once
+SetupPunchConnections()
 
+-- Input
+game:GetService("UserInputService").InputBegan:Connect(function(input, gp)
+	if gp then return end
 
-    if input.KeyCode == Enum.KeyCode.One then
-Move1(false)
-elseif input.KeyCode == Enum.KeyCode.Two then
-Run()
-elseif input.KeyCode == Enum.KeyCode.Three then
-Counter()
-elseif input.KeyCode == Enum.KeyCode.Four then
-Move4()
-elseif input.KeyCode == Enum.KeyCode.Five then
-if not char:FindFirstChild("Exe") then
-Rems.Finisher:FireServer()
-else
-Chars.TheFlashCw.Remotes.ReverseFinisher:FireServer()
-end
-elseif input.KeyCode == Enum.KeyCode.E then
-Velocity9()
-elseif input.KeyCode == Enum.KeyCode.R then
-Move1(true)
-elseif input.KeyCode == Enum.KeyCode.T then
-Rush()
-elseif input.KeyCode == Enum.KeyCode.G then
-RunBuff()
-elseif input.KeyCode == Enum.KeyCode.H then
-Tornado()
-   end
+	if input.KeyCode == Enum.KeyCode.One then
+		Move1(false)
+	elseif input.KeyCode == Enum.KeyCode.Two then
+		Run()
+	elseif input.KeyCode == Enum.KeyCode.Three then
+		Counter()
+	elseif input.KeyCode == Enum.KeyCode.Four then
+		Move4()
+	elseif input.KeyCode == Enum.KeyCode.Five then
+		if not char:FindFirstChild("Exe") then
+			Rems.Finisher:FireServer()
+		else
+			Chars.TheFlashCw.Remotes.ReverseFinisher:FireServer()
+		end
+	elseif input.KeyCode == Enum.KeyCode.E then
+		Velocity9()
+	elseif input.KeyCode == Enum.KeyCode.R then
+		Move1(true)
+	elseif input.KeyCode == Enum.KeyCode.T then
+		Rush()
+	elseif input.KeyCode == Enum.KeyCode.G then
+		RunBuff()
+	elseif input.KeyCode == Enum.KeyCode.H then
+		Tornado()
+	end
 end)
+
