@@ -247,7 +247,11 @@ Counter()
 elseif input.KeyCode == Enum.KeyCode.Four then
 Move4()
 elseif input.KeyCode == Enum.KeyCode.Five then
+if not char:FindFirstChild("Exe") then
 Rems.Finisher:FireServer()
+else
+Chars.TheFlashCw.Remotes.ReverseFinisher:FireServer()
+end
 elseif input.KeyCode == Enum.KeyCode.E then
 Velocity9()
 elseif input.KeyCode == Enum.KeyCode.R then
