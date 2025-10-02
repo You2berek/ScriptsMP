@@ -27,6 +27,16 @@ local StartRunA = Animator:LoadAnimation(Anims.StartRunQuick)
 local RunA = Animator:LoadAnimation(Anims.SuperSpeed)
 local GuardA = Animator:LoadAnimation(Anims.Blocking)
 
+local function FinalRush()
+if _G.FinalRushBlock == true then return end
+game.ReplicatedStorage.Characters.TheFlashCw.Remotes.Final:FireServer()
+_G.FinalRushBlock = true
+task.spawn(function()
+	task.wait(12)
+    _G.FinalRushBlock = false
+end)
+end
+
     if input.KeyCode == Enum.KeyCode.One then
 GutA:Play()
 RemsA.BehindYou:FireServer(plr)
@@ -94,6 +104,8 @@ RemsF.Rush:FireServer(MouseHit)
 elseif input.KeyCode == Enum.KeyCode.H then
 GutA:Play()
 RemsA.BellyPunch:FireServer()
+elseif input.KeyCode == Enum.KeyCode.X then
+FinalRush()
 elseif input.KeyCode == Enum.KeyCode.Z then
 StartRunA:Play()
 RemsF.FastestMan1:FireServer(plr)
