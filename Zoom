@@ -5,6 +5,12 @@ local char = plr.Character
 local Humanoid = char:FindFirstChild("Humanoid")
 local Animator = Humanoid:FindFirstChild("Animator")
 
+char.DescendantAdded:Connect(function(obj)
+    if obj.Name == "Blood1" then
+        obj:Destroy()
+    end
+end)
+
 if not char:FindFirstChild("Zoom") then return end
 local scriptVar = char:FindFirstChild("Zoom")
 local Anims = scriptVar:FindFirstChild("Animations")
