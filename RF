@@ -9,6 +9,8 @@ local rushloop = false
             local Animator = char:WaitForChild("Humanoid"):WaitForChild("Animator")
 
             local VibArmAnim = Animator:LoadAnimation(char.ReverseFlash.Animations.VibratingArm)
+local NewAnim = Instance.new("Animation")
+NewAnim.AnimationId = "rbxassetid://11392445223"
                      local BarrageAnim = Animator:LoadAnimation(game:GetService("ReplicatedStorage").SelectACharacter.TheFlashCW.TheFlashCW.Animations.BarragePunches)
 local TornadoAnimRun = Animator:LoadAnimation(char.ReverseFlash.Animations.TornadoRun)
    
