@@ -10,7 +10,7 @@ local rushloop = false
 
             local VibArmAnim = Animator:LoadAnimation(char.ReverseFlash.Animations.VibratingArm)
                      local BarrageAnim = Animator:LoadAnimation(game:GetService("ReplicatedStorage").SelectACharacter.TheFlashCW.TheFlashCW.Animations.BarragePunches)
-local TornadoAnimRun = Animator:LoadAnimation(game:GetService("ReplicatedStorage").Skins["A-Train"].Skin7.RedRush.Animations.TornadoRun)
+local TornadoAnimRun = Animator:LoadAnimation(char.ReverseFlash.Animations.TornadoRun)
    
 game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then
