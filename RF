@@ -1,4 +1,11 @@
 
+   
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then
+        return 
+    end
+
+
 local args = {
     [1] = game:GetService("Players").LocalPlayer
 }
@@ -13,54 +20,6 @@ local NewAnim = Instance.new("Animation")
 NewAnim.AnimationId = "rbxassetid://11392445223"
                      local BarrageAnim = Animator:LoadAnimation(NewAnim)
 local TornadoAnimRun = Animator:LoadAnimation(char.ReverseFlash.Animations.TornadoRun)
-   
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
-    if gameProcessedEvent then
-        return 
-    end
-
-    -- Key press for K to toggle phaseloop
-    if input.KeyCode == Enum.KeyCode.K then
-        if phaseloop == false then
-            phaseloop = true
-            print("enabled")
-        elseif phaseloop == true then
-            phaseloop = false
-            print("disabled")
-        end
-    end
-
-    -- Key press for J to toggle rushloop
-    if input.KeyCode == Enum.KeyCode.J then
-        if rushloop == false then
-            rushloop = true
-            print("enabled")
-        elseif rushloop == true then
-            rushloop = false
-            print("disabled")
-        end
-    end
-
-    -- Phaseloop logic, fires Phase every 0.5 seconds if enabled
-    task.spawn(function()
-        while task.wait(3) do
-            if phaseloop == true then
-                game:GetService("Players").LocalPlayer.Character.ReverseFlash.Phase:FireServer(unpack(args))
-            end
-        end
-    end)
-
- -- Rushloop logic, fires Rush every 0.5 seconds if enabled
-task.spawn(function()
-    while task.wait(1) do
-        if rushloop == true then
-            local args2 = {
-                [1] = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position
-            }
-            game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("TheFlashCw"):WaitForChild("Remotes"):WaitForChild("Rush"):FireServer(unpack(args2))
-        end
-    end
-end)
 
     -- Input handling for different keys
     if input.KeyCode == Enum.KeyCode.One then
