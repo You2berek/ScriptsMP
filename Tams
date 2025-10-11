@@ -216,6 +216,9 @@ Rems.DownSlam:FireServer()
 elseif input.KeyCode == Enum.KeyCode.C then
 Grab:Play()
 Rems.AndrewDownSlam:FireServer()
+elseif input.KeyCode == Enum.KeyCode.V then
+WebUpA:Play()
+Rems.TrippleShot:FireServer()
 elseif input.KeyCode == Enum.KeyCode.R then
 if SymDB == false then
 SymDB = true
