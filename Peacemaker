@@ -82,7 +82,7 @@ game:GetService("TweenService"):Create(game.Workspace.CurrentCamera, PreresetTwe
     ["FieldOfView"] = 80
 }):Play()
 local Hitbox = CombatHitbox:Clone()
-Hitbox.Size = Vector3.new(6, 6, 15)
+Hitbox.Size = Vector3.new(6, 6, 24)
 Hitbox.Parent = char
 local Weld = Instance.new("Weld", Hitbox)
 Weld.Part0 = Hitbox
