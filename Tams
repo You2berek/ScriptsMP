@@ -30,10 +30,8 @@ function Dash(arg1) -- Line 131
 end
 
 local function CounterTrigger()
-  local Counter = Instance.new("BoolValue")
-  Counter.Parent = char
-  Counter.Name = "CounterSucces"
-  game.Debris:AddItem(Counter, .05)
+SpideyS.DestroyCounter:FireServer()
+Rems.WebBlizCounter:FireServer()
 end
 
 local SpideyStingA = Animator:LoadAnimation(Anims.Sting)
@@ -42,6 +40,8 @@ local SwingStartA = Animator:LoadAnimation(Anims.WebswingStart)
 local SwingA = Animator:LoadAnimation(Anims.Webswing)
 local GuardA = Animator:LoadAnimation(Anims.Blocking)
 local SymStrike = Animator:LoadAnimation(Anims.SymbioteStrike)
+local GrenadeThrow = Animator:LoadAnimation(Anims.Throw)
+local Grab = Animator:LoadAnimation(Anims.Grab)
 
     if input.KeyCode == Enum.KeyCode.One then
 SpideyStingA:Play()
@@ -188,6 +188,34 @@ Chars.Miles.Remotes.FinisherTasm:FireServer(plr)
 elseif input.KeyCode == Enum.KeyCode.F then
 GuardA:Play()
 Chars.Combat.Remotes.Blocking:FireServer()
+elseif input.KeyCode == Enum.KeyCode.G then
+WebUpA:Play()
+SpiderS.SwingShoot:FireServer()
+local hb = CombatHitbox:Clone()
+hb.Parent = char
+hb.Size = Vector3.new(6,6,24)
+local wd = Instance.new("Weld", hb)
+wd.Part0 = hb
+wd.Part1 = char.HumanoidRootPart
+wd.C0 = CFrame.new(0, 0, 13) * CFrame.Angles(0,0,0)
+game.Debris:AddItem(hb, .2)
+hb.Touched:Connect(function(p)
+local p1 = p.Parent
+local hd = p1:FindFirstChild("Humanoid")
+if hd and hd.Health ~= 0 then
+hb:Destroy()
+Rems.WebGrapple:FireServer(p1)
+end
+end)
+elseif input.KeyCode == Enum.KeyCode.H then
+GrenadeThrow:Play()
+Rems.ElectricWebs:FireServer()
+elseif input.KeyCode == Enum.KeyCode.X then
+Grab:Play()
+Rems.DownSlam:FireServer()
+elseif input.KeyCode == Enum.KeyCode.C then
+Grab:Play()
+Rems.AndrewDownSlam:FireServer()
 elseif input.KeyCode == Enum.KeyCode.R then
 if SymDB == false then
 SymDB = true
