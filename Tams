@@ -30,7 +30,6 @@ function Dash(arg1) -- Line 131
 end
 
 local function CounterTrigger()
-SpideyS.DestroyCounter:FireServer()
 Rems.WebBlizCounter:FireServer()
 end
 
