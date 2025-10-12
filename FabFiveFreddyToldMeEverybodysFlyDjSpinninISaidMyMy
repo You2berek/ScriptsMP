@@ -25,7 +25,7 @@ local function MoveOne(mult)
     bv.Parent = char.HumanoidRootPart
     bv.P = 3000
     bv.MaxForce = Vector3.new(1000000, 0, 1000000)
-    bv.Velocity = char.HumanoidRootPart.CFrame.lookVector * 40
+    bv.Velocity = char.HumanoidRootPart.CFrame.lookVector * 49
     game.Debris:AddItem(bv, 1)
   local hb = CombatHitbox2:Clone()
     hb.Parent = char
@@ -43,6 +43,16 @@ local function MoveOne(mult)
       Move1Run:Stop()
     end
   end)
+ local runDuration = (how tf long)
+local startTime = tick()
+
+while tick() - startTime < runDuration do
+    if bv then
+        wait(0.1)
+        bv.Velocity = char.HumanoidRootPart.CFrame.LookVector * 49
+    end
+end
+
 end
 
 local function Counter()
