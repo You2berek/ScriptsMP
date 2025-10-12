@@ -80,7 +80,17 @@ end
         end
 	elseif input.KeyCode == Enum.KeyCode.K then
 		RadBeam:Play()
-        for i=1,5 do
+        for i=1,1 do
+          remotes.Radiation2:FireServer()
+        end
+   elseif input.KeyCode == Enum.KeyCode.X then
+      RadBeam:Play()
+  for i=1,8 do
+          remotes.Radiation:FireServer()
+        end
+elseif input.KeyCode == Enum.KeyCode.C then
+		RadBeam:Play()
+        for i=1,10 do
           remotes.Radiation2:FireServer()
         end
 	end
