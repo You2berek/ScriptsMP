@@ -43,7 +43,7 @@ local function MoveOne(mult)
       Move1Run:Stop()
     end
   end)
- local runDuration = (how tf long)
+ local runDuration = 1
 local startTime = tick()
 
 while tick() - startTime < runDuration do
