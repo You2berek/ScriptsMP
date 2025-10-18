@@ -1,0 +1,269 @@
+-- pulled-out globals / services / assets
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local Repl = game:GetService("ReplicatedStorage")
+local Chars = Repl:FindFirstChild("Characters")
+local Rems = Chars and Chars:FindFirstChild("Vigilante") and Chars:FindFirstChild("Vigilante"):WaitForChild("Remotes")
+local CombatHitbox = Chars and Chars.Combat and Chars.Combat.Fx and Chars.Combat.Fx.CombatHitbox
+local HitboxPunch = Chars and Chars.Combat and Chars.Combat.Peacemaker and Chars.Combat.Peacemaker.HitboxPunch
+
+local plr = Players.LocalPlayer
+local Mouse = plr:GetMouse()
+
+local kill = false
+local connectedKf = false
+
+-- animation variables (declared here, loaded later when Animator/Anims available)
+local GunShoot_anim, SwordCombo_anim, GunReloadFire_anim, StabCombo_anim
+local KnifeSlash_anim, Reload_anim, Sniper_anim, Dynamite_anim
+
+-- kill watcher
+task.spawn(function()
+	while true do
+		if _G.killAllNCD == true and _G.killAllNCD ~= nil then
+			kill = true
+			break
+		end
+		task.wait(1)
+	end
+end)
+local function onCharacterAdded(char)
+    local humanoid = char:WaitForChild("Humanoid")
+    
+    humanoid.Died:Connect(function()
+        kill = true
+    end)
+end
+
+-- connect existing character
+if plr.Character then
+    onCharacterAdded(plr.Character)
+end
+-- helper Dash (pulled out)
+local function Dash(arg1)
+	local BodyPosition = Instance.new("BodyPosition")
+	BodyPosition.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+	BodyPosition.P = 50000
+	BodyPosition.D = 3000
+	BodyPosition.Position = (arg1.CFrame * CFrame.new(0, 0, -10)).Position
+	BodyPosition.Parent = arg1
+	game.Debris:AddItem(BodyPosition, 0.7)
+end
+
+-- DoShoot function (pulled out)
+local function DoShoot(char, Rems, CombatHitbox, Chars, withWaltuh, debugging)
+	Rems.GunshotCombat:FireServer()
+	for i = 1, 4 do
+		Rems.SniperShot:FireServer()
+	end
+	if withWaltuh == true then
+		local hb = CombatHitbox:Clone()
+		if debugging then hb.Transparency = 0 end
+		hb.Parent = char
+		hb.Size = Vector3.new(6, 6, 24)
+		local wd = Instance.new("Weld", hb)
+		wd.Part0 = hb
+		wd.Part1 = char.HumanoidRootPart
+		wd.C0 = CFrame.new(0, 0, 13) * CFrame.Angles(0, 0, 0)
+		game.Debris:AddItem(hb, .3)
+		hb.Touched:Connect(function(p)
+			local p1 = p.Parent
+			local hd = p1:FindFirstChild("Humanoid")
+			if hd and hd.Health ~= 0 then
+				hb:Destroy()
+				Chars.Walter.Remotes.GunCounterHit:FireServer(p1)
+			end
+		end)
+	end
+end
+
+-- Input handler: only re-acquire character-specific refs and load animations once
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+	if gameProcessedEvent then return end
+	if kill == true then return end
+
+	local char = plr.Character
+	if not char then return end
+	local Humanoid = char:FindFirstChild("Humanoid")
+	if not Humanoid then return end
+	local Animator = Humanoid:FindFirstChild("Animator")
+	if not Animator then return end
+	if not char:FindFirstChild("Vigilante") then return end
+
+	local scriptVar = char:FindFirstChild("Vigilante")
+	local Anims = scriptVar:FindFirstChild("Animations")
+	if not Anims then return end
+
+	-- load animations once (keeps them declared at top)
+	if not GunShoot_anim then
+		GunShoot_anim = Animator:LoadAnimation(Anims.GunShoot)
+		SwordCombo_anim = Animator:LoadAnimation(Anims.SwordCombo)
+		GunReloadFire_anim = Animator:LoadAnimation(Anims.SwordCombo)
+		StabCombo_anim = Animator:LoadAnimation(Anims.SwordCombo)
+		KnifeSlash_anim = Animator:LoadAnimation(Anims.CombatKnifeStab)
+		Reload_anim = Animator:LoadAnimation(Anims.HandGunReload)
+		Sniper_anim = Animator:LoadAnimation(Anims.Sniper)
+		Dynamite_anim = Animator:LoadAnimation(Anims.DynamiteThrow)
+	end
+
+	-- connect keyframe handlers only once
+	if connectedKf == false then
+		-- Sword combo keyframes
+		SwordCombo_anim.KeyframeReached:Connect(function(arg1)
+			if arg1 == "GrabSword" then
+				scriptVar.DestroyCounter:FireServer()
+				scriptVar.SwordGrab:FireServer()
+			elseif arg1 == "Slash1" or arg1 == "Slash2" or arg1 == "Slash3" then
+				scriptVar.DestroyCounter:FireServer()
+				scriptVar.SwordSlash:FireServer()
+				local hb = CombatHitbox:Clone()
+				hb.Parent = char
+				local wd = Instance.new("Weld", hb)
+				wd.Part0 = hb
+				wd.Part1 = char.HumanoidRootPart
+				wd.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+				game.Debris:AddItem(hb, .2)
+				hb.Touched:Connect(function(p)
+					local P1 = p.Parent
+					local hmd = P1:FindFirstChild("Humanoid")
+					if hmd and hmd.Health ~= 0 and P1 ~= char then
+						for i = 1, 3 do
+							Rems.SlashHit:FireServer(char, P1)
+						end
+						hb:Destroy()
+					end
+				end)
+			elseif arg1 == "Putbacksword" then
+				scriptVar.DestroyCounter:FireServer()
+				scriptVar.SwordBack:FireServer()
+			end
+		end)
+
+		-- Stab combo keyframes
+		StabCombo_anim.KeyframeReached:Connect(function(arg1)
+			if arg1 == "GrabSword" then
+				scriptVar.KnifeSpecial:FireServer()
+				scriptVar.DestroyCounter:FireServer()
+			elseif arg1 == "Slash1" or arg1 == "Slash2" or arg1 == "Slash3" then
+				scriptVar.DestroyCounter:FireServer()
+				scriptVar.KnifeSpecial:FireServer()
+				scriptVar.SwordSlash:FireServer()
+				local hb = CombatHitbox:Clone()
+				hb.Parent = char
+				local wd = Instance.new("Weld", hb)
+				wd.Part0 = hb
+				wd.Part1 = char.HumanoidRootPart
+				wd.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+				game.Debris:AddItem(hb, .2)
+				hb.Touched:Connect(function(p)
+					local P1 = p.Parent
+					local hmd = P1:FindFirstChild("Humanoid")
+					if hmd and hmd.Health ~= 0 and P1 ~= char then
+						for i = 1, 3 do
+							Rems.SlashHit:FireServer(char, P1)
+						end
+						hb:Destroy()
+					end
+				end)
+			end
+		end)
+
+		-- Gun reload/fire keyframes
+		GunReloadFire_anim.KeyframeReached:Connect(function(arg1)
+			if arg1 == "Slash3" then
+				DoShoot(char, Rems, CombatHitbox, Chars, true, false)
+			elseif arg1 == "GrabSword" then
+				scriptVar.GunReload.HandGunReload:FireServer()
+			elseif arg1 == "Slash1" or arg1 == "Slash2" or arg1 == "PutbackSword" then
+				scriptVar.DestroyCounter:FireServer()
+				scriptVar.SwordSlash:FireServer()
+			end
+		end)
+
+		print("Connected")
+		connectedKf = true
+	end
+
+	-- local functions that use current char/scriptVar/etc
+	local function ShootGun()
+		GunShoot_anim:Play()
+		task.wait(.15)
+		DoShoot(char, Rems, CombatHitbox, Chars, true, false)
+	end
+
+	local function KnifeSlash()
+		scriptVar.KnifeSpecial:FireServer()
+		KnifeSlash_anim:Play()
+		local hb = CombatHitbox:Clone()
+		hb.Parent = char
+		local wd = Instance.new("Weld", hb)
+		wd.Part0 = hb
+		wd.Part1 = char.HumanoidRootPart
+		wd.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0, 0, 0)
+		game.Debris:AddItem(hb, .2)
+		hb.Touched:Connect(function(p)
+			local P1 = p.Parent
+			local hmd = P1:FindFirstChild("Humanoid")
+			if hmd and hmd.Health ~= 0 and P1 ~= char then
+				for i = 1, 3 do
+					Rems.SlashHit:FireServer(char, P1)
+				end
+				hb:Destroy()
+			end
+		end)
+	end
+
+	local function Reload()
+		Reload_anim:Play()
+		scriptVar.GunReload.HandGunReload:FireServer()
+	end
+
+	local function SniperShot()
+		scriptVar.Sniper:FireServer()
+		Sniper_anim:Play()
+		task.wait(1.4)
+		Chars.SCPGuard.Remotes.HitShotGun:FireServer()
+		Rems.SniperShot:FireServer()
+	end
+
+	local function Counter()
+		Rems.ChainsawPierce:FireServer()
+		task.spawn(function()
+			scriptVar.DestroyCounter:FireServer()
+			task.wait(.2)
+			scriptVar.DestroyCounter:FireServer()
+			task.wait(.2)
+			scriptVar.DestroyCounter:FireServer()
+		end)
+	end
+
+	local function Dynamite()
+		Dynamite_anim:Play()
+		Rems.Dynamite:FireServer()
+	end
+
+	-- Keybinds (same mapping you used)
+	if input.KeyCode == Enum.KeyCode.One then
+		KnifeSlash()
+	elseif input.KeyCode == Enum.KeyCode.Two then
+		SwordCombo_anim:Play()
+	elseif input.KeyCode == Enum.KeyCode.Three then
+		Counter()
+	elseif input.KeyCode == Enum.KeyCode.Four then
+		SniperShot()
+	elseif input.KeyCode == Enum.KeyCode.Five then
+		Rems.Finisher:FireServer()
+	elseif input.KeyCode == Enum.KeyCode.E then
+		Dynamite()
+	elseif input.KeyCode == Enum.KeyCode.G then
+		Reload()
+	elseif input.KeyCode == Enum.KeyCode.H then
+		ShootGun()
+	elseif input.KeyCode == Enum.KeyCode.X then
+		GunReloadFire_anim:Play()
+	elseif input.KeyCode == Enum.KeyCode.C then
+		StabCombo_anim:Play()
+	end
+end)
+plr.CharacterAdded:Connect(onCharacterAdded)
