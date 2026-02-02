@@ -1,251 +1,226 @@
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
-    if gameProcessedEvent then
-        return 
-    end
-   
-function ForceLeap(arg1) -- Line 37
-    local BodyPosition_2 = Instance.new("BodyPosition")
-    BodyPosition_2.MaxForce = Vector3.new(1000000, 1000000, 1000000)
-    BodyPosition_2.P = 50000
-    BodyPosition_2.D = 3000
-    BodyPosition_2.Position = (arg1.CFrame * CFrame.new(0, 35, -60)).Position
-    BodyPosition_2.Parent = arg1
-    game.Debris:AddItem(BodyPosition_2, 0.7)
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+
+local Characters = ReplicatedStorage.Characters
+local Vader = Characters.DarthVader
+local Remotes = Vader.Remotes
+local HitboxPunch = Characters.Combat.Peacemaker.HitboxPunch
+local CombatHitbox = Characters.Combat.Fx.CombatHitbox
+
+-- character related
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local VaderLS = Character:WaitForChild("DarthVader")
+local Humanoid = Character:WaitForChild("Humanoid")
+local HRP = Character:WaitForChild("HumanoidRootPart")
+local Animator = Humanoid:WaitForChild("Animator")
+local Animations = VaderLS.Animations
+
+-- minor functions
+local function Dash(hrp)
+    local bp = Instance.new("BodyPosition")
+    bp.MaxForce = Vector3.new(1000000, 0, 1000000)
+    bp.P = 100000
+    bp.D = 3000
+    bp.Position = (hrp.CFrame * CFrame.new(0, 0, -15)).Position
+    bp.Parent = hrp
+    Debris:AddItem(bp, .2)
 end
-  local Vader = game.Players.LocalPlayer.Character.DarthVader
-    local CombatHitbox = game.ReplicatedStorage.Characters.Combat.Fx.CombatHitbox
-    local saberOn = true
 
-    if input.KeyCode == Enum.KeyCode.One then
-local PCHitbox = game.ReplicatedStorage.Characters.Combat.Peacemaker.HitboxPunch
-local CloneHitbox = PCHitbox:Clone()
-local plr = game:GetService("Players").LocalPlayer
-plr.Character.DarthVader.HeavyStrike:FireServer(plr)
-CloneHitbox.Parent = plr.Character
-local Weld = Instance.new("Weld", CloneHitbox)
-Weld.Part0 = CloneHitbox
-Weld.Part1 = plr.Character.Saber
-Weld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0,0,0)
-game.Debris:AddItem(CloneHitbox, 0.6)
-local anim = Instance.new("Animation")
-anim.AnimationId = "rbxassetid://10735411810"
-
-local plr = game:GetService("Players").LocalPlayer
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-animTrack:Play()
-local tbl_upvr = {}
-
-CloneHitbox.Touched:Connect(function(arg1) -- Line 284
-
-
-local Parent_9 = arg1.Parent
-local Humanoid_3 = Parent_9:FindFirstChild("Humanoid")
-if not table.find(tbl_upvr, Parent_9) and Humanoid_3 and Humanoid_3.Health ~= 0 and Parent_9 ~= Character_upvr then
-table.insert(tbl_upvr, Parent_9)
-
-game:GetService("ReplicatedStorage").Characters.DarthVader.Remotes.Bash2:FireServer(Parent_9)
-
+local function Leap(hrp, height, length)
+    local bp = Instance.new("BodyPosition")
+    bp.MaxForce = Vector3.new(1000000, 1000000, 1000000)
+    bp.P = 80000
+    bp.D = 3000
+    bp.Position = (hrp.CFrame * CFrame.new(0, height, -length)).Position
+    bp.Parent = hrp
+    Debris:AddItem(bp, .7)
 end
-end)
-   elseif input.KeyCode == Enum.KeyCode.R then
-        if saberOn == true then
-            Vader.SaberOff:FireServer()
-            saberOn = false
-            else
-            Vader.SaberOn:FireServer()
-            saberOn = true
-        end
-        -- R key pressed
-    elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
-        -- Left mouse button (LMB) clicked
-        local Hitbox = CombatHitbox:Clone()
-        Hitbox.Parent = game.Players.LocalPlayer.Character
-        local Weld = Instance.new("Weld", Hitbox)
-        Weld.Part0 = Hitbox
-        Weld.Part1 = game.Players.LocalPlayer.Character.HumanoidRootPart
-        Weld.C0 = CFrame.new(0, 0, 3.5) * CFrame.Angles(0,0,0)
-        game.Debris:AddItem(Hitbox, .2)
-        Hitbox.Touched:Connect(function(what)
-        local A1 = what.Parent
-        local Humanoid = A1:FindFirstChild("Humanoid")
-        if Humanoid and Humanoid.Health ~= 0 and Humanoid ~= game.Players.LocalPlayer.Character.Humanoid then
-        Hitbox:Destroy()
-        Vader.Combat:FireServer()
-        game.ReplicatedStorage.Characters.Combat.Remotes.Combo:FireServer(A1)
-        end
-        end)
 
-elseif input.KeyCode == Enum.KeyCode.Two then
-local anim = Instance.new("Animation")
+-- loading animations
+local SaberThrowAnim = Animator:LoadAnimation(Animations.Throw)
+local HeavyStrikeAnim = Animator:LoadAnimation(Animations.DownStrike)
+local LeapAnim = Animator:LoadAnimation(Animations.Leap)
+local ForceAnim = Animator:LoadAnimation(Animations.Pull)
+local OmniSliceAnim = Animator:LoadAnimation(Characters.Jeffrey.AnimationsExtra.MoveFourAwakend)
+local TriSliceAnim = Animator:LoadAnimation(Characters.Jeffrey.AnimationsExtra.MoveOne)
 
-anim.AnimationId = "rbxassetid://10726548216"
+-- remotes
+local Bash2 = Remotes.Bash2
+local Finisher = Remotes.Finisher
+local ForcePull = Remotes.Pull
+local ForceChoke = Remotes.QuickChoke
+local SaberThrowHit = Remotes.SaberThrowHit
+local WindExplosion = Remotes.WindExplosion
+local WindExplosion1 = Remotes.WindExplosion1
 
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-game:GetService("Players").LocalPlayer.Character.DarthVader.Throw:FireServer()
-game:GetService("Players").LocalPlayer.Character.SaberThrow.CanTouch = true
-animTrack:Play()
-
-
-
-local args = {
-    [1] = game:GetService("Players").LocalPlayer
-}
-
-plr.Character:FindFirstChild("SaberThrow").Touched:Connect(function(plrTouch)
--- Ensure `plr` is defined and has a Character property
-local saber = plr.Character:FindFirstChild("SaberThrow")
-local debouncetime = 3
-local debounce = false
-if saber then
-
-
-    saber.Touched:Connect(function(plrTouch)
-    if debounce == false then
-
-        debounce = true
-        -- Ensure the touched part is valid and has a parent (likely a character)
-        if plrTouch and plrTouch.Parent then
-            local playerCharacter = workspace:FindFirstChild(plrTouch.Parent.Name)
-            
-            if playerCharacter then
-                -- Define the args for RemoteEvent firing
-                local args = {
-                    [1] = playerCharacter
-                }
-
-                -- Fire the RemoteEvent safely
-                local replicatedStorage = game:GetService("ReplicatedStorage")
-                local remote = replicatedStorage:WaitForChild("Characters"):WaitForChild("DarthVader")
-                                :WaitForChild("Remotes"):WaitForChild("SaberThrowHit")
-                if remote then
-                 
-                    remote:FireServer(unpack(args))
-                
-                    task.wait(debouncetime)
-                debounce = false
-                else
-                task.wait(debouncetime)
-                debounce = false
+-- Connecting to animations (Saber Throw Logic)
+SaberThrowAnim.KeyframeReached:Connect(function(kf)
+    if kf == "Throw" then
+        VaderLS.Throw:FireServer()
+        local Hb = HitboxPunch:Clone()
+        Hb.Parent = Character
+        local Weld = Instance.new("Weld", Hb)
+        Weld.Part1 = Character:FindFirstChild("SaberThrow")
+        Weld.Part0 = Hb
+        Weld.C0 = CFrame.new(0, 0, 0)
+        Debris:AddItem(Hb, 0.8)
+        
+        local AntiSpam = {}
+        Hb.Touched:Connect(function(part)
+            local Parent = part.Parent
+            local Hum = Parent:FindFirstChild("Humanoid")
+            if Hum and Hum.Health ~= 0 and Hum ~= Humanoid then
+                if not table.find(AntiSpam, Parent) then
+                    for i=1,5 do SaberThrowHit:FireServer(Parent) end
+                    table.insert(AntiSpam, Parent)
+                    task.spawn(function()
+                        task.wait(.3)
+                        local pos = table.find(AntiSpam, Parent)
+                        if pos then table.remove(AntiSpam, pos) end
+                    end)
                 end
-                
+            end
+        end)
+    elseif kf == "Back" then
+        VaderLS.Back:FireServer()
+    end
+end)
+
+--- Moves ---
+
+local function MoveOne() -- Heavy Strike
+    HeavyStrikeAnim:Play()
+    VaderLS.HeavyStrike:FireServer()
+    Dash(HRP)
+    
+    local Hb = CombatHitbox:Clone()
+    Hb.Parent = Character
+    local Weld = Instance.new("Weld", Hb)
+    Weld.Part1 = Character:FindFirstChild("Saber")
+    Weld.Part0 = Hb
+    Debris:AddItem(Hb, 0.4)
+    
+    local AntiSpam = {}
+    Hb.Touched:Connect(function(part)
+        local Parent = part.Parent
+        local Hum = Parent:FindFirstChild("Humanoid")
+        if Hum and Hum.Health ~= 0 and Hum ~= Humanoid then
+            if not table.find(AntiSpam, Parent) then
+                for i=1,15 do Bash2:FireServer(Parent) end
+                table.insert(AntiSpam, Parent)
+                task.spawn(function()
+                    task.wait(.3)
+                    local pos = table.find(AntiSpam, Parent)
+                    if pos then table.remove(AntiSpam, pos) end
+                end)
             end
         end
-    end
     end)
 end
-end)
 
+--- Input Listener ---
 
+UserInputService.InputBegan:Connect(function(input, gpe)
+    if gpe then return end
+    
+    -- Numeric Keybinds
+    if input.KeyCode == Enum.KeyCode.One then
+        MoveOne()
+    elseif input.KeyCode == Enum.KeyCode.Two then
+        SaberThrowAnim:Play()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+        LeapAnim:Play()
+        Leap(HRP, 65, 50)
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        ForceAnim:Play()
+        ForcePull:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        Finisher:FireServer()
+        
+    -- Alphabetical Keybinds
+    elseif input.KeyCode == Enum.KeyCode.E then -- Rage
+        for i=1,150 do VaderLS.Rage:FireServer() end
+        for i=1,5 do WindExplosion:FireServer() end
+        
+    elseif input.KeyCode == Enum.KeyCode.Z then -- Massive Wind
+        for i=1,20 do WindExplosion:FireServer() end
+        
+    elseif input.KeyCode == Enum.KeyCode.X then -- Choke
+        ForceAnim:Play()
+        ForceChoke:FireServer()
+        
+    elseif input.KeyCode == Enum.KeyCode.C then -- High Leap
+        LeapAnim:Play()
+        Leap(HRP, 100, 100)
 
-
-
-
-
-animTrack.Ended:Wait()
-game:GetService("Players").LocalPlayer.Character.DarthVader.Back:FireServer()
-game:GetService("Players").LocalPlayer.Character.SaberThrow.CanTouch = false
-
-elseif input.KeyCode == Enum.KeyCode.Three then
-
-
-local function ForceLeap(arg1) -- Line 37
-    local BodyPosition_2 = Instance.new("BodyPosition")
-    BodyPosition_2.MaxForce = Vector3.new(1000000, 1000000, 1000000)
-    BodyPosition_2.P = 50000
-    BodyPosition_2.D = 3000
-    BodyPosition_2.Position = (arg1.CFrame * CFrame.new(0, 35, -60)).Position
-    BodyPosition_2.Parent = arg1
-    game.Debris:AddItem(BodyPosition_2, 0.7)
-end
-
-local anim = Instance.new("Animation")
-anim.AnimationId = "rbxassetid://10735537856"
-
-local plr = game:GetService("Players").LocalPlayer
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-
-
-animTrack:Play()
-ForceLeap(game.Players.LocalPlayer.Character.HumanoidRootPart)
-elseif input.KeyCode == Enum.KeyCode.Four then
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://10725852749"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-animTrack:Play()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("Pull"):FireServer()
-
-
-elseif input.KeyCode == Enum.KeyCode.F then
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://9760917435"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-animTrack:Play()
-plr.Character:FindFirstChild("DarthVader").SaberBlocking:FireServer(plr)
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("Combat").Remotes.Blocking:FireServer(plr)
-elseif input.KeyCode == Enum.KeyCode.Five then
-game:GetService("ReplicatedStorage"):WaitForChild("Characters"):WaitForChild("DarthVader"):WaitForChild("Remotes"):WaitForChild("Finisher"):FireServer()
-elseif input.KeyCode == Enum.KeyCode.E then
-local anim = Instance.new("Animation")
-
-anim.AnimationId = "rbxassetid://10738038469"
-
-local plr = game.Players.LocalPlayer
-
-local animTrack = plr.Character.Humanoid:WaitForChild("Animator"):LoadAnimation(anim)
-
-
-animTrack:Play()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-plr.Character:FindFirstChild("DarthVader").Rage:FireServer(plr)
-
-
-elseif input.KeyCode == Enum.KeyCode.H then
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes.QuickChoke:FireServer(plr)
-elseif input.KeyCode == Enum.KeyCode.J then
-local plr = game.Players.LocalPlayer
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-game:GetService("ReplicatedStorage").Characters:FindFirstChild("DarthVader").Remotes:FindFirstChild("WindExplosion"):FireServer()
-
-
-   end
+    	 elseif input.KeyCode == Enum.KeyCode.T then  
+  for i=1,150 do VaderLS.Rage:FireServer() end
+	 elseif input.KeyCode == Enum.KeyCode.V then   
+OmniSliceAnim:Play()
+    for i = 1, 12 do
+	  local Hb = CombatHitbox:Clone()
+        Hb.Parent = Character
+        local Weld = Instance.new("Weld", Hb)
+        Weld.Part1 = Character:FindFirstChild("Saber")
+        Weld.Part0 = Hb
+        Weld.C0 = CFrame.new(0, 0, 0)
+        Debris:AddItem(Hb, 0.15)
+        Hb.Touched:Connect(function(part)
+            local Parent = part.Parent
+            local Hum = Parent:FindFirstChild("Humanoid")
+            if Hum and Hum.Health ~= 0 and Hum ~= Humanoid then
+			Hb:Destroy()
+                    for i=1,1 do Characters.Combat.Remotes.Combo:FireServer(Parent) end
+					for i=1,1 do Bash2:FireServer(Parent) end
+            end
+        end)
+        VaderLS.HeavyStrike:FireServer()
+        task.wait(0.15)
+    end
+	 elseif input.KeyCode == Enum.KeyCode.B then 
+TriSliceAnim:Play()
+    for i = 1, 3 do
+	  local Hb = CombatHitbox:Clone()
+        Hb.Parent = Character
+        local Weld = Instance.new("Weld", Hb)
+        Weld.Part1 = Character:FindFirstChild("Saber")
+        Weld.Part0 = Hb
+        Weld.C0 = CFrame.new(0, 0, 0)
+        Debris:AddItem(Hb, 0.15)
+        Hb.Touched:Connect(function(part)
+            local Parent = part.Parent
+            local Hum = Parent:FindFirstChild("Humanoid")
+            if Hum and Hum.Health ~= 0 and Hum ~= Humanoid then
+			Hb:Destroy()
+			   if i == 3 then for i=1,5 do Characters.Combat.Remotes.ComboEndRemote:FireServer(Parent) end   end
+                    for i=1,3 do Characters.Combat.Remotes.Combo:FireServer(Parent) end
+					for i=1,3 do Bash2:FireServer(Parent) end
+            end
+        end)
+        VaderLS.HeavyStrike:FireServer()
+        task.wait(0.3)
+    end
+    elseif input.KeyCode == Enum.KeyCode.Q then
+        HeavyStrikeAnim:Play()
+VaderLS.HeavyStrike:FireServer()
+  local Hb = CombatHitbox:Clone()
+        Hb.Parent = Character
+        local Weld = Instance.new("Weld", Hb)
+        Weld.Part1 = Character:FindFirstChild("Saber")
+        Weld.Part0 = Hb
+        Weld.C0 = CFrame.new(0, 0, 0)
+        Debris:AddItem(Hb, 0.3)
+        Hb.Touched:Connect(function(part)
+            local Parent = part.Parent
+            local Hum = Parent:FindFirstChild("Humanoid")
+            if Hum and Hum.Health ~= 0 and Hum ~= Humanoid then
+			Hb:Destroy()
+                    for i=1,55 do Characters.Combat.Remotes.Combo:FireServer(Parent) end
+					for i=1,55 do Bash2:FireServer(Parent) end
+            end
+        end)
+    end
 end)
