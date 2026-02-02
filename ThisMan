@@ -1,0 +1,78 @@
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Folder Setup
+local Characters = ReplicatedStorage:WaitForChild("Characters")
+local Jeff = Characters:WaitForChild("Jeffrey")
+local Rems = Jeff:WaitForChild("Remotes")
+
+-- Character and Animation Variables
+local Char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Char:WaitForChild("Humanoid")
+local JeffLS = Char.Jeff
+local Animations = JeffLS:WaitForChild("Animations")
+
+-- Load Animations
+local moveTwoAnim = Humanoid:LoadAnimation(Animations:WaitForChild("MoveTwo"))
+local moveFourStartAnim = Humanoid:LoadAnimation(Animations:WaitForChild("MoveFourStart"))
+
+-- State tracking
+local hoodOn = false 
+
+-- Main Input Listener
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    -- Moves 1-5
+    if input.KeyCode == Enum.KeyCode.One then
+        Rems.MoveOne:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Two then
+        moveTwoAnim:Play()
+        Rems.MoveTwo:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Three then
+	JeffLS.DestroyCounter:FireServer()
+        Rems.Counter:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Four then
+        Rems.MoveFourRemote:FireServer()
+    elseif input.KeyCode == Enum.KeyCode.Five then
+        Rems.MoveFive:FireServer()
+
+    -- Letter Keys
+    elseif input.KeyCode == Enum.KeyCode.E then
+        Rems.MoveE:FireServer()
+
+    -- Loop Keys (50x)
+    elseif input.KeyCode == Enum.KeyCode.Z then
+        for i = 1, 50 do Rems.MoveOne:FireServer() end
+    elseif input.KeyCode == Enum.KeyCode.X then
+        moveTwoAnim:Play()
+        for i = 1, 50 do Rems.MoveTwo:FireServer() end
+    elseif input.KeyCode == Enum.KeyCode.V then
+        for i = 1, 50 do Rems.MoveFourUlt:FireServer() end
+
+    -- Single Ult
+    elseif input.KeyCode == Enum.KeyCode.C then
+        Rems.MoveFourUlt:FireServer()
+		elseif input.KeyCode == Enum.KeyCode.G then
+JeffLS.DestroyCounter:FireServer()
+    -- Hood Toggle (B)
+   -- Hood Toggle (B)
+    elseif input.KeyCode == Enum.KeyCode.B then
+        if hoodOn then
+            -- Reverse Animation for HoodOff
+            moveFourStartAnim.TimePosition = moveFourStartAnim.Length
+            moveFourStartAnim:Play()
+            moveFourStartAnim:AdjustSpeed(-1) -- Corrected syntax
+            
+            JeffLS.HoodOff:FireServer()
+            hoodOn = false
+        else
+            -- Normal Animation for HoodOn
+            moveFourStartAnim:Play()
+            moveFourStartAnim:AdjustSpeed(1) -- Corrected syntax
+            
+            JeffLS.HoodOn:FireServer()
+            hoodOn = true
+        end
+	end
+end)
