@@ -2,7 +2,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(input, gameProce
     if gameProcessedEvent then
         return 
     end
-   
+   if not game.Players.LocalPlayer.Character.Anakin then return end
 function RollForwardDash(arg1) -- Line 52
     local BodyPosition_2 = Instance.new("BodyPosition")
     BodyPosition_2.MaxForce = Vector3.new(1000000, 0, 1000000)
@@ -58,7 +58,7 @@ local args = {
 }
 
 
-
+game.Players.LocalPlayer.Character.Anakin.DestroyCounter:FireServer()
 game:GetService("ReplicatedStorage").Characters.Anakin.Remotes.Counter:FireServer()
 elseif input.KeyCode == Enum.KeyCode.Four then
 local args = {
