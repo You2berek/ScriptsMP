@@ -1,0 +1,283 @@
+local players = game:GetService("Players")
+local userInputService = game:GetService("UserInputService")
+local runService = game:GetService("RunService")
+local tweenService = game:GetService("TweenService")
+local debris = game:GetService("Debris")
+
+local plr = players.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local humanoid = char:WaitForChild("Humanoid")
+local animator = humanoid:WaitForChild("Animator")
+local root = char:WaitForChild("HumanoidRootPart")
+
+local RS = game:GetService("ReplicatedStorage")
+local aeRemotes     = RS.Characters.AtomEve.Remotes
+local omniRemotes   = RS.Characters.OmniMan.Remotes
+local combatRemotes = RS.Characters.Combat.Remotes
+local combatHitbox  = RS.Characters.Combat.Fx.CombatHitbox
+
+local moveOneRemote    = aeRemotes.MoveOne
+local moveTwoRemote    = aeRemotes.MoveTwo
+local moveFourRemote   = aeRemotes.MoveFour
+local finisherRemote   = aeRemotes.Finisher
+local eBlastRemote     = aeRemotes.EBlast
+local counterRemote    = aeRemotes.Counter
+local counterOffRemote = aeRemotes.CounterOff
+local flightRemote     = omniRemotes.Flight
+local comboRemote      = combatRemotes.Combo
+local comboEndRemote   = combatRemotes.ComboEndRemote
+
+local atomEveLocal = char:FindFirstChild("AtomEve")
+local counterActivate = atomEveLocal:WaitForChild("CounterActivate")
+local destroyCounter  = atomEveLocal:WaitForChild("DestroyCounter")
+local animations      = atomEveLocal:WaitForChild("Animations")
+
+local homecrusherAnim = animator:LoadAnimation(animations.Homecrusher)
+local counterAnim     = animator:LoadAnimation(animations.CounterActivate)
+
+local FLIGHT_CONFIGS = {
+	normal = { normal = 150, boost = 210, fovStart = 130, fovBoost = 145, hitboxSize = Vector3.new(18, 18, 22) },
+	super  = { normal = 200, boost = 400, fovStart = 130, fovBoost = 160, hitboxSize = Vector3.new(26, 26, 32) },
+	ultra  = { normal = 400, boost = 600, fovStart = 200, fovBoost = 250, hitboxSize = Vector3.new(32,32,32) },
+	slow   = { normal = 50,  boost = 100, fovStart = 90,  fovBoost = 100, hitboxSize = Vector3.new(14, 14, 18) },
+}
+local FLIGHT_DURATION = 3
+local flightActive = false
+local flightConn   = nil
+local counterOn    = false
+
+local function doMoveOne()
+	moveOneRemote:FireServer()
+	tweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 50}):Play()
+	task.delay(0.3, function()
+		tweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 105}):Play()
+		task.delay(0.3, function()
+			tweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 70}):Play()
+		end)
+	end)
+end
+
+local function doMoveTwo()
+	moveTwoRemote:FireServer()
+end
+
+local function doMoveThree()
+	counterActivate:FireServer(plr)
+	char.HumanoidRootPart.RootRigAttachment.Shockwave:Emit(1)
+	atomEveLocal.Bass:Play()
+	counterAnim:Play()
+	task.delay(2, function()
+		counterAnim:Stop(0.1)
+	end)
+end
+
+local function doMoveFour()
+	moveFourRemote:FireServer()
+end
+
+local function doMoveFive()
+	finisherRemote:FireServer(plr)
+end
+
+local function doAtomBlast()
+	eBlastRemote:FireServer()
+	tweenService:Create(workspace.CurrentCamera, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 50}):Play()
+	task.delay(1, function()
+		local cc = Instance.new("ColorCorrectionEffect")
+		cc.Name = "MSBallImpactCC"
+		cc.Contrast = 0
+		cc.Parent = game.Lighting
+		debris:AddItem(cc, 3)
+		tweenService:Create(cc, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Contrast = 1}):Play()
+		task.delay(0.18, function()
+			if cc and cc.Parent then
+				local t = tweenService:Create(cc, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Contrast = 0})
+				t:Play()
+				t.Completed:Connect(function() if cc then cc:Destroy() end end)
+			end
+		end)
+		tweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 100}):Play()
+		task.delay(4, function()
+			tweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 70}):Play()
+		end)
+	end)
+end
+
+local function doCounterToggle()
+	if counterOn then
+		counterOffRemote:FireServer()
+		counterOn = false
+		return
+	end
+	counterOn = true
+	destroyCounter:FireServer(plr)
+	counterRemote:FireServer()
+	task.delay(11, function()
+		counterOffRemote:FireServer()
+		counterOn = false
+	end)
+end
+
+local function handleCounterSuccess()
+	if counterOn then return end
+	counterOn = true
+	destroyCounter:FireServer(plr)
+	counterRemote:FireServer()
+	task.delay(11, function()
+		counterOffRemote:FireServer()
+		counterOn = false
+	end)
+end
+if char:FindFirstChild("CounterSucces") then handleCounterSuccess() end
+char.ChildAdded:Connect(function(child)
+	if child.Name == "CounterSucces" then handleCounterSuccess() end
+end)
+
+local function stopFlight()
+	if not flightActive then return end
+	flightActive = false
+	if flightConn then flightConn:Disconnect(); flightConn = nil end
+	local fh  = char:FindFirstChild("FlightHitbox")
+	local lv  = root:FindFirstChild("Emove_LV")
+	local vf  = root:FindFirstChild("Emove_AntiGravity")
+	local att = root:FindFirstChild("Emove_Att")
+	if fh then fh:Destroy() end
+	homecrusherAnim:Stop(0.15)
+	humanoid.PlatformStand = false
+	humanoid.AutoRotate = true
+	tweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = 70}):Play()
+	if lv then
+		lv.VectorVelocity = Vector3.zero
+		lv.MaxForce = 0
+		lv:Destroy()
+		root.AssemblyLinearVelocity = Vector3.zero
+	end
+	if vf  then vf:Destroy()  end
+	if att then att:Destroy() end
+	root.AssemblyAngularVelocity = Vector3.zero
+end
+
+local function startFlight(config)
+	if flightActive then stopFlight(); return end
+
+	flightActive = true
+	homecrusherAnim:Play()
+	flightRemote:FireServer()
+	tweenService:Create(workspace.CurrentCamera, TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = config.fovStart}):Play()
+	humanoid.PlatformStand = false
+	humanoid.AutoRotate = true
+
+	local att = Instance.new("Attachment")
+	att.Name = "Emove_Att"
+	att.Parent = root
+
+	local lv = Instance.new("LinearVelocity")
+	lv.Name = "Emove_LV"
+	lv.Attachment0 = att
+	lv.RelativeTo = Enum.ActuatorRelativeTo.World
+	lv.MaxForce = math.huge
+	lv.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+	lv.VectorVelocity = Vector3.zero
+	lv.Parent = root
+
+	local vf = Instance.new("VectorForce")
+	vf.Name = "Emove_AntiGravity"
+	vf.Attachment0 = att
+	vf.RelativeTo = Enum.ActuatorRelativeTo.World
+	vf.Force = Vector3.new(0, root.AssemblyMass * workspace.Gravity, 0)
+	vf.Parent = root
+
+	local elapsed    = 0
+	local smoothDir  = root.CFrame.LookVector.Unit
+	local hitTargets = {}
+
+	local fh = combatHitbox:Clone()
+	fh.Name = "FlightHitbox"
+	fh.Size = config.hitboxSize
+	fh.Parent = char
+	local fw = Instance.new("Weld")
+	fw.Part0 = fh
+	fw.Part1 = root
+	fw.C0 = CFrame.new(0, 0, -3)
+	fw.Parent = fh
+	debris:AddItem(fh, FLIGHT_DURATION + 1)
+
+	fh.Touched:Connect(function(part)
+		if not flightActive then return end
+		if not part or not part.Parent then return end
+		if part:IsDescendantOf(char) then return end
+		local tc = part.Parent
+		local th = tc:FindFirstChildOfClass("Humanoid")
+		if not th or th.Health <= 0 then return end
+		if table.find(hitTargets, tc) then return end
+		table.insert(hitTargets, tc)
+		task.spawn(function()
+			local count = config == FLIGHT_CONFIGS.super and 15 or 5
+			for i = 1, count do
+				comboRemote:FireServer(tc)
+			end
+			comboEndRemote:FireServer(tc)
+			task.wait(0.1)
+			comboEndRemote:FireServer(tc)
+			task.wait(1.5)
+			local idx = table.find(hitTargets, tc)
+			if idx then table.remove(hitTargets, idx) end
+		end)
+	end)
+
+	task.delay(FLIGHT_DURATION, function()
+		if flightActive then stopFlight() end
+	end)
+
+	flightConn = runService.Heartbeat:Connect(function(dt)
+		elapsed += dt
+		if not root.Parent or not humanoid.Parent then stopFlight(); return end
+
+		vf.Force = Vector3.new(0, root.AssemblyMass * workspace.Gravity, 0)
+		lv.MaxForce = math.max(50000 * root.AssemblyMass, 1000000)
+
+		local look = root.CFrame.LookVector
+		local clamped = Vector3.new(look.X, math.clamp(look.Y, -0.18, 0.25), look.Z)
+		local flat = Vector3.new(clamped.X, 0, clamped.Z)
+		local wanted
+		if flat.Magnitude > 0.001 then
+			wanted = Vector3.new(flat.Unit.X, clamped.Y, flat.Unit.Z).Unit
+		else
+			wanted = Vector3.new(0, clamped.Y, -1).Unit
+		end
+		smoothDir = smoothDir:Lerp(wanted, math.clamp(dt * 10, 0, 1))
+		if smoothDir.Magnitude > 0.001 then smoothDir = smoothDir.Unit end
+
+		local speed = elapsed >= 1.5 and config.boost or config.normal
+		if elapsed >= 1.5 and elapsed - dt < 1.5 then
+			tweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {FieldOfView = config.fovBoost}):Play()
+		end
+
+		lv.VectorVelocity = smoothDir * speed
+		root.AssemblyAngularVelocity = Vector3.zero
+	end)
+end
+
+local keyBinds = {
+	[Enum.KeyCode.One]   = doMoveOne,
+	[Enum.KeyCode.Two]   = doMoveTwo,
+	[Enum.KeyCode.Three] = doMoveThree,
+	[Enum.KeyCode.Four]  = doMoveFour,
+	[Enum.KeyCode.Five]  = doMoveFive,
+	[Enum.KeyCode.T]     = doAtomBlast,
+	[Enum.KeyCode.E]     = function()
+		if humanoid.Health < 22 then doAtomBlast() else startFlight(FLIGHT_CONFIGS.normal) end
+	end,
+	[Enum.KeyCode.R]     = function() startFlight(FLIGHT_CONFIGS.normal) end,
+	[Enum.KeyCode.C]     = function() startFlight(FLIGHT_CONFIGS.super)  end,
+	[Enum.KeyCode.V]     = function() startFlight(FLIGHT_CONFIGS.slow)   end,
+	[Enum.KeyCode.Z]     = doCounterToggle,
+	[Enum.KeyCode.X]     = function() destroyCounter:FireServer(plr) end,
+		[Enum.KeyCode.B]    = function() startFlight(FLIGHT_CONFIGS.ultra)   end,
+}
+
+userInputService.InputBegan:Connect(function(input, gp)
+	if gp then return end
+	local action = keyBinds[input.KeyCode]
+	if action then action() end
+end)
