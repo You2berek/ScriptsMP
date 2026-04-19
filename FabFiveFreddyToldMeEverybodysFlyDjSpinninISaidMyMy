@@ -71,6 +71,10 @@ end
 		end
 	elseif input.KeyCode == Enum.KeyCode.Three then
 	  Counter()
+	elseif input.KeyCode == Enum.KeyCode.Z then
+for i=1,50 do	  
+Counter()
+end
 	elseif input.KeyCode == Enum.KeyCode.Five then
 		remotes.Finisher:FireServer()
     elseif input.KeyCode == Enum.KeyCode.E then
